@@ -1,22 +1,25 @@
 #!/bin/bash
 #
-# /home/pi/scripts/json_sync.sh
+# /home/ubuntu/scripts/json_sync.sh
 #
 # This script will synchronize the json dump for ethercalc on the usb storage
 # device. It simply creates a link to a dump file in the group's folder.
 # This is called on mysql_import.
 #
 # Dependencies:
-# /home/pi/files/group.conf
+# /home/ubuntu/files/group.conf
 #
 # Author: Lara Klimm
 # Date: 10.06.2016
+#
+# Edited by Lukas Reichwein
+# Date 15.03.2021
 
 
-group_conf="/home/pi/files/group.conf"
+group_conf="/home/ubuntu/files/group.conf"
 group_path=$(cat "$group_conf" | grep -oP "(?<=path\=).*")
 dump_path="${group_path}/.meta/"
-ethercalc_link_path="/home/pi/dump.json"
+ethercalc_link_path="/home/ubuntu/dump.json"
 
 exit_status=1
 
@@ -24,7 +27,7 @@ exit_status=1
 # check if the folder exists (& create the folder on usb storage device)
 # param1 : folder path
 new_folder(){
-        sudo bash /home/pi/scripts/new_folder.sh "$1"
+        sudo bash /home/ubuntu/scripts/new_folder.sh "$1"
         if [ "$?" = 1 ]
         then
                 exit 1

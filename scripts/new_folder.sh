@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# /home/pi/scripts/new_folder.sh
+# /home/ubuntu/scripts/new_folder.sh
 #
 # Create a new folder and set permissions
 # param1 : folder destination
