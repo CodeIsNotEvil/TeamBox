@@ -1,14 +1,17 @@
 #!/bin/bash
 #
-# /home/pi/scripts/usb_check_free.sh
+# /home/ubuntu/scripts/usb_check_free.sh
 #
 # This script checks the usb storagde device's free space
 #
 # Author: Lara Klimm
 # Date: 22.07.2016
+#
+# Edited by Lukas Reichwein
+# Date 15.03.2021
 
 
-group_conf="/home/pi/files/group.conf"
+group_conf="/home/ubuntu/files/group.conf"
 teambox_path="/media/USB-TeamBox/TeamBox"
 
 

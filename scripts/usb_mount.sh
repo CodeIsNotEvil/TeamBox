@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# /home/pi/scripts/usb_mount.sh
+# /home/ubuntu/scripts/usb_mount.sh
 #
 # This script will mount one (assuming there will only be one reachable USB
 # slot) plugged in USB storage device to the predefined location
@@ -12,7 +12,9 @@
 #
 # Author: Lara Klimm
 # Date: 02.05.2016
-
+#
+# Edited by Lukas Reichwein
+# Date 15.03.2021
 
 
 # path where devices shoud be mounted to

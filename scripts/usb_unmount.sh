@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# /home/pi/scripts/usb_unmount.sh
+# /home/ubuntu/scripts/usb_unmount.sh
 #
 # param $1 : unmount despite export failure (yes/no [0/2])
 #
@@ -11,19 +11,21 @@
 # ~/files/group.conf to get the group's path.
 # If writing a mysql dump fails you will be asked to write to console wheater
 # to unmount it anyway (which could cause data loss!) or not.
-# When calling thsi script with a parameter yes/no (0/1) it will automatically
+# When calling this script with a parameter yes/no (0/1) it will automatically
 # be (not) unmounted despite any failure.
 #
 # Dependencies:
-# /home/pi/files/group.conf
-# /home/pi/scripts/mysql_export.conf
+# /home/ubuntu/files/group.conf
+# /home/ubuntu/scripts/mysql_export.conf
 #
 # Author: Lara Klimm
 # Date: 02.05.2016
+#
+# Edited by Lukas Reichwein
+# Date 15.03.2021
 
 
-
-group_conf="/home/pi/files/group.conf"
+group_conf="/home/ubuntu/files/group.conf"
 number=""
 
 exit_status=1
@@ -77,7 +79,7 @@ then
 	printf "\nNo usb storage device mounted!\n" >&2
 else
 	# export mysql dump first
-	sudo bash /home/pi/scripts/mysql_export.sh
+	sudo bash /home/ubuntu/scripts/mysql_export.sh
 	if [ "$?" = 0 ]
 	then
 		printf "Exported data structure to USB device\n"
