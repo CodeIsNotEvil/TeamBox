@@ -1,19 +1,19 @@
 #!/bin/bash
 #
-# /home/pi/scripts/folder_sync.sh
+# /home/ubuntu/scripts/folder_sync.sh
 #
 # This script will synchronize the data folders on the usb storage
 # device. It simply creates a link to a folder file in the group's folder.
 # This is called on mysql_import.
 #
 # Dependencies:
-# /home/pi/files/group.conf
+# /home/ubuntu/files/group.conf
 #
 # Author: Lara Klimm
 # Date: 20.06.2016
 
 
-group_conf="/home/pi/files/group.conf"
+group_conf="/home/ubuntu/files/group.conf"
 group_path=$(cat "$group_conf" | grep -oP "(?<=path\=).*")
 
 exit_status=1
@@ -40,7 +40,7 @@ new_folder(){
 		                printf "Could not copy ${3}!\n" >&2
 		        fi
 		else
-			sudo bash /home/pi/scripts/new_folder.sh "$2"
+			sudo bash /home/ubuntu/scripts/new_folder.sh "$2"
 			exit_status="$?"
 		fi
 	fi
@@ -122,17 +122,17 @@ drawings_data_path="/var/www/html/app/drawings"
 sync_folder "drawings" "${group_path}/files/drawings" "$drawings_data_path" 0
 
 # copy collabtive files
-collabtive_data_path="/var/www/html/collabtive/files"
-collabtive_empty_path="/home/pi/files/collabtive_data_emptyFolder/"
-sync_folder "collabtive" "${group_path}/.meta/" "$collabtive_data_path" 1 "$collabtive_empty_path"
+# collabtive_data_path="/var/www/html/collabtive/files"
+# collabtive_empty_path="/home/pi/files/collabtive_data_emptyFolder/"
+# sync_folder "collabtive" "${group_path}/.meta/" "$collabtive_data_path" 1 "$collabtive_empty_path"
 
 # copy bozon files
-bozon_data_path_uploads="/var/www/html/bozon/uploads/TeamBox"
-bozon_data_path_thumbs="/var/www/html/bozon/thumbs/uploads/TeamBox"
-bozon_empty_thumbs_path="/home/pi/files/bozon_data_emptyFolder/TeamBox_thumbs/"
+# bozon_data_path_uploads="/var/www/html/bozon/uploads/TeamBox"
+# bozon_data_path_thumbs="/var/www/html/bozon/thumbs/uploads/TeamBox"
+# bozon_empty_thumbs_path="/home/pi/files/bozon_data_emptyFolder/TeamBox_thumbs/"
 #sync_folder "bozon uploads" "${group_path}/files/uploads" "$bozon_data_path_uploads" 0
-sync_folder "bozon uploads" "${group_path}/files" "$bozon_data_path_uploads" 0
-sync_folder "bozon thumbs" "${group_path}/.meta/bozon_thumbs" "$bozon_data_path_thumbs" 1 "$bozon_empty_thumbs_path"
+# sync_folder "bozon uploads" "${group_path}/files" "$bozon_data_path_uploads" 0
+# sync_folder "bozon thumbs" "${group_path}/.meta/bozon_thumbs" "$bozon_data_path_thumbs" 1 "$bozon_empty_thumbs_path"
 
 
 exit "$exit_status"
