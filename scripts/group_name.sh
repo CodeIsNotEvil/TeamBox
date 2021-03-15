@@ -1,20 +1,22 @@
 #!/bin/bash
 #
-# /home/pi/scripts/group_name.sh
+# /home/ubuntu/scripts/group_name.sh
 #
 # This script will check if any device is mounted and then it will read the
 # group's name from ~/files/group.conf.
 #
 # Dependencies:
-# /home/pi/files/group.conf
-# /home/pi/scripts/usb_mount.sh
+# /home/ubuntu/files/group.conf
+# /home/ubuntu/scripts/usb_mount.sh
 #
 # Author: Lara Klimm
 # Date: 24.05.2016
+#
+# Edited by Lukas Reichwein
+# Date 15.03.2021
 
 
-
-group_conf="/home/pi/files/group.conf"
+group_conf="/home/ubuntu/files/group.conf"
 
 exit_status=1
 
@@ -25,7 +27,7 @@ check_mounted=$(mount | grep "TeamBox")
 if [ -z "$check_mounted" ]
 then
 	# try to mount usb
-	sudo bash /home/pi/scripts/usb_mount.sh 2>/dev/null
+	sudo bash /home/ubuntu/scripts/usb_mount.sh 2>/dev/null
 	if [ "$?" = 0 ]
 	then
 		exit_status=0

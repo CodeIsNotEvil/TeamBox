@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# /home/pi/scripts/group_show.sh
+# /home/ubuntu/scripts/group_show.sh
 #
 # This skript shows all existing groups from a plugged in USB storage
 # device to work on that grouop's collaborative work.
@@ -9,7 +9,7 @@
 # content which is the group folders.
 #
 # Dependencies:
-# /home/pi/scripts/usb_mount.sh
+# /home/ubuntu/scripts/usb_mount.sh
 #
 # Author: Lara Klimm
 # Date: 11.05.2016
@@ -28,7 +28,7 @@ check_mounted=$(mount | grep "TeamBox")
 if [ ! -n "$check_mounted" ]
 then
 	# try to mount usb
-	sudo bash /home/pi/scripts/usb_mount.sh
+	sudo bash /home/ubuntu/scripts/usb_mount.sh
 	if [ "$?" = 0 ]
 	then
 		exit_status=0

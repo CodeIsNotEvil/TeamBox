@@ -1,6 +1,6 @@
 ##!/bin/bash
 #
-# /home/pi/scripts/detect_usb.sh
+# /home/ubuntu/scripts/detect_usb.sh
 #
 # param $1 : new group's name
 #
@@ -21,17 +21,20 @@
 # create a new group instead of working on existing group projects.
 #
 # Dependencies:
-# /home/pi/files/group.conf
-# /home/pi/scripts/usb_mount.sh
+# /home/ubuntu/files/group.conf
+# /home/ubuntu/scripts/usb_mount.sh
 #
 # Author: Lara Klimm
 # Date: 02.05.2016
+#
+# Edited by Lukas Reichwein
+# Date 15.03.2021
 
 
 
 # path where devices shoud be mounted to
 mount_path="/media/USB-TeamBox"
-group_conf="/home/pi/files/group.conf"
+group_conf="/home/ubuntu/files/group.conf"
 group=""
 
 exit_status=1
@@ -61,7 +64,7 @@ read_name(){
 # check if the folder exists (& create the folder on usb storage device)
 # param1 : folder path
 new_folder(){
-        sudo bash /home/pi/scripts/new_folder.sh "$1"
+        sudo bash /home/ubuntu/scripts/new_folder.sh "$1"
 
         if [ "$?" = "1" ]
         then
@@ -108,7 +111,7 @@ check_mounted=$(mount | grep "TeamBox")
 if [ ! -n "$check_mounted" ]
 then
 	# try to mount usb
-	sudo bash /home/pi/scripts/usb_mount.sh
+	sudo bash /home/ubuntu/scripts/usb_mount.sh
 	if  [ "$?" = 0 ]
 	then
 		exit_status=0

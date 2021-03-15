@@ -1,18 +1,20 @@
 #!/bin/bash
 #
-# /home/pi/scripts/group_name.sh
+# /home/ubuntu/scripts/group_name.sh
 #
 # This script will delete group info in ~/files/group.conf.
 #
 # Dependencies:
-# /home/pi/files/group.conf
+# /home/ubuntu/files/group.conf
 #
 # Author: Lara Klimm
 # Date: 30.05.2016
+#
+# Edited by Lukas Reichwein
+# Date 15.03.2021
 
 
-
-group_conf="/home/pi/files/group.conf"
+group_conf="/home/ubuntu/files/group.conf"
 
 
 # check if a group is selected

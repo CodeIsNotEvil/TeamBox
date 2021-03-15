@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# /home/pi/scripts/group_choose.sh
+# /home/ubuntu/scripts/group_choose.sh
 #
 # param $1 : chosen group's name
 #
@@ -21,17 +21,20 @@
 # to ~/files/group.conf.
 #
 # Dependencies:
-# /home/pi/files/group.conf
-# /home/pi/scripts/usb_mount.sh
+# /home/ubuntu/files/group.conf
+# /home/ubuntu/scripts/usb_mount.sh
 #
 # Author: Lara Klimm
 # Date: 02.05.2016
+#
+# Edited by Lukas Reichwein
+# Date 15.03.2021
 
 
 
 # path where devices shoud be mounted to
 mount_path="/media/USB-TeamBox"
-group_conf="/home/pi/files/group.conf"
+group_conf="/home/ubuntu/files/group.conf"
 group=""
 
 exit_status=1
@@ -64,7 +67,7 @@ read_number(){
 		else
 			if [ "$number" = 0 ]
 			then
-				sudo bash /home/pi/scripts/group_create.sh
+				sudo bash /home/ubuntu/scripts/group_create.sh
 				success=1
 			else
 				group="${directories[(($number-1))]}"
@@ -78,7 +81,7 @@ read_number(){
 # check if the folder exists (& create the folder on usb storage device)
 # param1 : folder path
 new_folder(){
-        sudo bash /home/pi/scripts/new_folder.sh "$1"
+        sudo bash /home/ubuntu/scripts/new_folder.sh "$1"
         if [ "$?" = 1 ]
         then
                 exit 1
@@ -120,7 +123,7 @@ check_mounted=$(mount | grep "TeamBox")
 if [ ! -n "$check_mounted" ]
 then
 	# try to mount usb
-	sudo bash /home/pi/scripts/usb_mount.sh
+	sudo bash /home/ubuntu/scripts/usb_mount.sh
 	if ["$?" = 0 ]
 	then
 		exit_status=0
@@ -138,7 +141,7 @@ then
 	then
 		if [ ! "$group" = "" ]
 		then
-			sudo bash /home/pi/scripts/group_create.sh "$group"
+			sudo bash /home/ubuntu/scripts/group_create.sh "$group"
 			exit_status="$?"
 		fi
 	else
@@ -197,7 +200,7 @@ then
 	fi
 else
 	printf "There are no groups yet! Please create a new one...\n\n"
-	sudo bash /home/pi/scripts/group_create.sh
+	sudo bash /home/ubuntu/scripts/group_create.sh
 	exit_status="$?"
 fi
 
