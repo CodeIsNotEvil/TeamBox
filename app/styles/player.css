@@ -1,0 +1,102 @@
+    .tutorialArea{
+      position: relative;
+      width: 100%;
+      margin-bottom: 50px;
+      background-color: white;
+      border-bottom: 2px solid rgba(0,0,0,0.8);
+    }
+    .tutorialName{
+	font-size: 16px;
+	margin-bottom: 10px;
+    }
+    video{
+      width: 100%;
+    }
+    .overlay.active{
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 99%;
+      height: 99%;
+      cursor: pointer;
+      background-color: rgba(0,0,0,0.5);
+      background-image: url(media/video/play-big.png);
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+    .overlay.inactive{
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 99%;
+      height: 99%;
+      cursor: pointer;
+    }
+    .controlsBar{
+      width: 100%;
+      height: 30px;
+      margin-top: -30px;
+      position: relative;
+      background-color: rgba(0,0,0,0.8);
+    }
+    .control{
+      width: 24px;
+      height: 24px;
+      display: inline-block;
+      float: left;
+      padding: 3px;
+      cursor: pointer;
+    }
+    .button.inactive{
+      display: none;
+    }
+    input[type=range]{
+      margin-top: 3px;
+      border: none;
+    }
+    .control.seek{
+      width: 369px;
+    }
+    .output.seek{
+      position: absolute;
+      background-color: rgba(0,0,0,0.8);
+      width: 80px;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+      color: white;
+      border-radius: 4px;
+      display: inline-block;
+      bottom: 110%;
+      left: 0;
+      display: none;
+    }
+    .control.volume{
+      width: 100px;
+    }
+    .control.mute,
+    .control.volume,
+    .control.subt,
+    .control.full{
+      float:right;
+    }
+    .subtitlesMenu{
+      width:90px;
+      margin-top: -97px;
+      overflow: auto;
+      float: right;
+      position: relative;
+      padding: 5px;
+      background-color: rgba(0,0,0,0.8);
+      display: none;
+    }
+    .subtitleButton{
+      cursor: pointer;
+      color: white;
+
+    }
+    .subtitleButton.active{
+      background-image: url("media/video/checked.png");
+      background-repeat: no-repeat;
+      background-position: right;
+    }

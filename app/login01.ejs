@@ -1,0 +1,43 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="styles/styleBlack.css">
+    <meta name="viewport" content="width=device-width, height=device-height,  initial-scale=1.0, user-scalable=no, user-scalable=0"/>
+    <script type="text/javascript" src="_jquery/jquery-1.12.3.js"></script>
+    <script src="_socket.io/socket.io.js"></script>
+  </head>
+  <body>
+    <div id="logo01">
+      <div style="margin: 0px auto 0px auto; width: 130px;">
+        <div style="float: left; padding: 0px 2px 0px 0px; color: rgba(150,150,150,1);">TeamB</div>
+        <div id="loadingIconNoLoad"></div>
+        <div id="loadingIcon"></div>
+        <div style="float: left; padding: 0px 0px 0px 2px; color: rgba(150,150,150,1);">x</div>
+        <div class="clear"></div>
+      </div>
+    </div>
+    <div id="containerLogin">
+      <div id="loginNoticePlaceholder">
+        <div id="loginNotice" class="loginNoticeError"></div>
+      </div>
+      <form id="loginForm" method="post"  action="/login01.ejs" autocomplete="off">
+        <input id="inputGroup" name="user[group]" class ="ease" type="text" placeholder="create / select group" maxlength="20" list="dataListGroup">
+          <datalist id="dataListGroup">
+          </datalist>
+        </input>
+        <input id="inputSubmitUsername" class="ease" type="submit" value="continue"/>
+      </form>
+    </div>
+    <div id="containerWarningShutdown" class="containerWarningShutdown">
+            <div class="containerWarningMessage">PI was shutdown</div>
+    </div>
+    <div id="containerWarningServertime" class="containerWarningServertime">
+      <div class="containerWarningMessage">Servertime was set</div>
+    </div>
+    <div id="containerWarningImporting" class="containerWarningImporting">
+    </div>
+    <script>
+        groups = <%- JSON.stringify(groups) %>;
+    </script>
+    <script src="scripts/login01.js"></script>
+  </body>
+</html>
