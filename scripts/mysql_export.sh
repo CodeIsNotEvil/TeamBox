@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# /home/pi/scripts/mysql_export.sh
+# /home/ubuntu/scripts/mysql_export.sh
 #
 # This script exports sql dumps that are stored on a USB storage device to
 # the folder .meta.
@@ -11,16 +11,18 @@
 # latest 4 dumps for backup.
 #
 # Dependencies:
-# /home/pi/files/group.conf
-# /home/pi/scripts/usb_mount.sh
-# /home/pi/scripts/etherpad_save.sh
+# /home/ubuntu/files/group.conf
+# /home/ubuntu/scripts/usb_mount.sh
+# /home/ubuntu/scripts/etherpad_save.sh
 #
 # Author: Lara Klimm
 # Date: 02.05.2016
+#
+# Edited by Lukas Reichwein
+# Date 15.03.2021
 
 
-
-group_conf="/home/pi/files/group.conf"
+group_conf="/home/ubuntu/files/group.conf"
 group_path=$(cat "$group_conf" | grep -oP "(?<=path\=).*")
 dump_path="${group_path}/.meta/"
 user="TeamBox"
@@ -32,7 +34,7 @@ exit_status=1
 # check if the folder exists (& create the folder on usb storage device)
 # param1 : folder path
 new_folder(){
-        sudo bash /home/pi/scripts/new_folder.sh "$1"
+        sudo bash /home/ubuntu/scripts/new_folder.sh "$1"
         if [ "$?" = 1 ]
         then
                 exit 1
@@ -89,7 +91,7 @@ check_mounted=$(mount | grep "TeamBox")
 if [ -z "$check_mounted" ]
 then
 	# try to mount usb
-	sudo bash /home/pi/scripts/usb_mount.sh
+	sudo bash /home/ubuntu/scripts/usb_mount.sh
 	if [ "$?" = 0 ]
 	then
 		exit_status=0
@@ -116,11 +118,11 @@ new_folder "$dump_path"
 # export databases
 export_DB "TeamBox"
 export_DB "etherpadLite"
-export_DB "collabtive"
+# export_DB "collabtive" replaced with WEKAN wich uses MongoDB as it's Database.
 
 # call script to save etherpads
-sudo bash /home/pi/scripts/etherpad_export.sh &
-sudo bash /home/pi/scripts/ethercalc_export.sh &
+sudo bash /home/ubuntu/scripts/etherpad_export.sh &
+sudo bash /home/ubuntu/scripts/ethercalc_export.sh &
 
 
 

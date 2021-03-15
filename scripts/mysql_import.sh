@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# /home/pi/scripts/mysql_import.sh
+# /home/ubuntu/scripts/mysql_import.sh
 #
 # This script will import sql dumps that are stored on a USB storage device.
 # At first it will check if any device is mounted and then it will read the
@@ -11,20 +11,22 @@
 # database from dump ~/files/TeamBox_emptyDB.sql.
 #
 # Dependencies:
-# /home/pi/files/group.conf
-# /home/pi/files/TeamBox_emptyDB.sql
-# /home/pi/files/etherpadLite_emptyDB.sql
-# /home/pi/scripts/usb_mount.sh
+# /home/ubuntu/files/group.conf
+# /home/ubuntu/files/TeamBox_emptyDB.sql
+# /home/ubuntu/files/etherpadLite_emptyDB.sql
+# /home/ubuntu/scripts/usb_mount.sh
 #
 # Author: Lara Klimm
 # Date: 02.05.2016
+#
+# Edited by Lukas Reichwein
+# Date 15.03.2021
 
 
-
-group_conf="/home/pi/files/group.conf"
-empty_db_path="/home/pi/files/"
+group_conf="/home/ubuntu/files/group.conf"
+empty_db_path="/home/ubuntu/files/"
 user="TeamBox"
-password="PasswdForTeamBox"
+password="raspberry"
 
 exit_status=1
 
@@ -99,7 +101,7 @@ check_mounted=$(mount | grep "TeamBox")
 if [ -z "$check_mounted" ]
 then
 	# try to mount usb
-	sudo bash /home/pi/scripts/usb_mount.sh
+	sudo bash /home/ubuntu/scripts/usb_mount.sh
 	if [ "$?" = 0 ]
 	then
 		exit_status=0
@@ -139,11 +141,11 @@ then
 	# import databases
 	import_DB "TeamBox"
 	import_DB "etherpadLite"
-	import_DB "collabtive"
+	# import_DB "collabtive" replaced with WEKAN wich uses MongoDB as it's Database.
 
 	# call scripts to synchronise json dump & data folders
-	sudo bash /home/pi/scripts/json_sync.sh
-	sudo bash /home/pi/scripts/folder_sync.sh
+	sudo bash /home/ubuntu/scripts/json_sync.sh
+	sudo bash /home/ubuntu/scripts/folder_sync.sh
 else
 	printf "Configuration file does not exist!\n" >&2
 	exit_status=1
