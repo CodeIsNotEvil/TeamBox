@@ -47,17 +47,20 @@ var connection      = mysql.createConnection({
     host     : 'localhost',
     user     : 'TeamBox',
     database : 'TeamBox',
-    password : 'PasswdForTeamBox'
+    password : 'raspberry'
 });
 
 // LARA 21.07.2016
 // connection for collabtive
+// Lukas 15.03.2021 i removed it cause we now use Wekan instead
+/*
 var collabtiveConnection      = mysql.createConnection({
     host     : 'localhost',
     user     : 'TeamBox',
     database : 'collabtive',
     password : 'PasswdForTeamBox'
 });
+*/
 // LARA end
 
 
@@ -76,7 +79,7 @@ var clients             = [];
 var illegalClients      = [];
     illegalClients.push("admin");
     illegalClients.push("administrator");
-    illegalClients.push("pi");
+    illegalClients.push("ubuntu");
     illegalClients.push("root");
     illegalClients.push("teambox");
 
@@ -121,7 +124,7 @@ setInterval(function()
 // check the usb's size as well as free, used & TeamBox-used space
 function usbCheckFree()
 {
-        var usbValues = syncExec("bash /home/pi/scripts/usb_check_free.sh").stdout.split("\n");
+        var usbValues = syncExec("bash /home/ubuntu/scripts/usb_check_free.sh").stdout.split("\n");
 	var usbSize = usbValues[0].split(":")[1].trim();
 	var usbFree	= usbValues[1].split(":")[1].split("=")[0].trim();
 	var usbFreePerc = usbValues[1].split(":")[1].split("=")[1].trim();
@@ -166,7 +169,7 @@ function synchronizeTime(dateDate, dateTime)
 function shutdownPi()
 {
           //UNQUOTE Later
-          var isError = syncExec("sudo bash service hostapd stop && /home/pi/scripts/group_delete.sh && /home/pi/scripts/display_exit.sh && shutdown -h now").stderr;
+          var isError = syncExec("/home/ubuntu/scripts/group_delete.sh && sudo shutdown now").stderr;
           //UNQUOTE Later
           //DELETE THIS Later
           //var isError = syncExec("ping -n 2 127.0.0.1 > NUL && echo 'SHUTDOWN PI'").stderr;
@@ -185,7 +188,7 @@ function shutdownPi()
 function importMysql()
 {
         //UNQUOTE Later
-        var isError = syncExec("sudo bash /home/pi/scripts/mysql_import.sh").stderr;
+        var isError = syncExec("sudo bash /home/ubuntu/scripts/mysql_import.sh").stderr;
         //UNQUOTE Later
         //DELETE THIS Later
         //var isError = syncExec("ping -n 2 127.0.0.1 > NUL && echo 'IMPORT MYSQL").stderr;
@@ -216,7 +219,7 @@ function exportMysql()
         io.sockets.emit('appExportMysqlStart');
 
         //UNQUOTE Later
-        var isError = syncExec("sudo bash /home/pi/scripts/mysql_export.sh").stderr;
+        var isError = syncExec("sudo bash /home/ubuntu/scripts/mysql_export.sh").stderr;
         //UNQUOTE Later
         //DELETE THIS Later
         //var isError = syncExec( "ping -n 2 127.0.0.1 > NUL && echo 'EXPORT MYSQL'").stderr;
@@ -237,7 +240,7 @@ function exportMysql()
 function exportMysqlAsync()
 {
         console.log("ASYNC EXEC");
-        asyncExec("sudo bash /home/pi/scripts/mysql_export.sh");
+        asyncExec("sudo bash /home/ubuntu/scripts/mysql_export.sh");
 }
 
 
@@ -245,7 +248,7 @@ function loadGroups()
 {
         groups  = [];
         //UNQUOTE Later
-        groups = syncExec("bash /home/pi/scripts/group_show.sh").stdout.split("\n");
+        groups = syncExec("bash /home/ubuntu/scripts/group_show.sh").stdout.split("\n");
         //UNQUOTE Later
         //DELETE THIS Later
         //groups = syncExec("echo '.20SPACE GRP INCOMING.xGrp.TerraGrp'").stdout.split(".");
@@ -256,7 +259,7 @@ function loadGroups()
 function chooseGroup()
 {
         //UNQUOTE Later
-        var isError = syncExec("sudo bash /home/pi/scripts/group_choose.sh '" + group + "'").stderr;
+        var isError = syncExec("sudo bash /home/ubuntu/scripts/group_choose.sh '" + group + "'").stderr;
         //UNQUOTE Later
         //DELETE THIS Later
         //var isError = syncExec("ping -n 2 127.0.0.1 > NUL && echo 'CHOOSE GROUP'").stderr;
@@ -276,7 +279,7 @@ function chooseGroup()
 function createGroup()
 {
         //UNQUOTE Later
-        var isError = syncExec("sudo bash /home/pi/scripts/group_create.sh '" + group + "'").stderr;
+        var isError = syncExec("sudo bash /home/ubuntu/scripts/group_create.sh '" + group + "'").stderr;
         //UNQUOTE Later
         //DELETE THIS Later
         //var isError = syncExec("ping -n 2 127.0.0.1 > NUL && echo 'CREATE GROUP'").stderr;
@@ -297,7 +300,7 @@ function getEtherpadEntries()
         var data = [];
 
         //UNQUOTE Later
-        data = syncExec("sudo bash /home/pi/scripts/server_get_etherpad.sh").stdout.split("\n");
+        data = syncExec("sudo bash /home/ubuntu/scripts/server_get_etherpad.sh").stdout.split("\n");
         //UNQUOTE Later
         //DELETE THIS Later
         //data = syncExec("echo 'Datei1 DateiXX Datei3'").stdout.split(" ");
@@ -315,7 +318,7 @@ function getEthercalcEntries()
         var data = [];
 
         //UNQUOTE Later
-        data = syncExec("sudo bash /home/pi/scripts/server_get_ethercalc.sh").stdout.split("\n");
+        data = syncExec("sudo bash /home/ubuntu/scripts/server_get_ethercalc.sh").stdout.split("\n");
         //UNQUOTE Later
         //DELETE THIS Later
         //data = syncExec("echo 'Calc1 Calc2 Calcn'").stdout.split(" ");
