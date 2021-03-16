@@ -1,10 +1,10 @@
 // functions for player & controls
 
 
-  fsVideo="";
-  timeoutMove=0;
-  timeoutClick=0;
-  preventClick=false;
+  let fsVideo="";
+  let timeoutMove=0;
+  let timeoutClick=0;
+  let preventClick=false;
 
 
 // FUNCTION to create controls
@@ -50,7 +50,7 @@
       menu.appendChild(subtButton);
       subtButton.addEventListener("click", subtitlesChange);
     }
-    var subtButton=document.createElement("div");
+    subtButton=document.createElement("div");
     subtButton.innerHTML="Off";
     subtButton.className=videoName+" subtitleButton off inactive";
     menu.appendChild(subtButton);
@@ -117,7 +117,7 @@
         }
       }
     }
-    lastMove=move;
+    // lastMove=move;
   }
   function hideControlsFSClick(click){
     var video=document.getElementById(fsVideo);
@@ -162,7 +162,7 @@
       if(controlsBar.style.display=="none"){
         controlsBar.style.display="block";
       }
-      var seek=document.getElementsByClassName(fsVideo+" control seek")[0];
+      seek=document.getElementsByClassName(fsVideo+" control seek")[0];
       if((document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen)==true){
         var nextCtrl=document.getElementsByClassName(fsVideo+" control mute")[0];
         var width=nextCtrl.getBoundingClientRect().left-seek.getBoundingClientRect().left-10;
@@ -241,11 +241,11 @@
     var video=document.getElementById(classes[0]);
     if(video.muted==false) {
       video.muted=true;
-      tempVolume=0;
+      //let tempVolume=0;
     }
     else{
       video.muted=false;
-      tempVolume=volume[video.id];
+      //let tempVolume=volume[video.id];
     }
     document.getElementsByClassName(video.id+" control volume")[0].value=tempVolume;
     buttonSwitch(video.id, "button mute")
@@ -281,7 +281,7 @@
     var lang=classes[2];
     var subtButtons=document.getElementsByClassName(video.id+" subtitleButton");
     for(var i=0; i< subtButtons.length; i++){
-      button=subtButtons[i];
+      let button=subtButtons[i];
       if(button==subtitle){
         button.className=button.className.substring(0, button.className.lastIndexOf(" "))+" active";
       }
@@ -290,8 +290,8 @@
       }
     }
     var tracks=video.textTracks;
-    for(var i=0; i< tracks.length; i++){
-      var track=tracks[i];
+    for(var track_inc=0; track_inc< tracks.length; track_inc++){
+      var track=tracks[track_inc];
       if(track.language==lang){
         track.mode="showing";
       }
@@ -303,7 +303,7 @@
 
   // FUNCTION for full screen switch
   function fullscreen(click){
-    var fullscreen=click.target;
+    fullscreen=click.target;
     var classes=fullscreen.className.split(" ");
     var video=document.getElementById(classes[0]);
     var tutorial=document.getElementsByClassName(video.id+" tutorialArea")[0];
@@ -355,7 +355,7 @@
   function toTimeString(seconds) {
     var hours   = Math.floor(seconds / 3600);
     var minutes = Math.floor((seconds - (hours * 3600)) / 60);
-    var seconds = seconds - (hours * 3600) - (minutes * 60);
+    seconds = seconds - (hours * 3600) - (minutes * 60);
     if(minutes < 10){
       minutes = "0"+minutes;
     }
@@ -363,7 +363,7 @@
       seconds = "0"+seconds;
     }
     if(hours == 0){
-      hours   = "0"+hours;
+      // hours   = "0"+hours;
       return minutes+':'+seconds;
     }
     else if(hours < 10){
