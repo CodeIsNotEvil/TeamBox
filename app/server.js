@@ -246,7 +246,7 @@ function getEtherpadEntries() {
 
 function getEthercalcEntries() {
         var data = [];
-        
+
         data = syncExec("sudo bash /home/ubuntu/scripts/server_get_ethercalc.sh").stdout.split("\n");
 
         return data;

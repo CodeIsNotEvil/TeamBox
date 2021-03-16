@@ -1,7 +1,7 @@
 /*
 * Function to create PencilArray-Objects 
 */
-function PencilArray(obj, fileName){
+function PencilArray(obj, fileName) {
 	this.objArray = obj;
 	this.name = 'pencilarray';
 	this.fileName = fileName;
@@ -10,7 +10,7 @@ function PencilArray(obj, fileName){
 /*
 * Function to create PencilObj-Objects 
 */
-function PencilObj(x, y, v, xp, yp, col, l, fileName){
+function PencilObj(x, y, v, xp, yp, col, l, fileName) {
 	this.x = x; //mouseposx
 	this.y = y; //mousepos y
 	this.v = v; //thickness
@@ -25,14 +25,14 @@ function PencilObj(x, y, v, xp, yp, col, l, fileName){
 /*
 * Function to create LineObj-Objects 
 */
-function LineObj(x, y, v, xp, yp, col, l, fileName){
-	this.x = x; 
-	this.y = y; 
-	this.v = v; 
-	this.xp = xp; 
-	this.yp = yp; 
-	this.col = col; 
-	this.l = l; 
+function LineObj(x, y, v, xp, yp, col, l, fileName) {
+	this.x = x;
+	this.y = y;
+	this.v = v;
+	this.xp = xp;
+	this.yp = yp;
+	this.col = col;
+	this.l = l;
 	this.name = 'line';
 	this.fileName = fileName;
 }
@@ -40,7 +40,7 @@ function LineObj(x, y, v, xp, yp, col, l, fileName){
 /*
 * Function to create RectObj-Objects 
 */
-function RectObj(x, y, v, width, height, col, filled, l, fileName){
+function RectObj(x, y, v, width, height, col, filled, l, fileName) {
 	this.x = x; //startposx
 	this.y = y; //startposy
 	this.v = v; //thickness
@@ -56,7 +56,7 @@ function RectObj(x, y, v, width, height, col, filled, l, fileName){
 /*
 * Function to create CircleObj-Objects 
 */
-function CircleObj(x, y, v, width, height, col, filled, l, fileName){
+function CircleObj(x, y, v, width, height, col, filled, l, fileName) {
 	this.x = x; //startposx
 	this.y = y; //startposy
 	this.v = v; //thickness
@@ -72,13 +72,13 @@ function CircleObj(x, y, v, width, height, col, filled, l, fileName){
 /*
 * Function to create TextObj-Objects 
 */
-function TextObj(x, y, str, size, family, col, l, fileName){
-	this.x = x; 
-	this.y = y; 
+function TextObj(x, y, str, size, family, col, l, fileName) {
+	this.x = x;
+	this.y = y;
 	this.str = str;
 	this.size = size;
 	this.family = family;
-	this.col = col; 
+	this.col = col;
 	this.l = l;
 	this.name = 'text';
 	this.fileName = fileName;
@@ -87,10 +87,10 @@ function TextObj(x, y, str, size, family, col, l, fileName){
 /*
 * Function to create ImgObj-Objects 
 */
-function ImgObj(src, x, y, l, fileName){
+function ImgObj(src, x, y, l, fileName) {
 	this.src = src;
-	this.x = x; 
-	this.y = y; 
+	this.x = x;
+	this.y = y;
 	this.l = l;
 	this.name = 'img';
 	this.fileName = fileName;

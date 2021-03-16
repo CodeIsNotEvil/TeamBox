@@ -21,64 +21,54 @@ var fileName = "/menuHub/";
 var language = "";
 
 
-function initializePage()
-{
+function initializePage() {
         socket.emit("appUpdateUsers", username, fileName);
         socket.emit("appGetLanguage", username);
-	// LARA 02.08.2016
-//	usbCheck();
-	// LARA end
+        // LARA 02.08.2016
+        //	usbCheck();
+        // LARA end
 }
 initializePage();
 
 
-socket.on('appUpdateUsers', function(users, user, file)
-{
-  usersConnected = users;
+socket.on('appUpdateUsers', function (users, user, file) {
+        usersConnected = users;
 
 
-  $("#containerInfoRight").html("Online are: ");
-  $("#hubInfoMemberOnline").html("");
+        $("#containerInfoRight").html("Online are: ");
+        $("#hubInfoMemberOnline").html("");
 
-  for(var i = 0; i < usersConnected.length; i++)
-  {
-    if(usersConnected[i].mindMapValue002 == fileName)
-    {
-      if(usersConnected[i].userName == username)
-      {
-        $("#containerInfoRight").append("<font style='padding: 6px 3px 7px 3px; border-radius: 3px; color: #ffffff; background-color:"+usersConnected[i].userColor+";'>"+usersConnected[i].userName+"</font> ");
-      }
-      else
-      {
-        $("#containerInfoRight").append("<font style='padding: 3px 3px 4px 3px; border-radius: 3px; color: #ffffff; background-color:"+usersConnected[i].userColor+";'>"+usersConnected[i].userName+"</font> ");
-      }
-    }
-   $("#hubInfoMemberOnline").append("<font style='color:"+usersConnected[i].userColor+";'>"+usersConnected[i].userName+"</font> ");
-  }
+        for (var i = 0; i < usersConnected.length; i++) {
+                if (usersConnected[i].mindMapValue002 == fileName) {
+                        if (usersConnected[i].userName == username) {
+                                $("#containerInfoRight").append("<font style='padding: 6px 3px 7px 3px; border-radius: 3px; color: #ffffff; background-color:" + usersConnected[i].userColor + ";'>" + usersConnected[i].userName + "</font> ");
+                        }
+                        else {
+                                $("#containerInfoRight").append("<font style='padding: 3px 3px 4px 3px; border-radius: 3px; color: #ffffff; background-color:" + usersConnected[i].userColor + ";'>" + usersConnected[i].userName + "</font> ");
+                        }
+                }
+                $("#hubInfoMemberOnline").append("<font style='color:" + usersConnected[i].userColor + ";'>" + usersConnected[i].userName + "</font> ");
+        }
 });
 
-socket.on('appGetLanguage', function(value)
-{
+socket.on('appGetLanguage', function (value) {
         language = value;
         $("#selectLanguage").html(language);
 });
 
-socket.on('appExportMysqlStart', function()
-{
+socket.on('appExportMysqlStart', function () {
         $("#containerWarningExporting").show();
 });
-socket.on('appExportMysqlEnd', function()
-{
+socket.on('appExportMysqlEnd', function () {
         $("#containerWarningExporting").hide();
 });
 
 
-function showHideContentHub(value)
-{
-	// LARA 11.08.2016
+function showHideContentHub(value) {
+        // LARA 11.08.2016
         //if(value == "Info")
-        if(value == "Help")
-	// LARA end
+        if (value == "Help")
+        // LARA end
         {
                 $("#hubSettings").slideUp("fast");
                 $("#hubAppList").slideUp("fast");
@@ -88,8 +78,7 @@ function showHideContentHub(value)
                 $("#containerInfoSettings").css("background-color", "rgba(100,100,100,1)");
                 $("#containerInfoApps").css("background-color", "rgba(100,100,100,1)");
         }
-        else if(value == "Settings")
-        {
+        else if (value == "Settings") {
                 $("#hubInfo").slideUp("fast");
                 $("#hubAppList").slideUp("fast");
                 $("#hubSettings").slideDown("fast");
@@ -97,12 +86,11 @@ function showHideContentHub(value)
                 $("#containerInfoInfo").css("background-color", "rgba(100,100,100,1)");
                 $("#containerInfoSettings").css("background-color", "rgba(0,0,0,1)");
                 $("#containerInfoApps").css("background-color", "rgba(100,100,100,1)");
-		// LARA 02.08.2016
-//		usbCheck();
-		// LARA end
+                // LARA 02.08.2016
+                //		usbCheck();
+                // LARA end
         }
-        else if(value == "Apps")
-        {
+        else if (value == "Apps") {
                 $("#hubInfo").slideUp("fast");
                 $("#hubSettings").slideUp("fast");
                 $("#hubAppList").slideDown("fast");
@@ -116,10 +104,8 @@ function showHideContentHub(value)
 
 
 
-$(document).keyup(function(e)
-{
-        if(e.keyCode == 27)
-        {
+$(document).keyup(function (e) {
+        if (e.keyCode == 27) {
                 openCloseMenuLanguage("close");
         }
 });
@@ -127,52 +113,44 @@ $(document).keyup(function(e)
 //SET SERVER TIME. The server time is adjusted to
 //the clients time.
 
-function changeServertime()
-{
-        var date            = new Date();
-        var month           = (date.getUTCMonth() < 9 ? "0"+(date.getUTCMonth()+1) : (date.getUTCMonth()+1));
-        var day             = (date.getUTCDate() < 10 ? "0"+date.getUTCDate() : date.getUTCDate());
-        var dateDate        = date.getUTCFullYear() + "" + month + "" + day;
-        var dateTime        = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+function changeServertime() {
+        var date = new Date();
+        var month = (date.getUTCMonth() < 9 ? "0" + (date.getUTCMonth() + 1) : (date.getUTCMonth() + 1));
+        var day = (date.getUTCDate() < 10 ? "0" + date.getUTCDate() : date.getUTCDate());
+        var dateDate = date.getUTCFullYear() + "" + month + "" + day;
+        var dateTime = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
 
         socket.emit("appSynchronizeTime", dateDate, dateTime);
 }
 
 
-socket.on('appSynchronizeTime', function()
-{
-        $("#containerWarningServertime").show().delay(1000).fadeOut().animate({opacity: 1,}, 1500 );
+socket.on('appSynchronizeTime', function () {
+        $("#containerWarningServertime").show().delay(1000).fadeOut().animate({ opacity: 1, }, 1500);
 });
 
 
 // LARA 02.08.2016
-function usbCheck()
-{
-	socket.emit("usbCheckFree");
+function usbCheck() {
+        socket.emit("usbCheckFree");
 }
 // LARA end
 
 
 //OPENS THE LANGUAGE SELECT FIELD
-function openCloseMenuLanguage(value)
-{
-        if(value == "open")
-        {
+function openCloseMenuLanguage(value) {
+        if (value == "open") {
                 $("#containerLanguageSelect").show();
         }
-        else
-        {
+        else {
                 $("#containerLanguageSelect").hide();
         }
 }
 
-function changeLanguage(value)
-{
+function changeLanguage(value) {
         socket.emit("appChangeLanguage", username, value);
 }
 
-socket.on('appChangeLanguage', function(value)
-{
+socket.on('appChangeLanguage', function (value) {
         language = value;
         $("#selectLanguage").html(language);
         openCloseMenuLanguage("close");
@@ -183,27 +161,22 @@ socket.on('appChangeLanguage', function(value)
 //IF THERE ARE ANY ERRORS SAVING THE SYSTEM
 //SHOULD GIVE AN ERROR MESSAGE
 
-function openCloseMenuShutdown(value)
-{
-        if(value == "open")
-        {
+function openCloseMenuShutdown(value) {
+        if (value == "open") {
                 $("#containerWarningShutdownSelect").show();
         }
-        else
-        {
+        else {
                 $("#containerWarningShutdownSelect").hide();
         }
 
 }
 
 
-function shutdownPi()
-{
+function shutdownPi() {
         socket.emit("shutdownPi");
 }
 
-socket.on('shutdownPi', function()
-{
+socket.on('shutdownPi', function () {
         $(".containerWarningShutdown").show();
 });
 
@@ -211,7 +184,6 @@ socket.on('shutdownPi', function()
 //all other clients are being redirected after server
 //response.
 
-socket.on('appLogin01GroupCreated', function()
-{
+socket.on('appLogin01GroupCreated', function () {
         window.open("/login02.ejs", "_parent");
 });
