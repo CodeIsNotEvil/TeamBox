@@ -45,7 +45,7 @@ var connection = mysql.createConnection({
         host: 'localhost',
         user: 'TeamBox',
         database: 'TeamBox',
-        password: 'raspberry'
+        password: 'yourPassword'
 });
 
 // LARA 21.07.2016
@@ -169,7 +169,7 @@ function importMysql() {
 
                 connection.query("CREATE TABLE IF NOT EXISTS dataAppDraw (id int NOT NULL AUTO_INCREMENT, fileName VARCHAR(50), content LONGTEXT, PRIMARY KEY(id,fileName) )");
                 connection.query("ALTER TABLE dataAppDraw ADD UNIQUE (fileName)");
-                connection.query("CREATE TABLE IF NOT EXISTS dataAppMindmap (id int NOT NULL AUTO_INCREMENT, fileName VARCHAR(50), content VARCHAR(40000), PRIMARY KEY(id,fileName) )");
+                connection.query("CREATE TABLE IF NOT EXISTS dataAppMindmap (id int NOT NULL AUTO_INCREMENT, fileName VARCHAR(50), content TEXT, PRIMARY KEY(id,fileName) )");
                 connection.query("ALTER TABLE dataAppMindmap ADD UNIQUE (fileName)");
                 connection.query("CREATE TABLE IF NOT EXISTS userData (id int NOT NULL AUTO_INCREMENT, user VARCHAR(20), color VARCHAR(25), language VARCHAR(10), ip VARCHAR(20), PRIMARY KEY(id,user) )");
                 connection.query("ALTER TABLE userData ADD UNIQUE (user)");
@@ -259,7 +259,7 @@ function startUp() {
 startUp();
 
 http.listen(3000, function () {
-        console.log("===================");
+        console.log("\n===================");
         console.log("Server started ....");
         console.log("Port: 3000 ========");
 });
@@ -983,7 +983,7 @@ io.on('connection', function (socket) {
                 var data = image.replace(/^data:image\/\w+;base64,/, '');
                 var fs = require("fs");
                 var date = new Date();
-                imgFileName = "draw_" + date.getTime() + ".png";
+                let imgFileName = "draw_" + date.getTime() + ".png";
                 var path = "/var/www/html/app/drawings/" + imgFileName;
                 var path = "/var/www/html/app/drawings/draw_" + fileName + ".png";
                 fs.writeFile(path, data, { encoding: 'base64' }, function (err) {
@@ -1011,7 +1011,7 @@ function createString(fileName) {
                                         break;
                                 case 'pencilarray':
                                         var allObjects = allObj[i].objArray[0].x + "###" + allObj[i].objArray[0].y + "###" + allObj[i].objArray[0].v + "###" + allObj[i].objArray[0].xp + "###" + allObj[i].objArray[0].yp + "###" + allObj[i].objArray[0].col + "###" + allObj[i].objArray[0].l + "###" + allObj[i].objArray[0].name + "###" + allObj[i].objArray[0].fileName + "***";
-                                        for (j = 1; j < allObj[i].objArray.length; j++) {
+                                        for (let j = 1; j < allObj[i].objArray.length; j++) {
                                                 allObjects += "+++" + allObj[i].objArray[j].x + "###" + allObj[i].objArray[j].y + "###" + allObj[i].objArray[j].v + "###" + allObj[i].objArray[j].xp + "###" + allObj[i].objArray[j].yp + "###" + allObj[i].objArray[j].col + "###" + allObj[i].objArray[j].l + "###" + allObj[i].objArray[j].name + "###" + allObj[i].objArray[j].fileName + "***";
                                         }
                                         string = string + allObjects + "+++" + allObj[i].name + "###" + allObj[i].fileName + "***";

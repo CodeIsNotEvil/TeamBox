@@ -28,7 +28,7 @@ fi
 etherpad=$(netstat -lt | grep "9001")
 if [ -z "$etherpad" ]
 then
-	sudo -H -u ubuntu bash -c /home/ubuntu/etherpad-lite/bin/run.sh &
+	sudo -H -u ubuntu bash -c /home/ubuntu/etherpad-lite/bin/fastRun.sh &
 	printf "\nStarted etherpad"
 else
 	printf "\nEtherpad is already running"

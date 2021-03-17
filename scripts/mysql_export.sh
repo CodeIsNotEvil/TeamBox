@@ -26,7 +26,7 @@ group_conf="/home/ubuntu/files/group.conf"
 group_path=$(cat "$group_conf" | grep -oP "(?<=path\=).*")
 dump_path="${group_path}/.meta/"
 user="TeamBox"
-password="PasswdForTeamBox"
+password="yourPassword"
 
 exit_status=1
 

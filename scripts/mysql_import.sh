@@ -26,7 +26,7 @@
 group_conf="/home/ubuntu/files/group.conf"
 empty_db_path="/home/ubuntu/files/"
 user="TeamBox"
-password="raspberry"
+password="yourPassword"
 
 exit_status=1
 
