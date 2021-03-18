@@ -12,7 +12,7 @@
 group_conf="/home/pi/files/group.conf"
 group_path=$(cat "$group_conf" | grep -oP "(?<=path\=).*")
 user="TeamBox"
-password="PasswdForTeamBox"
+password="yourPassword"
 
 exit_status=1
 
