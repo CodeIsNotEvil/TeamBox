@@ -46,6 +46,27 @@ else
 	printf "\nEthercalc is already running"
 fi
 
+filebrowser_status=$(sudo service filebrowser status | grep -oP "(?<=Active:\ )[^\ ]*(?=\ )")
+	if [ "$filebrowser_status" = "active" ]
+	then
+		printf "\nFile Browser is Active"
+	else
+		printf "\nFile Browser is not Active start the service..."
+		sudo systemctl start filebrowser
+	fi
+
+# start WEKAN on port 2000
+wekan=$(netstat -lt | grep "2000")
+if [ -z "$wekan" ]
+then
+	# first change directory (to save dump in ubuntu's home)
+	cd /home/ubuntu/bundle
+	sudo -H -u ubuntu bash -c ./start-wekan.sh &
+	printf "\nStarted WEKAN"
+else
+	printf "\nWEKAN is already running"
+fi
+
 printf "\n\n"
 
 exit 0
