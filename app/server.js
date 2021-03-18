@@ -34,7 +34,9 @@ var syncExec = require('/usr/local/lib/node_modules/sync-exec');
 var asyncExec = require('child_process').exec;
 var app = express();
 var http = require('http').Server(app);
-var io = require('/usr/local/lib/node_modules/socket.io')(http);
+var io = require('/usr/local/lib/node_modules/socket.io')(http, {
+        allowEIO3: true // false by default
+      });
 var cheerio = require('/usr/local/lib/node_modules/cheerio'),
         $ = cheerio.load("<container id='-1'></container>");
 // LARA 21.07.2016
