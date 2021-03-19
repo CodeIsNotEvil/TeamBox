@@ -438,7 +438,6 @@ app.post('/login02.ejs', function (req, res) {
 });
 
 
-
 app.get("/", function (req, res) {
         if (!req.session.userName && !groupIsSelected) {
                 loadGroups();
@@ -451,8 +450,6 @@ app.get("/", function (req, res) {
                 return res.redirect("/hub.ejs");
         }
 });
-
-
 
 app.get("/login01.ejs", function (req, res) {
         if (!req.session.userName && !groupIsSelected) {
@@ -467,8 +464,6 @@ app.get("/login01.ejs", function (req, res) {
         }
 });
 
-
-
 app.get("/login02.ejs", function (req, res) {
         if (!req.session.userName && !groupIsSelected && group == "") {
                 return res.redirect("/login01.ejs");
@@ -481,8 +476,6 @@ app.get("/login02.ejs", function (req, res) {
         }
 });
 
-
-
 app.get("/hub.ejs", function (req, res) {
         if (req.session.userName) {
                 // LARA 02.08.2016
@@ -494,8 +487,6 @@ app.get("/hub.ejs", function (req, res) {
                 return res.redirect("/login01.ejs");
         }
 });
-
-
 
 app.get("/logout.ejs", function (req, res) {
         if (req.session.userName) {
@@ -540,11 +531,9 @@ app.get("/appDrawLoad.ejs", function (req, res) {
 
 });
 
-
 /**
  * function to render HTML and redirect to appDraw.ejs
  */
-
 app.get("/appDraw.ejs", function (req, res) {
         if (req.session.userName) {
                 var drawObjData = [];
@@ -561,22 +550,6 @@ app.get("/appDraw.ejs", function (req, res) {
                 return res.redirect("/login01.ejs");
         }
 });
-
-//NENA END
-
-
-app.get("/appEtherpadLoad.ejs", function (req, res) {
-        if (req.session.userName) {
-                var data = [];
-                data = getEtherpadEntries();
-
-                res.render(__dirname + "/appEtherpadLoad.ejs", { userName: req.session.userName, group: group, color: req.session.userColor, data: data });
-        }
-        else {
-                return res.redirect("/login01.ejs");
-        }
-});
-
 
 
 app.get("/appMindmapLoad.ejs", function (req, res) {
@@ -595,6 +568,27 @@ app.get("/appMindmapLoad.ejs", function (req, res) {
         }
 });
 
+app.get("/appMindmap.ejs", function (req, res) {
+        if (req.session.userName) {
+                res.render(__dirname + "/appMindmap.ejs", { userName: req.session.userName, group: group, color: req.session.userColor });
+        }
+        else {
+                return res.redirect("/login01.ejs");
+        }
+});
+
+
+app.get("/appEtherpadLoad.ejs", function (req, res) {
+        if (req.session.userName) {
+                var data = [];
+                data = getEtherpadEntries();
+
+                res.render(__dirname + "/appEtherpadLoad.ejs", { userName: req.session.userName, group: group, color: req.session.userColor, data: data });
+        }
+        else {
+                return res.redirect("/login01.ejs");
+        }
+});
 
 
 app.get("/appEthercalcLoad.ejs", function (req, res) {
@@ -608,18 +602,6 @@ app.get("/appEthercalcLoad.ejs", function (req, res) {
                 return res.redirect("/login01.ejs");
         }
 });
-
-
-
-app.get("/appMindmap.ejs", function (req, res) {
-        if (req.session.userName) {
-                res.render(__dirname + "/appMindmap.ejs", { userName: req.session.userName, group: group, color: req.session.userColor });
-        }
-        else {
-                return res.redirect("/login01.ejs");
-        }
-});
-
 
 //SOCKET IO
 
