@@ -10,7 +10,7 @@
 
 
 user="TeamBox"
-password="PasswdForTeamBox"
+password="yourPassword"
 #user="root"
 #password="TeamBoxNeedsSomeSQL!"
 
