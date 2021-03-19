@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# /home/pi/scripts/server_get_ethercalc.sh
+# /home/ubuntu/scripts/server_get_ethercalc.sh
 #
 #
 # This scripts gives all the calcs stored in the ethercalc dump.
@@ -9,9 +9,9 @@
 # Date: 15.06.2016
 
 
-dump_path="/home/pi/dump.json"
+dump_path="/home/ubuntu/dump.json"
 
-calcs=$(cat /home/pi/dump.json | grep -oP "(?<=chat\-)[^\"]*(?=\_formdata)")
+calcs=$(cat /home/ubuntu/dump.json | grep -oP "(?<=chat\-)[^\"]*(?=\_formdata)")
 
 echo "$calcs"
 
