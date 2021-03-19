@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# /home/pi/scripts/etherpad_export.sh
+# /home/ubuntu/scripts/etherpad_export.sh
 #
 # This scripts exports all the pads to a .txt on the usb storage device (into
 # /files/)
@@ -9,7 +9,7 @@
 # Date: 15.06.2016
 
 
-group_conf="/home/pi/files/group.conf"
+group_conf="/home/ubuntu/files/group.conf"
 group_path=$(cat "$group_conf" | grep -oP "(?<=path\=).*")
 user="TeamBox"
 password="yourPassword"
@@ -19,7 +19,7 @@ exit_status=1
 # check if the folder exists (& create the folder on usb storage device)
 # param1 : folder path
 new_folder(){
-        sudo bash /home/pi/scripts/new_folder.sh "$1"
+        sudo bash /home/ubuntu/scripts/new_folder.sh "$1"
         if [ "$?" = 1 ]
         then
                 exit 1

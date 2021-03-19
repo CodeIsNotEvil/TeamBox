@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# /home/pi/scripts/ethercalc_export.sh
+# /home/ubuntu/scripts/ethercalc_export.sh
 #
 # This scripts exports all the calc to a .xlsx on the usb storage device (into
 # /files/)
@@ -9,8 +9,8 @@
 # Date: 13.07.2016
 
 
-dump_path="/home/pi/dump.json"
-group_conf="/home/pi/files/group.conf"
+dump_path="/home/ubuntu/dump.json"
+group_conf="/home/ubuntu/files/group.conf"
 group_path=$(cat "$group_conf" | grep -oP "(?<=path\=).*")
 
 exit_status=1
@@ -19,7 +19,7 @@ exit_status=1
 # check if the folder exists (& create the folder on usb storage device)
 # param1 : folder path
 new_folder(){
-	sudo bash /home/pi/scripts/new_folder.sh "$1"
+	sudo bash /home/ubuntu/scripts/new_folder.sh "$1"
 	if [ "$?" = 1 ]
 	then
 		exit 1
@@ -48,7 +48,7 @@ new_folder "${group_path}/files/tables"
 
 if [ "$exit_status" = 0 ]
 then
-	calcs_str=$(cat /home/pi/dump.json | grep -oP "(?<=chat\-)[^\"]*(?=\_formdata)")
+	calcs_str=$(cat /home/ubuntu/dump.json | grep -oP "(?<=chat\-)[^\"]*(?=\_formdata)")
 IFS="
 "
         calcs_all=( $calcs_str )
