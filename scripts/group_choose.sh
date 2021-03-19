@@ -90,7 +90,7 @@ new_folder(){
         fi
 }
 
-# save group name to file /etc/hostapd/group
+# save group name to file group conf path /home/ubuntu/files/group.conf
 # param $1 : group name
 save_group(){
         if [ ! -e "$group_conf" ]
