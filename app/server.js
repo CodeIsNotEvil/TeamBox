@@ -39,11 +39,10 @@ var io = require('/usr/local/lib/node_modules/socket.io')(http, {
       });
 var cheerio = require('/usr/local/lib/node_modules/cheerio'),
         $ = cheerio.load("<container id='-1'></container>");
-// LARA 21.07.2016
 var crypto = require('crypto');
-// LARA end
 
-var connection = mysql.createConnection({
+//Mysql TeamBox setup
+var mysqlConnection = mysql.createConnection({
         host: 'localhost',
         user: 'TeamBox',
         database: 'TeamBox',
@@ -169,12 +168,12 @@ function importMysql() {
         if (isError == "" && isError != null) {
                 console.log("EXEC :: IMPORTMYSQL:\t\tSUCCESS");
 
-                connection.query("CREATE TABLE IF NOT EXISTS dataAppDraw (id int NOT NULL AUTO_INCREMENT, fileName VARCHAR(50), content LONGTEXT, PRIMARY KEY(id,fileName) )");
-                connection.query("ALTER TABLE dataAppDraw ADD UNIQUE (fileName)");
-                connection.query("CREATE TABLE IF NOT EXISTS dataAppMindmap (id int NOT NULL AUTO_INCREMENT, fileName VARCHAR(50), content TEXT, PRIMARY KEY(id,fileName) )");
-                connection.query("ALTER TABLE dataAppMindmap ADD UNIQUE (fileName)");
-                connection.query("CREATE TABLE IF NOT EXISTS userData (id int NOT NULL AUTO_INCREMENT, user VARCHAR(20), color VARCHAR(25), language VARCHAR(10), ip VARCHAR(20), PRIMARY KEY(id,user) )");
-                connection.query("ALTER TABLE userData ADD UNIQUE (user)");
+                mysqlConnection.query("CREATE TABLE IF NOT EXISTS dataAppDraw (id int NOT NULL AUTO_INCREMENT, fileName VARCHAR(50), content LONGTEXT, PRIMARY KEY(id,fileName) )");
+                mysqlConnection.query("ALTER TABLE dataAppDraw ADD UNIQUE (fileName)");
+                mysqlConnection.query("CREATE TABLE IF NOT EXISTS dataAppMindmap (id int NOT NULL AUTO_INCREMENT, fileName VARCHAR(50), content TEXT, PRIMARY KEY(id,fileName) )");
+                mysqlConnection.query("ALTER TABLE dataAppMindmap ADD UNIQUE (fileName)");
+                mysqlConnection.query("CREATE TABLE IF NOT EXISTS userData (id int NOT NULL AUTO_INCREMENT, user VARCHAR(20), color VARCHAR(25), language VARCHAR(10), ip VARCHAR(20), PRIMARY KEY(id,user) )");
+                mysqlConnection.query("ALTER TABLE userData ADD UNIQUE (user)");
                 groupIsSelected = true;
                 groupIsSelectedPi = true;
         }
@@ -255,8 +254,8 @@ function getEthercalcEntries() {
 }
 
 function startUp() {
-        connection.query("DROP TABLE IF EXISTS `dataAppMindmap`");
-        connection.query("DROP TABLE IF EXISTS `userData`");
+        mysqlConnection.query("DROP TABLE IF EXISTS `dataAppMindmap`");
+        mysqlConnection.query("DROP TABLE IF EXISTS `userData`");
 }
 startUp();
 
@@ -266,6 +265,9 @@ http.listen(80, function () {
         console.log("Port: 3000 ========");
 });
 
+/**
+ * Group login post.
+ */
 app.post('/login01.ejs', function (req, res) {
         var errorMessage = "";
 
@@ -304,7 +306,9 @@ app.post('/login01.ejs', function (req, res) {
 });
 
 
-
+/**
+ * User login post.
+ */
 app.post('/login02.ejs', function (req, res) {
         var nameIsInUse = false;
         var nameIsIllegal = false;
@@ -312,23 +316,28 @@ app.post('/login02.ejs', function (req, res) {
         var maxClientsReached = false;
         var errorMessage = "";
 
+        
         var replUserName = req.body.user.name.replace(/[^a-z0-9-_\s]/gi, '').replace(/\s+/g, "_").toLowerCase();
-        for (var i = 0; i < clients.length; i++) {
+        // Check if the choosen username is currently in use.
+        for (let i = 0; i < clients.length; i++) {
                 if (clients[i].userName == replUserName) {
                         nameIsInUse = true;
                 }
         }
 
-        for (var i = 0; i < illegalClients.length; i++) {
+        // Check if the choosen username is one of the illegal ones (admin, Teambox...).
+        for (let i = 0; i < illegalClients.length; i++) {
                 if (illegalClients[i].toLowerCase() == replUserName) {
                         nameIsIllegal = true;
                 }
         }
 
+        // Check if there are already the maximum number of users (currently 7).
         if (clients.length > 7) {
                 maxClientsReached = true;
         }
 
+        // Check if the username is empty or null, also assamles the error massage
         if (req.body.user.name == "" || req.body.user.name == null) {
                 errorMessage += "Please select a username.";
                 nameIsEmpty = true;
@@ -340,21 +349,27 @@ app.post('/login02.ejs', function (req, res) {
                 errorMessage += "This name is not available";
         }
         if (maxClientsReached) {
-                errorMessage = "Only 6 users can join a group.";
+                errorMessage = "Only 7 users can join a group.";
         }
 
+        // Send the error massage if there was a error during the username selection.
         if (nameIsEmpty || nameIsInUse || nameIsIllegal || maxClientsReached) {
                 res.end(errorMessage);
         }
         else if (!nameIsEmpty && !nameIsInUse && !nameIsIllegal && !maxClientsReached) {
+
                 var username = replUserName;
-                var ip = req.connection.remoteAddress.replace(/[f:]/g, '');
+                // Gets the users IPv4 adress and replaces the IPv6 part with an empty string
+                var ip = req.socket.remoteAddress.replace(/[f:]/g, '');
+                // Selects a random color for the user
                 var color = 'rgb(' + (50 + Math.floor(Math.random() * 156)) + ',' + (50 + Math.floor(Math.random() * 156)) + ',' + (50 + Math.floor(Math.random() * 156)) + ')';
 
-                connection.query("INSERT IGNORE INTO userData (user,color,language) VALUES ('" + username + "','" + color + "','ENG')");
-                connection.query("UPDATE userData SET ip = '" + ip + "'    WHERE user =  '" + username + "'    ");
+                // Writes the userdata to the TeamBox database
+                mysqlConnection.query("INSERT IGNORE INTO userData (user,color,language) VALUES ('" + username + "','" + color + "','ENG')");
+                mysqlConnection.query("UPDATE userData SET ip = '" + ip + "'    WHERE user =  '" + username + "'    ");
 
-                connection.query("SELECT * FROM userData WHERE user = '" + username + "' ", function (err, result, fields) {
+                // Create and save the session for this user 
+                mysqlConnection.query("SELECT * FROM userData WHERE user = '" + username + "' ", function (err, result, fields) {
                         req.session.userName = result[0].user.toLowerCase();
                         req.session.userColor = result[0].color;
                         req.session.userLanguage = result[0].language;
@@ -362,7 +377,6 @@ app.post('/login02.ejs', function (req, res) {
                         clients.push(new user(result[0].user.toLowerCase(), result[0].color, result[0].language));
                         res.end("loginSuccess");
                 });
-
                 // LARA 21.07.2016
                 // add user to collabtives database
                 /*
@@ -437,7 +451,9 @@ app.post('/login02.ejs', function (req, res) {
         }
 });
 
-
+/**
+ * Default route.
+ */
 app.get("/", function (req, res) {
         if (!req.session.userName && !groupIsSelected) {
                 loadGroups();
@@ -510,7 +526,7 @@ app.get("/appDrawLoad.ejs", function (req, res) {
 
                 var data = [];
 
-                connection.query("SELECT * FROM dataAppDraw", function (err, result) {
+                mysqlConnection.query("SELECT * FROM dataAppDraw", function (err, result) {
 
                         for (var i = 0; i < result.length; i++) {
 
@@ -538,7 +554,7 @@ app.get("/appDraw.ejs", function (req, res) {
         if (req.session.userName) {
                 var drawObjData = [];
                 var data = [];
-                connection.query("SELECT * FROM dataAppDraw", function (err, result) {
+                mysqlConnection.query("SELECT * FROM dataAppDraw", function (err, result) {
                         for (var i = 0; i < result.length; i++) {
                                 drawObjData.push(result[i].content);
                                 data.push(result[i].fileName);
@@ -556,7 +572,7 @@ app.get("/appMindmapLoad.ejs", function (req, res) {
         if (req.session.userName) {
                 var data = [];
 
-                connection.query("SELECT * FROM dataAppMindmap", function (err, result, fields) {
+                mysqlConnection.query("SELECT * FROM dataAppMindmap", function (err, result, fields) {
                         for (var i = 0; i < result.length; i++) {
                                 data.push(result[i].fileName);
                         }
@@ -700,7 +716,7 @@ io.on('connection', function (socket) {
         //in the object and sends back the response.
 
         socket.on('appChangeLanguage', function (user, value) {
-                connection.query("UPDATE userData SET language = '" + value + "'    WHERE user =  '" + user + "'    ");
+                mysqlConnection.query("UPDATE userData SET language = '" + value + "'    WHERE user =  '" + user + "'    ");
 
                 for (var i = 0; i < clients.length; i++) {
                         if (clients[i].userName == user) {
@@ -747,7 +763,7 @@ io.on('connection', function (socket) {
                 var content;
                 var newFile = false;
 
-                connection.query("SELECT * FROM dataAppMindmap WHERE fileName = '" + fileName + "' ", function (err, result, fields) {
+                mysqlConnection.query("SELECT * FROM dataAppMindmap WHERE fileName = '" + fileName + "' ", function (err, result, fields) {
                         if (result.length > 0) {
                                 content = "<data name='" + fileName + "'>" + result[0].content + "</data>";
                         }
@@ -914,10 +930,10 @@ io.on('connection', function (socket) {
         socket.on('appMindmapSave', function (image, fileName) {
                 var errorMessage = "";
 
-                connection.query("INSERT IGNORE INTO dataAppMindmap (fileName) VALUES ('" + fileName + "')", function (err, rows, fields) {
+                mysqlConnection.query("INSERT IGNORE INTO dataAppMindmap (fileName) VALUES ('" + fileName + "')", function (err, rows, fields) {
                         if (err) errorMessage += "Fehler beim Schreiben: SQL1<br>";
                 });
-                connection.query("UPDATE dataAppMindmap SET content = '" + $("data[name=" + fileName + "]").html() + "'    WHERE fileName =  '" + fileName + "'    ", function (err, rows, fields) {
+                mysqlConnection.query("UPDATE dataAppMindmap SET content = '" + $("data[name=" + fileName + "]").html() + "'    WHERE fileName =  '" + fileName + "'    ", function (err, rows, fields) {
                         if (err) errorMessage += "Fehler beim Schreiben: SQL2<br>";
                 });
 
@@ -956,7 +972,7 @@ io.on('connection', function (socket) {
                 function (fileName) {
                         socket.broadcast.emit('clear', fileName);
                         allObj.length = 0;
-                        connection.query("UPDATE dataAppDraw SET content = '' WHERE fileName =  '" + fileName + "'    ");
+                        mysqlConnection.query("UPDATE dataAppDraw SET content = '' WHERE fileName =  '" + fileName + "'    ");
                 }
         );
         /*
@@ -1018,8 +1034,8 @@ function createString(fileName) {
                         }
                 }
         }
-        connection.query("INSERT IGNORE INTO dataAppDraw (filename,content) VALUES ('" + fileName + "','" + string + "')");
-        connection.query("UPDATE dataAppDraw SET content = '" + string + "'    WHERE fileName =  '" + fileName + "'    ");
+        mysqlConnection.query("INSERT IGNORE INTO dataAppDraw (filename,content) VALUES ('" + fileName + "','" + string + "')");
+        mysqlConnection.query("UPDATE dataAppDraw SET content = '" + string + "'    WHERE fileName =  '" + fileName + "'    ");
 }
 //NENA END
 
