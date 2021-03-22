@@ -260,7 +260,7 @@ function startUp() {
 }
 startUp();
 
-http.listen(3000, function () {
+http.listen(80, function () {
         console.log("\n===================");
         console.log("Server started ....");
         console.log("Port: 3000 ========");
