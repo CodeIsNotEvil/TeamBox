@@ -1,4 +1,9 @@
+
+//Define Constants up here
 const PORT = 3000;
+const PATH_TO_GLOBAL_MODULES = '/usr/local/lib/node_modules/';
+const PATH_TO_BASH_SCRIPTS = __dirname + '/scripts/';
+const PATH_TO_VIEWS = __dirname + '/public/views';
 
 function user(cUserName, cUserColor, cUserlanguage) {
         this.userName = cUserName;
@@ -8,44 +13,25 @@ function user(cUserName, cUserColor, cUserlanguage) {
         this.settingsLanguage = cUserlanguage;
 }
 
-
-//initialization
-/*
-var express		= require('express');
-var bodyParser		= require('body-parser');
-var cookieParser	= require('cookie-parser');
-var expressSession	= require('express-session');
-var mysql               = require('mysql');
-var syncExec            = require('sync-exec');
-var asyncExec           = require('child-process-promise').exec;
-var app 		= express();
-var http                = require('http').Server(app);
-var io                  = require('socket.io')(http);
-var cheerio             = require('cheerio'),
-    $ = cheerio.load("<container id='-1'></container>");
-*/
-
-// initialization PI
-
-const fetch = require('node-fetch');
-var express = require('express');
-var bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser');
-var expressSession = require('/usr/local/lib/node_modules/express-session');
-var mysql = require('/usr/local/lib/node_modules/mysql');
-var syncExec = require('/usr/local/lib/node_modules/sync-exec');
+const fetch = require(PATH_TO_GLOBAL_MODULES + 'node-fetch');
+var express = require(PATH_TO_GLOBAL_MODULES + 'express');
+var bodyParser = require(PATH_TO_GLOBAL_MODULES + 'body-parser');
+var cookieParser = require(PATH_TO_GLOBAL_MODULES + 'cookie-parser');
+var expressSession = require(PATH_TO_GLOBAL_MODULES + 'express-session');
+var mysql = require(PATH_TO_GLOBAL_MODULES + 'mysql');
+var syncExec = require(PATH_TO_GLOBAL_MODULES + 'sync-exec');
 var asyncExec = require('child_process').exec;
 var app = express();
 var http = require('http').Server(app);
-var io = require('/usr/local/lib/node_modules/socket.io')(http, {
+var io = require(PATH_TO_GLOBAL_MODULES + 'socket.io')(http, {
         allowEIO3: true // false by default
       });
-var cheerio = require('/usr/local/lib/node_modules/cheerio'),
+var cheerio = require(PATH_TO_GLOBAL_MODULES + 'cheerio'),
         $ = cheerio.load("<container id='-1'></container>");
 var crypto = require('crypto');
-const { MongoClient } = require("mongodb");
+const { MongoClient } = require(PATH_TO_GLOBAL_MODULES + "mongodb");
 
-//MongoDB Wekan setup
+//Setup MongoDB Wekan database connection
 const uri = "mongodb://localhost:27017/wekan";
 const client = new MongoClient(uri, {
         useNewUrlParser: true,
@@ -75,19 +61,6 @@ var mysqlConnection = mysql.createConnection({
         password: 'yourPassword'
 });
 
-// LARA 21.07.2016
-// connection for collabtive
-// Lukas 15.03.2021 i removed it cause we now use Wekan instead
-/*
-var collabtiveConnection      = mysql.createConnection({
-    host     : 'localhost',
-    user     : 'TeamBox',
-    database : 'collabtive',
-    password : 'PasswdForTeamBox'
-});
-*/
-// LARA end
-
 var group = "";
 var groupIsFromUsb = false;
 var groupIsSelected = false;
@@ -103,13 +76,13 @@ illegalClients.push("root");
 illegalClients.push("teambox");
 
 app.set("view engine", "ejs");
-app.use("/styles", express.static(__dirname + "/styles"));
-app.use("/_jquery", express.static(__dirname + '/_jquery'));
+app.use("/styles", express.static(__dirname + "/public/styles"));
+app.use("/_jquery", express.static(__dirname + '/public/_jquery'));
 app.use("/p5", express.static(__dirname + '/p5'));
-app.use("/screenshots", express.static(__dirname + '/screenshots'));
-app.use("/drawings", express.static(__dirname + '/drawings'));
-app.use("/scripts", express.static(__dirname + '/scripts'));
-app.use("/_socket.io", express.static(__dirname + '/_socket.io'));
+app.use("/screenshots", express.static(__dirname + '/public/screenshots'));
+app.use("/drawings", express.static(__dirname + '/public/drawings'));
+app.use("/scripts", express.static(__dirname + '/public/scripts'));
+app.use("/_socket.io", express.static(__dirname + 'public/_socket.io'));
 app.use(bodyParser.urlencoded(
         {
                 extended: true
@@ -126,7 +99,6 @@ app.use(expressSession({
 // LARA 02.08.2016
 var usbString = "";
 // LARA end
-
 
 
 setInterval(function () {
@@ -164,7 +136,7 @@ connectToWekanAPI();
 
 // check the usb's size as well as free, used & TeamBox-used space
 function usbCheckFree() {
-        var usbValues = syncExec("bash /home/ubuntu/scripts/usb_check_free.sh").stdout.split("\n");
+        var usbValues = syncExec("bash " + PATH_TO_BASH_SCRIPTS + "usb_check_free.sh").stdout.split("\n");
         var usbSize = usbValues[0].split(":")[1].trim();
         var usbFree = usbValues[1].split(":")[1].split("=")[0].trim();
         var usbFreePerc = usbValues[1].split(":")[1].split("=")[1].trim();
@@ -202,7 +174,7 @@ function synchronizeTime(dateDate, dateTime) {
 
 
 function shutdownPi() {
-        var isError = syncExec("/home/ubuntu/scripts/group_delete.sh && sudo shutdown now").stderr;
+        var isError = syncExec(PATH_TO_BASH_SCRIPTS + "group_delete.sh && sudo shutdown now").stderr;
 
         if (isError == "" && isError != null) {
                 console.log("EXEC :: SHUTDOWNPI:\t\tSUCCESS");
@@ -213,7 +185,7 @@ function shutdownPi() {
 }
 
 function importMysql() {
-        var isError = syncExec("sudo bash /home/ubuntu/scripts/mysql_import.sh").stderr;
+        var isError = syncExec("sudo bash " + PATH_TO_BASH_SCRIPTS + "mysql_import.sh").stderr;
 
         if (isError == "" && isError != null) {
                 console.log("EXEC :: IMPORTMYSQL:\t\tSUCCESS");
@@ -236,7 +208,7 @@ function importMysql() {
 function exportMysql() {
         io.sockets.emit('appExportMysqlStart');
 
-        var isError = syncExec("sudo bash /home/ubuntu/scripts/mysql_export.sh").stderr;
+        var isError = syncExec("sudo bash " + PATH_TO_BASH_SCRIPTS + "mysql_export.sh").stderr;
 
         if (isError == "" && isError != null) {
                 console.log("EXEC :: EXPORTMYSQL:\t\tSUCCESS");
@@ -250,19 +222,19 @@ function exportMysql() {
 
 function exportMysqlAsync() {
         console.log("ASYNC EXEC");
-        asyncExec("sudo bash /home/ubuntu/scripts/mysql_export.sh");
+        asyncExec("sudo bash " + PATH_TO_BASH_SCRIPTS + "mysql_export.sh");
 }
 
 
 function loadGroups() {
         groups = [];
 
-        groups = syncExec("bash /home/ubuntu/scripts/group_show.sh").stdout.split("\n");
+        groups = syncExec("bash " + PATH_TO_BASH_SCRIPTS + "group_show.sh").stdout.split("\n");
 }
 
 
 function chooseGroup() {
-        var isError = syncExec("sudo bash /home/ubuntu/scripts/group_choose.sh '" + group + "'").stderr;
+        var isError = syncExec("sudo bash " + PATH_TO_BASH_SCRIPTS + "group_choose.sh '" + group + "'").stderr;
 
         if (isError == "" && isError != null) {
                 console.log("EXEC :: CHOOESEGROUP:\t\tSUCCESS");
@@ -274,7 +246,7 @@ function chooseGroup() {
 
 
 function createGroup() {
-        var isError = syncExec("sudo bash /home/ubuntu/scripts/group_create.sh '" + group + "'").stderr;
+        var isError = syncExec("sudo bash " + PATH_TO_BASH_SCRIPTS + "group_create.sh '" + group + "'").stderr;
 
         if (isError == "" && isError != null) {
                 console.log("EXEC :: CREATEGROUP:\t\tSUCCESS");
@@ -287,7 +259,7 @@ function createGroup() {
 function getEtherpadEntries() {
         var data = [];
 
-        data = syncExec("sudo bash /home/ubuntu/scripts/server_get_etherpad.sh").stdout.split("\n");
+        data = syncExec("sudo bash " + PATH_TO_BASH_SCRIPTS + "server_get_etherpad.sh").stdout.split("\n");
         if (data[0].indexOf("server_get_etherpad.sh") >= 0) {
                 data.splice(0, 1);
         }
@@ -298,7 +270,7 @@ function getEtherpadEntries() {
 function getEthercalcEntries() {
         var data = [];
 
-        data = syncExec("sudo bash /home/ubuntu/scripts/server_get_ethercalc.sh").stdout.split("\n");
+        data = syncExec("sudo bash " + PATH_TO_BASH_SCRIPTS + "server_get_ethercalc.sh").stdout.split("\n");
 
         return data;
 }
@@ -507,7 +479,7 @@ app.post('/login02.ejs', function (req, res) {
 app.get("/", function (req, res) {
         if (!req.session.userName && !groupIsSelected) {
                 loadGroups();
-                res.render(__dirname + "/login01.ejs", { groups: groups });
+                res.render(PATH_TO_VIEWS + "/login01.ejs", { groups: groups });
         }
         else if (!req.session.userName && group != "") {
                 return res.redirect("/login02.ejs");
@@ -520,7 +492,7 @@ app.get("/", function (req, res) {
 app.get("/login01.ejs", function (req, res) {
         if (!req.session.userName && !groupIsSelected) {
                 loadGroups();
-                res.render(__dirname + "/login01.ejs", { groups: groups });
+                res.render(PATH_TO_VIEWS + "/login01.ejs", { groups: groups });
         }
         else if (!req.session.userName && group != "") {
                 return res.redirect("/login02.ejs");
@@ -535,7 +507,7 @@ app.get("/login02.ejs", function (req, res) {
                 return res.redirect("/login01.ejs");
         }
         else if (!req.session.userName && groupIsSelected && group != "") {
-                res.render(__dirname + "/login02.ejs", { group: group });
+                res.render(PATH_TO_VIEWS + "/login02.ejs", { group: group });
         }
         else {
                 return res.redirect("/hub.ejs");
@@ -546,7 +518,7 @@ app.get("/hub.ejs", function (req, res) {
         if (req.session.userName) {
                 // LARA 02.08.2016
                 usbString = usbCheckFree();
-                res.render(__dirname + "/hub.ejs", { userName: req.session.userName, group: group, color: req.session.userColor, usbString: usbString });
+                res.render(PATH_TO_VIEWS + "/hub.ejs", { userName: req.session.userName, group: group, color: req.session.userColor, usbString: usbString });
                 // LARA end
         }
         else {
@@ -562,10 +534,10 @@ app.get("/logout.ejs", function (req, res) {
                         }
                 }
                 req.session.destroy();
-                res.render(__dirname + "/logout.ejs");
+                res.render(PATH_TO_VIEWS + "/logout.ejs");
         }
         else {
-                return res.redirect("/login01.ejs");
+                return res.redirect(PATH_TO_VIEWS + "/login01.ejs");
         }
 });
 
@@ -584,14 +556,14 @@ app.get("/appDrawLoad.ejs", function (req, res) {
 
                         }
 
-                        res.render(__dirname + "/appDrawLoad.ejs", { userName: req.session.userName, group: group, color: req.session.userColor, data: data });
+                        res.render(PATH_TO_VIEWS + "/appDrawLoad.ejs", { userName: req.session.userName, group: group, color: req.session.userColor, data: data });
 
                 });
 
         }
         else {
 
-                return res.redirect("/login01.ejs");
+                return res.redirect(PATH_TO_VIEWS + "/login01.ejs");
 
         }
 
@@ -609,11 +581,11 @@ app.get("/appDraw.ejs", function (req, res) {
                                 drawObjData.push(result[i].content);
                                 data.push(result[i].fileName);
                         }
-                        res.render(__dirname + "/appDraw.ejs", { userName: req.session.userName, group: group, color: req.session.userColor, drawObjData: drawObjData, data: data });
+                        res.render(PATH_TO_VIEWS + "/appDraw.ejs", { userName: req.session.userName, group: group, color: req.session.userColor, drawObjData: drawObjData, data: data });
                 });
         }
         else {
-                return res.redirect("/login01.ejs");
+                return res.redirect(PATH_TO_VIEWS + "/login01.ejs");
         }
 });
 
@@ -626,20 +598,20 @@ app.get("/appMindmapLoad.ejs", function (req, res) {
                         for (var i = 0; i < result.length; i++) {
                                 data.push(result[i].fileName);
                         }
-                        res.render(__dirname + "/appMindmapLoad.ejs", { userName: req.session.userName, group: group, color: req.session.userColor, data: data });
+                        res.render(PATH_TO_VIEWS + "/appMindmapLoad.ejs", { userName: req.session.userName, group: group, color: req.session.userColor, data: data });
                 });
         }
         else {
-                return res.redirect("/login01.ejs");
+                return res.redirect(PATH_TO_VIEWS + "/login01.ejs");
         }
 });
 
 app.get("/appMindmap.ejs", function (req, res) {
         if (req.session.userName) {
-                res.render(__dirname + "/appMindmap.ejs", { userName: req.session.userName, group: group, color: req.session.userColor });
+                res.render(PATH_TO_VIEWS + "/appMindmap.ejs", { userName: req.session.userName, group: group, color: req.session.userColor });
         }
         else {
-                return res.redirect("/login01.ejs");
+                return res.redirect(PATH_TO_VIEWS + "/login01.ejs");
         }
 });
 
@@ -649,10 +621,10 @@ app.get("/appEtherpadLoad.ejs", function (req, res) {
                 var data = [];
                 data = getEtherpadEntries();
 
-                res.render(__dirname + "/appEtherpadLoad.ejs", { userName: req.session.userName, group: group, color: req.session.userColor, data: data });
+                res.render(PATH_TO_VIEWS + "/appEtherpadLoad.ejs", { userName: req.session.userName, group: group, color: req.session.userColor, data: data });
         }
         else {
-                return res.redirect("/login01.ejs");
+                return res.redirect(PATH_TO_VIEWS + "/login01.ejs");
         }
 });
 
@@ -662,19 +634,19 @@ app.get("/appEthercalcLoad.ejs", function (req, res) {
                 var data = [];
                 data = getEthercalcEntries();
 
-                res.render(__dirname + "/appEthercalcLoad.ejs", { userName: req.session.userName, group: group, color: req.session.userColor, data: data });
+                res.render(PATH_TO_VIEWS + "/appEthercalcLoad.ejs", { userName: req.session.userName, group: group, color: req.session.userColor, data: data });
         }
         else {
-                return res.redirect("/login01.ejs");
+                return res.redirect(PATH_TO_VIEWS + "/login01.ejs");
         }
 });
 
 app.get("/wekanLoad.ejs", function (req, res) {
         if (req.session.userName) {
-                res.render(__dirname + "/wekanLoad.ejs", { userName: req.session.userName, group: group, color: req.session.userColor});
+                res.render(PATH_TO_VIEWS + "/wekanLoad.ejs", { userName: req.session.userName, group: group, color: req.session.userColor});
         }
         else {
-                return res.redirect("/login01.ejs");
+                return res.redirect(PATH_TO_VIEWS + "/login01.ejs");
         }
 });
 

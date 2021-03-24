@@ -1,0 +1,34 @@
+<%- include('header'); -%>
+  <body>
+    <div id="logo01">
+        <div style="margin: 0px auto 0px auto; width: 130px;">
+          <div style="float: left; padding: 0px 2px 0px 0px; color: rgba(150,150,150,1);">TeamB</div>
+          <div id="loadingIconNoLoad"></div>
+          <div id="loadingIcon"></div>
+          <div style="float: left; padding: 0px 0px 0px 2px; color: rgba(150,150,150,1);">x</div>
+          <div class="clear"></div>
+        </div>
+    </div>
+    <div id="containerLogin">
+      <div id="loginNoticePlaceholder">
+        <div id="loginNotice" class="loginNoticeError"></div>
+      </div>
+      <div id="loginGroupInfo">Your group: <b><%= group %></b></div>
+      <form id="loginForm" method="post"  action="/login02.ejs" autocomplete="off">
+        <input id="inputUsername" name="user[name]" class="ease" type="text" placeholder="your name"/>
+        <input id="inputSubmitUsername" class="ease" type="submit" value="continue"/>
+      </form>
+    </div>
+    <div id="containerWarningShutdown" class="containerWarningShutdown">
+            <div class="containerWarningMessage">PI was shutdown</div>
+    </div>
+    <div id="containerWarningServertime" class="containerWarningServertime">
+      <div class="containerWarningMessage">Servertime was set</div>
+    </div>
+    <div id="containerWarningExporting" class="containerWarningExporting">
+    </div>
+    <div id="containerWarningImporting" class="containerWarningImporting">
+    </div>
+    <script src="../scripts/login02.js"></script>
+  </body>
+</html>
