@@ -1,3 +1,5 @@
+const PORT = 3000;
+
 function user(cUserName, cUserColor, cUserlanguage) {
         this.userName = cUserName;
         this.userColor = cUserColor;
@@ -25,6 +27,7 @@ var cheerio             = require('cheerio'),
 
 // initialization PI
 
+const fetch = require('node-fetch');
 var express = require('express');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
@@ -133,6 +136,30 @@ setInterval(function () {
 }, 120000);
 
 
+function connectToWekanAPI(){
+        const inputBody = {
+                "username": "admin",
+                "password": "admin123"
+              };
+              const headers = {
+                'Content-Type':'application/x-www-form-urlencoded',
+                'Accept':'*/*'
+              };
+              
+              fetch('http://teambox.local:2000/users/login',
+              {
+                method: 'POST',
+                body: JSON.stringify(inputBody),
+                headers: headers
+              })
+              .then(function(res) {
+                  return res.json();
+              }).then(function(body) {
+                  console.log(body);
+              });
+}
+
+connectToWekanAPI();
 // LARA 22.07.20016 // 02.08.2016
 
 // check the usb's size as well as free, used & TeamBox-used space
@@ -282,10 +309,10 @@ function startUp() {
 }
 startUp();
 
-http.listen(80, function () {
+http.listen(PORT, function () {
         console.log("\n===================");
         console.log("Server started ....");
-        console.log("Port: 3000 ========");
+        console.log("Port: " + PORT + " ========");
 });
 
 /**
@@ -636,6 +663,15 @@ app.get("/appEthercalcLoad.ejs", function (req, res) {
                 data = getEthercalcEntries();
 
                 res.render(__dirname + "/appEthercalcLoad.ejs", { userName: req.session.userName, group: group, color: req.session.userColor, data: data });
+        }
+        else {
+                return res.redirect("/login01.ejs");
+        }
+});
+
+app.get("/wekanLoad.ejs", function (req, res) {
+        if (req.session.userName) {
+                res.render(__dirname + "/wekanLoad.ejs", { userName: req.session.userName, group: group, color: req.session.userColor});
         }
         else {
                 return res.redirect("/login01.ejs");
