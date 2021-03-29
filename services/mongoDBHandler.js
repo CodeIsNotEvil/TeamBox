@@ -17,11 +17,11 @@ const groupHandler = require("./groupHandler");
   }
 */
 function importEmptyWekanDB() {
-  let error = SYNC_EXEC("sudo bash mongorestore --db=wekan --out=/home/ubuntu/files").stderr;
+  let error = SYNC_EXEC("sudo bash mongorestore /home/ubuntu/files").stderr;
   console.error(error);
 }
 function importGroupWekanDB() {
-  let error = SYNC_EXEC("sudo bash mongorestore --db=wekan --out=/media/USB-TeamBox/TeamBox/" + groupHandler.group + "/.meta/").stderr;
+  let error = SYNC_EXEC("sudo bash mongorestore /media/USB-TeamBox/TeamBox/" + groupHandler.group + "/.meta/").stderr;
   console.error(error);
 }
 function exportWekanDB() {
