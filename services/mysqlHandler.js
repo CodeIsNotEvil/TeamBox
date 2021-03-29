@@ -54,24 +54,46 @@ function exportMysql() {
         return false;
     }
 }
-
+/**
+ * Exports the MySQL Databases with the help of the mysql_export.sh script.
+ */
 function exportMysqlAsync() {
     console.log("ASYNC EXEC");
     asyncExec("sudo bash " + PATH_TO_BASH_SCRIPTS + "mysql_export.sh");
 }
-
+/**
+ * Drops the dataAppMindmap and userData Tables from the MySQL Databases. 
+ */
 function startUp() {
     mysqlConnection.query("DROP TABLE IF EXISTS `dataAppMindmap`");
     mysqlConnection.query("DROP TABLE IF EXISTS `userData`");
 }
 
+/**
+ * Creates the user with his name color and ip in the MySQL Database.
+ * @param {String} username The name of the current user
+ * @param {String} color The color of the current user
+ * @param {String} ip The IP-Adrress of the current user
+ */
 function writeUserdata(username, color, ip) {
     mysqlConnection.query("INSERT IGNORE INTO userData (user,color,language) VALUES ('" + username + "','" + color + "','ENG')");
     mysqlConnection.query("UPDATE userData SET ip = '" + ip + "'    WHERE user =  '" + username + "'    ");
 }
-
+/**
+ * Gets the username from userData and passes it to the saveUser function
+ * @param {String} username The name of the user
+ * @param {function} saveUser callback function with the way to save the user
+ */
 function createAndSaveUserSession(username, saveUser) {
     mysqlConnection.query("SELECT * FROM userData WHERE user = '" + username + "' ", saveUser);
+}
+/**
+ * 
+ * @param {String} user The name of the user
+ * @param {String} value The Language Selector ENG or GER
+ */
+function updateUserLanguage(user, value) {
+    mysqlConnection.query("UPDATE userData SET language = '" + value + "'    WHERE user =  '" + user + "'    ");
 }
 
 function getDrawData() {
@@ -104,10 +126,6 @@ function getMindmapData() {
 
     });
     return data;
-}
-
-function updateUserLanguage(user, value) {
-    mysqlConnection.query("UPDATE userData SET language = '" + value + "'    WHERE user =  '" + user + "'    ");
 }
 
 function saveDataDrawStringToDB(string, fileName) {
