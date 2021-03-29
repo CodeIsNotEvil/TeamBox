@@ -1,10 +1,11 @@
-const synchronizeTime = require('../services/syncHandler');
-const { saveDataDrawStringToDB, updateUserLanguage, getMindMapContentFromDB, writeMindmap, exportMysql } = require("./mysqlHandler");
+const { exportData, synchronizeTime } = require('../services/syncHandler');
+const { saveDataDrawStringToDB, updateUserLanguage, getMindMapContentFromDB, writeMindmap } = require("./mysqlHandler");
 const { PATH_TO_GLOBAL_MODULES } = require("../config/server");
 const { JSDOM } = require(PATH_TO_GLOBAL_MODULES + 'jsdom');
 const { window } = new JSDOM("");
 const $ = require("../_jquery/jquery-1.12.3")(window);
 const Group = require('./Group');
+const { shutdownPi } = require('./piHeandler');
 
 //SOCKET IO
 function socketHandler(app, io) {
@@ -15,10 +16,9 @@ function socketHandler(app, io) {
                 //Here should be an error message as well if the export fails
 
                 socket.on("shutdownPi", function () {
-                        if(exportMysql()){
-                                Group.mysqlIsImported = false;
-                        }
-                        //exportMysql();
+                        io.sockets.emit('appExportMysqlStart');
+                        exportData();
+                        io.sockets.emit('appExportMysqlEnd');
                         io.sockets.emit('shutdownPi');
                         shutdownPi();
                 });

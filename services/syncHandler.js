@@ -1,8 +1,29 @@
 const { PATH_TO_GLOBAL_MODULES } = require("../config/server");
-const { exportMysqlAsync } = require("./mysqlHandler");
+const { exportMysqlAsync, exportMysql } = require("./mysqlHandler");
 const syncExec = require(PATH_TO_GLOBAL_MODULES + 'sync-exec');
 const Group = require('./Group');
+const { exportWekanDB } = require("./mongoDBHandler");
 
+/**
+ * Exports the Groups Databases Syncron
+ * This will be used before system shutdown to export the latest Data.
+ * @returns {boolean} wether the export were successfull or not.
+ */
+function exportData() {
+        if (!exportMysql()) {
+                console.error("MySQL DBs could not be exported.");
+                return false;
+        }
+        if (!exportWekanDB()) {
+                console.error("Wekan DB could not be exported.");
+                return false;
+        }
+        return true;
+}
+
+/**
+ * Exports the MySQL Databases asyncron.
+ */
 function exportAsync() {
         setInterval(function () {
                 if (Group.mysqlIsImported == true) {
@@ -11,8 +32,11 @@ function exportAsync() {
         }, 120000);
 }
 
-
-// synchronize pi's server time by getting is from the first client who creates the group
+/**
+ * Synchronize pi's server time by getting is from the first client who creates the group
+ * @param {Date} dateDate The actual Date.
+ * @param {Date} dateTime The actual Time.
+ */
 function synchronizeTime(dateDate, dateTime) {
         var success = syncExec("sudo date +%Y%m%d -s '" + dateDate + "'");
 
@@ -33,5 +57,8 @@ function synchronizeTime(dateDate, dateTime) {
         }
 }
 
-module.exports = synchronizeTime;
-module.exports = exportAsync;
+module.exports = {
+        exportData,
+        exportAsync,
+        synchronizeTime
+};

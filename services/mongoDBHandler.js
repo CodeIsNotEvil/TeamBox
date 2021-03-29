@@ -6,7 +6,7 @@ const fs = require('fs');
 /**
  * Checks if the Selected Group has already a wekan database,
  * wich should be stored on the USB Stick at the folder of that Group
- * @returns true if the group has a wekan database and false if not.
+ * @returns {boolean} true if the group has a wekan database and false if not.
  */
 function hasSelectedGroupWekanDB() {
   try {
@@ -61,14 +61,18 @@ function importGroupWekanDB() {
 }
 
 /**
- * Exports the Group specific Database to the USB folder
+ * Exports the Group specific Database to the USB folder.
+ * @returns {boolean} Wether it exported successfully or not.
  */
 function exportWekanDB() {
   let error = SYNC_EXEC("sudo mongodump --db=wekan --out=/media/USB-TeamBox/TeamBox/" + Group.group + "/.meta/").stderr;
   if (error == "") {
     Group.wekanDBIsImported = false;
+    console.log("Wekan Database was exportted Successfully.")
+    return true;
   } else {
     console.error(error);
+    return false;
   }
 }
 

@@ -1,7 +1,7 @@
 const { PATH_TO_GLOBAL_MODULES, PATH_TO_BASH_SCRIPTS } = require('../config/server');
 const mysql = require(PATH_TO_GLOBAL_MODULES + 'mysql');
 const asyncExec = require('child_process').exec;
-
+const Group = require('./Group');
 const user = require('../models/MySQLUser');
 
 const runScript = require('./runScripts');
@@ -40,17 +40,18 @@ function importMysql() {
 }
 
 function exportMysql() {
-    io.sockets.emit('appExportMysqlStart');
+    //io.sockets.emit('appExportMysqlStart');
 
     var isError = runScript("mysql_export.sh", true, true);
 
     if (isError == "" && isError != null) {
         console.log("EXEC :: EXPORTMYSQL:\t\tSUCCESS");
-        io.sockets.emit('appExportMysqlEnd');
+        //io.sockets.emit('appExportMysqlEnd');
+        Group.mysqlIsImported = false;
         return true;
     } else {
         console.log("EXEC :: EXPORTMYSQL:\t\tERROR: \n" + isError);
-        io.sockets.emit('appExportMysqlEnd');
+        //io.sockets.emit('appExportMysqlEnd');
         return false;
     }
 }
