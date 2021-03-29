@@ -1,0 +1,155 @@
+<%- include('header'); -%>
+  <body oncontextmenu="return false;">
+    <div style="display: none;" id="content" order="-1"></div>
+    <div id="sidebar">
+      <div class="sidebarContainer">
+        <div id="menuItemGroup">
+          <%= group %>
+        </div>
+        <div id="menuItemName" style="font-family: teamBoxFontBold; background-color: <%=color %>;">
+          <%= username %>
+        </div>
+        <div class="clear"></div>
+	<!-- LARA 22.07.2016 -->
+	<!--
+        <div class="sidebarItem" onClick="showHideItem(2);">
+          <div style="float: left; padding: 0px 0px 0px 10px;">Main Menu</div>
+          <div id="sidebarItem2" class="transform"></div>
+          <div class="clear"></div>
+        </div>
+        <div id="sidebarItemFocus2">
+          <div class="itemMenu" onClick="saveData();">Save Image (USB)</div>
+          <div class="itemMenu" onClick="saveScreenshot();">Download Image</div>
+          <a href="hub.ejs">
+            <div class="itemMenu">back to Main Menu</div>
+          </a>
+        </div>
+	-->
+        <div id="sidebarItemMenu" style="background-color: rgb(239, 239, 239);">
+          <a href="hub.ejs">
+            <div class="itemMenu">Home</div>
+          </a>
+          <div class="itemMenu" onClick="saveScreenshot();">Download Image</div>
+          <div class="itemMenu" onClick="saveData();">Save to USB</div>
+        </div>
+	<!-- LARA end -->
+      </div>
+      <div class="sidebarContainer">
+        <div id="nodeMenu">
+          <div id="nodeAddRoot" onClick="createNode('root');">New Root</div>
+        </div>
+      </div>
+      <div id="sidebarItemPlaceholder">
+        <div style="padding: 0px 0px 0px 10px;">Select Node to edit</div>
+      </div>
+
+      <div id="sidebarElementEdit" class="sidebarContainer">
+        <div class="sidebarItem" style=" background-image: url('styles/media/edit.png'); background-repeat: no-repeat; background-position: 5px 50%; background-size: 35px 35px;" onClick="showHideItem(0);">
+          <div id="sidebarItem0Header" style="float: left; padding: 0px 0px 0px 35px;">Edit Node</div>
+          <div id="sidebarItem0" class="transform"></div>
+          <div class="clear"></div>
+        </div>
+        <div id="sidebarItemFocus0">
+          <div id="nodeAddNode" onClick="createNode('normal');">Add Sub-Node</div>
+          <div id="nodeDeleteNode" onClick="closeWarning(); openWarning('node');">Delete Node</div>
+          <div id="nodeDeleteSubtree" onClick="closeWarning(); openWarning('subtree');">Delete Node & Subtree</div>
+          <div style="width: 100%; height: 0px; background-color: rgba(255,255,255,1); border-bottom: 1px solid rgba(220,220,220,1);"></div>
+        </div>
+
+        <div class="sidebarItem" style=" background-image: url('styles/media/design.png'); background-repeat: no-repeat; background-position: 5px 50%; background-size: 35px 35px;" onClick="showHideItem(1);">
+          <div style="float: left; padding: 0px 0px 0px 35px;">Design Node</div>
+          <div id="sidebarItem1" class="transform"></div>
+          <div class="clear"></div>
+        </div>
+        <div id="sidebarItemFocus1">
+          Text:<br>
+          <input type="text" id="inputChangeElementText" maxlength="20">
+          <br>
+          Color:<br>
+          <div id="containerColor">
+            <div class="containerColorItem" style="background-color: #000;" onClick="changeColor('#000');"></div>
+            <div class="containerColorItem" style="background-color: #F00;" onClick="changeColor('#F00');"></div>
+            <div class="containerColorItem" style="background-color: #ff822f;" onClick="changeColor('#ff822f');"></div>
+            <div class="containerColorItem" style="background-color: #ffac2f;" onClick="changeColor('#ffac2f');"></div>
+            <div class="containerColorItem" style="background-color: #b59f0b;" onClick="changeColor('#b59f0b');"></div>
+            <div class="containerColorItem" style="background-color: #93b50b;" onClick="changeColor('#93b50b');"></div>
+            <div class="containerColorItem" style="background-color: #629a2b;" onClick="changeColor('#629a2b');"></div>
+            <div class="containerColorItem" style="background-color: #57a357;" onClick="changeColor('#57a357');"></div>
+            <div class="clear"></div>
+            <div class="containerColorItem" style="background-color: #229d74;" onClick="changeColor('#229d74');"></div>
+            <div class="containerColorItem" style="background-color: #288aae;" onClick="changeColor('#288aae');"></div>
+            <div class="containerColorItem" style="background-color: #069;" onClick="changeColor('#069');"></div>
+            <div class="containerColorItem" style="background-color: #776699;" onClick="changeColor('#776699');"></div>
+            <div class="containerColorItem" style="background-color: #969;" onClick="changeColor('#969');"></div>
+            <div class="containerColorItem" style="background-color: #d27493;" onClick="changeColor('#d27493');"></div>
+            <div class="containerColorItem" style="background-color: #a30032;" onClick="changeColor('#a30032');"></div>
+            <div class="containerColorItem" style="background-color: #8e1e1e;" onClick="changeColor('#8e1e1e');"></div>
+            <div class="clear"></div>
+          </div>
+        </div>
+      </div>
+      <div id="sidebarItemSaveNotice">
+        <div style="padding: 0px 0px 0px 10px;">USB Export successful</div>
+      </div>
+    </div>
+    <div id="container02">
+      <canvas id="canvas" width="100%" height="700"></canvas>
+    </div>
+
+
+    <div id="containerInfoMindmap">
+      <div id="containerOnlineUser">
+        123
+      </div>
+
+      <div id="containerHotkeyInfo">
+        <div class="containerHotkeyItem hkInfoEsc">Esc</div>
+        <div class="containerHotkeyItemInfo hkInfoEsc">deselect Node</div>
+        <div class="containerHotkeyItem hkInfoEntf">Del</div>
+        <div class="containerHotkeyItemInfo hkInfoEntf">delete Node</div>
+        <div class="containerHotkeyItem hkInfoEnde">End</div>
+        <div class="containerHotkeyItemInfo hkInfoEnde">Delete Node & Subtree</div>
+        <div class="containerHotkeyItem hkInfoTabA">Tab</div>
+        <div class="containerHotkeyItemInfo hkInfoTabA">Add Node</div>
+        <div class="containerHotkeyItem hkInfoTabB">Tab</div>
+        <div class="containerHotkeyItemInfo hkInfoTabB">Add Root</div>
+        <div class="containerHotkeyItemB hkInfoText">Text Edit Mode</div>
+        <div class="clear"></div>
+      </div>
+
+    </div>
+
+
+
+
+    <div id="containerWarningDeleteSubtree" class="containerWarning">
+      <div class="containerWarningMessage">Delete this Node<br>and Subtree?</div>
+      <div class="containerWarningPreview"></div>
+      <div style="float: left;background-color: rgba(240,240,240,1);" class="containerWarningButton" onClick="deleteSubTree(); closeWarning();">Yes</div>
+      <div style="float: right; background-color: rgba(240,240,240,1);" class="containerWarningButton" onClick="closeWarning();">No</div>
+      <div class="clear"></div>
+    </div>
+    <div id="containerWarningDeleteNode" class="containerWarning">
+      <div class="containerWarningMessage">Delete this Node?</div>
+      <div class="containerWarningPreview"></div>
+      <div style="float: left;background-color: rgba(240,240,240,1);" class="containerWarningButton" onClick="deleteNode(); closeWarning();">yes</div>
+      <div style="float: right; background-color: rgba(240,240,240,1);" class="containerWarningButton" onClick="closeWarning();">No</div>
+      <div class="clear"></div>
+    </div>
+
+    <div id="containerWarningShutdown" class="containerWarningShutdown">
+      <div class="containerWarningMessage">PI was shutdown</div>
+    </div>
+    <div id="containerWarningServertime" class="containerWarningServertime">
+      <div class="containerWarningMessage">Servertime was set</div>
+    </div>
+    <div id="containerWarningExporting" class="containerWarningExporting">
+    </div>
+    <div id="containerWarningImporting" class="containerWarningImporting">
+    </div>
+
+  <!-- SCRIPTS HERE-->
+  <script>var username = "<%= username %>";</script>
+  <script src="../scripts/appMindmap.js"></script>
+  </body>
+</html>

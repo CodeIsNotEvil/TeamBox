@@ -1,0 +1,391 @@
+<%- include('header'); -%>
+  <body>
+    <div id="container01">
+	<a href="">
+	      <div id="logo01">
+	        <div style="margin: 0px auto 0px auto; width: 130px;">
+	          <div style="float: left; padding: 0px 2px 0px 0px; color: rgba(150,150,150,1);">TeamB</div>
+	          <div id="loadingIconNoLoad"></div>
+	          <div id="loadingIcon"></div>
+	          <div style="float: left; padding: 0px 0px 0px 2px; color: rgba(150,150,150,1);">x</div>
+	          <div class="clear"></div>
+	        </div>
+	      </div>
+	</a>
+      <div id="containerMenu">
+        <div id="containerInfo">
+	  <div id="containerInfoInfo" class="transform" onClick="showHideContentHub('Help');">
+	  Help
+	  <!-- LARA end -->
+          </div>
+          <div id="containerInfoSettings" class="transform" onClick="showHideContentHub('Settings');">
+            Settings
+          </div>
+          <div id="containerInfoApps" class="transform" onClick="showHideContentHub('Apps');">
+            Apps
+          </div>
+          <div id="containerInfoRight">
+          </div>
+          <div class="clear"></div>
+        </div>
+
+        <div id="hubInfo">
+          <div class="hubSettingsContainerLeftRight">
+            <div class="contentHeader">
+              Help
+            </div>
+	    With TeamBox groups can create collaborative projects.<br><br>
+	    Zentrales E-Learning-Labor<br>
+	    eLearning@hs-fulda.de<br>
+	    Leipziger Straße 123<br>
+	    Geb&auml;ude B, Raum 105<br>
+	    36037 Fulda
+
+            <div class="contentHeader">
+              Tutorials
+            </div>
+	    <div id="tutorials">
+		
+
+
+
+		<div class="video1 tutorialName">
+        		Text Editor
+      		</div>
+      		<div id="textEditor" class="video1 tutorialArea">
+        		<video id="video1" class="video1 tutorial" name="video1" preload="metadata" src="./styles/videos/etherpad.mp4">
+          			<track class="video1 subtitle" label="German" kind="subtitles" srclang="de" src="./styles/videos/subtitles/de_etherpad.vtt" default>
+          			<track class="video1 subtitle" label="English" kind="subtitles" srclang="en" src="./styles/videos/subtitles/en_etherpad.vtt">
+        		</video>
+      		</div>
+
+		<div class="video2 tutorialName">
+        		Brain Storming
+      		</div>
+      		<div id="brainStorming" class="video2 tutorialArea">
+        		<video id="video2" class="video2 tutorial" name="video1" preload="metadata" src="./styles/videos/mindmap.mp4">
+          			<track class="video2 subtitle" label="German" kind="subtitles" srclang="de" src="./styles/videos/subtitles/de_mindmap.vtt" default>
+          			<track class="video2 subtitle" label="English" kind="subtitles" srclang="en" src="./styles/videos/subtitles/en_mindmap.vtt">
+        		</video>
+      		</div>
+
+		<div class="video3 tutorialName">
+        		File Sharing
+      		</div>
+      		<div id="filesharing" class="video3 tutorialArea">
+        		<video id="video3" class="video3 tutorial" name="video1" preload="metadata" src="./styles/videos/filesharing.mp4">
+          			<track class="video3 subtitle" label="German" kind="subtitles" srclang="de" src="./styles/videos/subtitles/de_filesharing.vtt" default>
+          			<track class="video3 subtitle" label="English" kind="subtitles" srclang="en" src="./styles/videos/subtitles/en_filesharing.vtt">
+        		</video>
+      		</div>
+
+		<div class="video4 tutorialName">
+        		Spreadsheet
+      		</div>
+      		<div id="spreadsheet" class="video4 tutorialArea">
+        		<video id="video4" class="video4 tutorial" name="video1" preload="metadata" src="./styles/videos/ethercalc.mp4">
+          			<track class="video4 subtitle" label="German" kind="subtitles" srclang="de" src="./styles/videos/subtitles/de_ethercalc.vtt" default>
+          			<track class="video4 subtitle" label="English" kind="subtitles" srclang="en" src="./styles/videos/subtitles/en_ethercalc.vtt">
+        		</video>
+      		</div>
+
+		<div class="video5 tutorialName">
+        		Drawing Pad
+      		</div>
+      		<div id="drawingPad" class="video5 tutorialArea">
+        		<video id="video5" class="video5 tutorial" name="video1" preload="metadata" src="./styles/videos/drawing.mp4">
+          			<track class="video5 subtitle" label="German" kind="subtitles" srclang="de" src="./styles/videos/subtitles/de_drawing.vtt" default>
+          			<track class="video5 subtitle" label="English" kind="subtitles" srclang="en" src="./styles/videos/subtitles/en_drawing.vtt">
+        		</video>
+      		</div>
+
+		<div class="video6 tutorialName">
+        		Project Management
+      		</div>
+      		<div id="projectManagement" class="video6 tutorialArea">
+        		<video id="video6" class="video6 tutorial" name="video1" preload="metadata" src="./styles/videos/projectmgnt.mp4">
+          			<track class="video6 subtitle" label="German" kind="subtitles" srclang="de" src="./styles/videos/subtitles/de_projectmgnt.vtt" default>
+          			<track class="video6 subtitle" label="English" kind="subtitles" srclang="en" src="./styles/videos/subtitles/en_projectmgnt.vtt">
+        		</video>
+      		</div>
+
+
+
+                <div class="clear"></div>
+	    </div>
+            <br>
+
+	    <!-- LARA end -->
+
+          </div>
+          <div class="clear"></div>
+        </div>
+
+        <div id="hubSettings">
+            <div class="contentHeader">
+              User
+            </div>
+            <div style="float: left; width: 50%;">User: <font style=' color:<%= color %>'><%= username %></font></div>
+            <div style="float: left; width: 50%; text-align: right;"><a href="logout.ejs">LOGOUT</a></div>
+            <div class="clear"></div>
+	    <br>
+            <div style="float: left;">Group: <%= group %></div>
+            <div class="clear"></div>
+            <div style="float: left;">Online: </div>
+            <div id="hubInfoMemberOnline" style="float: left; margin-left: 2px;"></div>
+            <div class="clear"></div>
+            <div class="contentHeader">
+              System
+            </div>
+            <div style="float: left; width: 50%;">Shutdown Pi:</div>
+            <div style="float: left; width: 50%; text-align: right;"><a href="javascript:void(0)" onClick="openCloseMenuShutdown('open');">SHUTDOWN</a></div>
+            <div class="clear"></div>
+            <div style="float: left; width: 50%;">Set Servertime:</div>
+            <div style="float: left; width: 50%; text-align: right;"><a href="javascript:void(0)" onClick="changeServertime();">SET</a></div>
+            <div style="float: left; width: 50%;">Change language:</div>
+            <div style="float: left; width: 50%; text-align: right;"><a id="selectLanguage" href="javascript:void(0)" onClick="openCloseMenuLanguage('open');">GERMAN</a></div>
+            <div class="clear"></div>
+	    <div id="usb" style="width:100%; height:15px; margin-top:20px;">
+		<div id="usbText"></div>
+		<div id="usbUsed" style="height:100%; background-color:red; display:inline-block; float:left;"></div>
+		<div id="usbTB" style="height:100%; background-color:yellow; display:inline-block; float:left;"></div>
+		<div id="usbFree" style="height:100%; background-color:green; display:inline-block; float:left;"></div>
+	    </div>
+	    <div class="clear"></div>
+        </div>
+	<!-- LARA end -->
+
+
+
+
+        <div id="hubAppList">
+           <a href="appEtherpadLoad.ejs">
+            <div class="containerItem containerItem1 transformBackground">
+          	  <div class="containerItemTitle transform">
+                Text Editor
+              </div>
+            </div>
+           </a>
+           <a href="appMindmapLoad.ejs">
+             <div class="containerItem containerItem5 transformBackground">
+               <div class="containerItemTitle transform">
+                 Brain Storming
+               </div>
+             </div>
+           </a>
+          <a href="http://teambox.local:8080"><!--File Browser -->
+           <div class="containerItem containerItem6 transformBackground">
+             <div class="containerItemTitle transform">
+               File Sharing
+             </div>
+           </div>
+          </a>
+           <a href="appEthercalcLoad.ejs">
+            <div class="containerItem containerItem4 transformBackground">
+              <div class="containerItemTitle transform">
+                Spreadsheet
+              </div>
+            </div>
+           </a>
+           <a href="appDrawLoad.ejs">
+             <div class="containerItem containerItem3 transformBackground">
+               <div class="containerItemTitle transform">
+                 Drawing Pad
+               </div>
+             </div>
+           </a>
+           <a href="wekanLoad.ejs"><!--WEKAN -->
+             <div class="containerItem containerItem2 transformBackground">
+     	        <div class="containerItemTitle transform">
+     	          Project Management
+     	        </div>
+     	      </div>
+           </a>
+          <div class="clear"></div>
+        </div>
+      </div>
+    </div>
+    <div id="containerLanguageSelect" class="containerWarning">
+            Select Language:<br><br>
+        <a href="javascript:void(0)" onClick="changeLanguage('ENG');">English</a><br>
+        <a href="javascript:void(0)" onClick="changeLanguage('GER');">German</a>
+    </div>
+
+    <div id="containerWarningShutdownSelect" class="containerWarning">
+      <div class="containerWarningMessage">Shutdown PI?</div>
+      <div style="float: left;background-color: rgba(240,240,240,1);" class="containerWarningButton" onClick="shutdownPi(); openCloseMenuShutdown('close');">Yes</div>
+      <div style="float: right; background-color: rgba(240,240,240,1);" class="containerWarningButton" onClick="openCloseMenuShutdown('close');">No</div>
+      <div class="clear"></div>
+    </div>
+
+    <div id="containerWarningShutdown" class="containerWarningShutdown">
+      <div class="containerWarningMessage">PI was shutdown</div>
+    </div>
+
+    <div id="containerWarningServertime" class="containerWarningServertime">
+      <div class="containerWarningMessage">Servertime was set</div>
+    </div>
+
+    <div id="containerWarningExporting" class="containerWarningExporting">
+    </div>
+    <div id="containerWarningImporting" class="containerWarningImporting">
+    </div>
+
+
+    <script>
+      var socket          = io();
+      var usersConnected  = new Array();
+      var username        = "<%= username %>";
+    </script>
+
+
+    <!-- SCRIPTS HERE-->
+    <script src="../scripts/hub.js"></script>
+    <script src="../scripts/player.js"></script>
+
+
+
+    <script>
+	// LARA 02.08.2016
+	var usbString = "<%= usbString %>";
+//	console.log("usb: "+usbString);
+	var usbValues = usbString.split(" ");
+	var usbSize = usbValues[0];
+	var usbFree = usbValues[1];
+	var usbFreePerc = usbValues[2].slice(0, -1);
+	var usbUsed = usbValues[3];
+	var usbUsedPerc = usbValues[4].slice(0,-1);
+	var usbTB = usbValues[5];
+	var usbTBPerc = usbValues[6].slice(0, -1);
+	usbTBPerc = usbTBPerc < 0.2 ? 0.2 : usbTBPerc;
+
+	document.getElementById("usbUsed").style.width=(usbUsedPerc-usbTBPerc)+"%";
+	document.getElementById("usbTB").style.width=usbTBPerc+"%";
+	document.getElementById("usbFree").style.width=(100-usbUsedPerc)+"%";
+	document.getElementById("usbFree").title="free: "+usbFree+"B";
+	document.getElementById("usbUsed").title="used: "+usbUsed+"B";
+	document.getElementById("usbTB").title="TeamBox: "+usbTB+"B";
+	document.getElementById("usbText").innerHTML="USB size: "+usbSize+"B, free: "+usbFree+"B";	
+
+
+
+
+
+	// 29.08.2016
+	// player
+
+// mouse events for document
+  //document.addEventListener("onfullscreenchange", function(){console.log("change");});
+  $(document).bind("webkitfullscreenchange mozfullscreenchange fullscreenchange", function(){detectFullscreen();});
+  document.onmousemove = hideControlsFSMove;
+
+  // create video controls & add hover events for tutorial area
+  areas=document.getElementsByClassName("tutorialArea");
+  for(var i=0; i<areas.length; i++){
+    var area=areas[i];
+    area.addEventListener("mouseover", function(hover){
+      if((document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen)!=true){
+        showControls(hover);
+      }
+    });
+    area.addEventListener("mouseout", hideControls);
+    // create controls
+    createControls(area);
+  }
+
+  // add time & mouse events for videos
+  videos=document.getElementsByClassName("tutorial");
+  for(var i=0; i<videos.length; i++){
+    var video=videos[i];
+    video.addEventListener("timeupdate", updateSeekBar);
+    video.addEventListener("mouseout", function(hover){
+      if((document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen)==true){
+        hideControls(hover);
+      }
+    });
+  }
+
+  // click event for overlays
+  overlays=document.getElementsByClassName("control overlay");
+  for(var i=0; i<overlays.length; i++){
+    overlays[i].addEventListener("click", function(click){
+      timeoutClick=setTimeout(function(){
+        if(preventClick==false){
+          play(click);
+          if((document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen)==true){
+            var videoName=click.target.className.split(" ")[0];
+            var controlsBar=document.getElementsByClassName(videoName+" controlsBar")[0];
+            clearTimeout(timeoutMove);
+            clearTimeout(timeoutClick);
+            if(controlsBar.style.display=="none"){
+              controlsBar.style.display="block";
+            }
+          }
+        }
+        hideControlsFSClick(click);
+      }, 200);
+      preventClick=false;
+    });
+    overlays[i].addEventListener("dblclick", function(click){
+      clearTimeout(timeoutClick);
+      preventClick=true;
+      fullscreen(click);
+    });
+  }
+
+  // click event for play buttons
+  playButtons=document.getElementsByClassName("control play");
+  for(var i=0; i<playButtons.length; i++){
+    playButtons[i].addEventListener("click", play);
+  }
+
+  // click event for seek bars
+  seekBars=document.getElementsByClassName("control seek");
+  for(var i=0; i<seekBars.length; i++){
+    seekBars[i].value=0;
+    seekBars[i].addEventListener("click", seek);
+    seekBars[i].addEventListener("mousemove", editSeekOutput);
+    seekBars[i].addEventListener("mouseout", function(hover){
+      var videoName=hover.target.className.split(" ")[0];
+      var output=document.getElementsByClassName(videoName+" output seek")[0];
+      output.style.display="none";
+    });
+  }
+
+  // click event for mutes
+  muteButtons=document.getElementsByClassName("control mute");
+  for(var i=0; i<muteButtons.length; i++){
+    muteButtons[i].addEventListener("click", mute);
+  }
+
+  // click event for volume bars
+  volumeBars=document.getElementsByClassName("control volume");
+  volumes=[];
+  for(var i=0; i<volumeBars.length; i++){
+    volumeBars[i].value=0.7;
+    volumeBars[i].addEventListener("click", volume);
+    volumes["video"+(i+1)]=0.7;
+  }
+
+  // click & hover event for subtitles
+  subtButtons=document.getElementsByClassName("control subt");
+  for(var i=0; i<subtButtons.length; i++){
+    subtButtons[i].addEventListener("click", showSubtMenu);
+    //subtButtons[i].addEventListener("mouseout", hideSubtMenu);
+  }
+
+  // click event for fullscreen
+  fullButtons=document.getElementsByClassName("control full");
+  for(var i=0; i<fullButtons.length; i++){
+    fullButtons[i].addEventListener("click", fullscreen);
+  }
+
+
+
+	// LARA end
+
+    </script>
+  </body>
+</html>
+
+
