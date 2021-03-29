@@ -16,7 +16,7 @@ let mysqlConnection = mysql.createConnection({
 
 /**
  * Imports dataAppDraw, dataAppMindmap and userData MySQL databases.
- * @returns true if the import was successfull
+ * @returns {boolean} true if the import was successfull
  */
 function importMysql() {
 
@@ -38,7 +38,10 @@ function importMysql() {
     }
 
 }
-
+/**
+ * Exports the MySQL Databases with the help of the mysql_export.sh script.
+ * @returns {boolean} wether the export was succsessfull or not.
+ */
 function exportMysql() {
     //io.sockets.emit('appExportMysqlStart');
 
@@ -57,10 +60,18 @@ function exportMysql() {
 }
 /**
  * Exports the MySQL Databases with the help of the mysql_export.sh script.
+ * @returns {boolean} wether then export was successfull.
  */
 function exportMysqlAsync() {
-    console.log("ASYNC EXEC");
-    asyncExec("sudo bash " + PATH_TO_BASH_SCRIPTS + "mysql_export.sh");
+    asyncExec("sudo bash " + PATH_TO_BASH_SCRIPTS + "mysql_export.sh", (err, stdout, stderr) => {
+        if (err == null) {
+          console.log("MySQL Databases were exported Successfully.")
+          return true;
+        } else {
+          console.error(error);
+          return false;
+        }
+      });
 }
 /**
  * Drops the dataAppMindmap and userData Tables from the MySQL Databases. 

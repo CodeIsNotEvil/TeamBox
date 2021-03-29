@@ -14,7 +14,7 @@ function exportData() {
                 console.error("MySQL DBs could not be exported.");
                 return false;
         }
-        if (!exportWekanDB()) {
+        if (!exportWekanDB(true)) {
                 console.error("Wekan DB could not be exported.");
                 return false;
         }
@@ -26,10 +26,14 @@ function exportData() {
  */
 function exportAsync() {
         setInterval(function () {
+                console.log("Asynchron Database exports:");
                 if (Group.mysqlIsImported == true) {
                         exportMysqlAsync();
                 }
-        }, 120000);
+                if (Group.wekanDBIsImported == true) {
+                        exportWekanDB(false);
+                }
+        }, 120000);//120000ms = 2minutes
 }
 
 /**
