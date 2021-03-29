@@ -1,13 +1,12 @@
 const { PATH_TO_VIEWS, MAX_USER_COUNT } = require('../config/server');
+const { exportAsync } = require('../services/syncHandler');
 
 const { startUp, writeUserdata, createAndSaveUserSession: createAndSaveUserSession } = require('../services/mysqlHandler');
 const usbCheckFree = require('../services/USBHandler');
-const { loadGroups, chooseGroup, createGroup } = require('../services/groupHandler');
+
+const { loadGroups } = require('../services/groupHandler');
 const groupHandler = require('../services/groupHandler');
 const user = require('../models/MySQLUser');
-
-const exportAsync = require('../services/syncHandler');
-const { clearMongoDBOnStartUp } = require('../services/mongoDBHandler');
 const Group = require('../services/Group');
 
 
