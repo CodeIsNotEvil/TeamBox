@@ -18,7 +18,7 @@ class groupHandler {
 
     static import() {
         Group.mysqlIsImported = importMysql();
-        Group.ekanDBIsImported = importGroupWekanDB();
+        Group.wekanDBIsImported = importGroupWekanDB();
     }
 
     static isGroupSelected(bodyGroup) {
