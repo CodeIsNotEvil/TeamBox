@@ -1,11 +1,11 @@
 const { PATH_TO_GLOBAL_MODULES } = require("../config/server");
-const groupHandler = require("./groupHandler");
 const { exportMysqlAsync } = require("./mysqlHandler");
 const syncExec = require(PATH_TO_GLOBAL_MODULES + 'sync-exec');
+const Group = require('./Group');
 
 function exportAsync() {
         setInterval(function () {
-                if (groupHandler.mysqlIsImported == true) {
+                if (Group.mysqlIsImported == true) {
                         exportMysqlAsync();
                 }
         }, 120000);

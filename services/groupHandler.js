@@ -1,30 +1,15 @@
 const runScript = require('./runScripts');
 const { importMysql } = require('./mysqlHandler');
 const { importGroupWekanDB } = require('./mongoDBHandler');
-/*class group {
-    name
-    groupIsFromUsb
-    groupIsSelected
-    groupIsSelectedPi
-    mySqlIsImported
-    clients
-    illegalClients = ["admin", "administrator", "ubuntu", "root", ];
-}*/
-class groupHandler {
-    static group = "";
-    static groupIsFromUsb = false;
-    static mysqlIsImported = false;
-    static wekanDBIsImported = false;
-    static groups = [];
-    static clients = [];
-    static illegalClients = ["admin", "administrator", "ubuntu", "root",];
+const Group = require('./Group');
 
+class groupHandler {
     static importCheck() {
-        if (groupHandler.mysqlIsImported && groupHandler.wekanDBIsImported) {
+        if (Group.mysqlIsImported && Group.wekanDBIsImported) {
             return true;
-        } else if (groupHandler.mysqlIsImported) {
+        } else if (Group.mysqlIsImported) {
             return false;
-        } else if (groupHandler.wekanDBIsImported) {
+        } else if (Group.wekanDBIsImported) {
             return false;
         } else {
             return false;
@@ -32,17 +17,17 @@ class groupHandler {
     }
 
     static import() {
-        groupHandler.mysqlIsImported = importMysql();
-        groupHandler.ekanDBIsImported = importGroupWekanDB();
+        Group.mysqlIsImported = importMysql();
+        Group.ekanDBIsImported = importGroupWekanDB();
     }
 
     static isGroupSelected(bodyGroup) {
-        groupHandler.group = bodyGroup.replace(/[^a-z0-9-_\s]/gi, '').replace(/\s+/g, "_").toLowerCase();
+        Group.group = bodyGroup.replace(/[^a-z0-9-_\s]/gi, '').replace(/\s+/g, "_").toLowerCase();
 
         let groupExists = false;
 
-        for (let i = 0; i < groupHandler.groups.length; i++) {
-            if (groupHandler.groups[i].toString() == groupHandler.group.toString()) {
+        for (let i = 0; i < Group.groups.length; i++) {
+            if (Group.groups[i].toString() == Group.group.toString()) {
                 groupExists = true;
             }
         }
@@ -56,12 +41,12 @@ class groupHandler {
     }
 
     static loadGroups() {
-        groupHandler.groups = runScript("group_show.sh", false, false).split("\n");
+        Group.groups = runScript("group_show.sh", false, false).split("\n");
     }
 
     static chooseGroup() {
 
-        let isError = runScript("group_choose.sh '" + groupHandler.group + "'", true, true);
+        let isError = runScript("group_choose.sh '" + Group.group + "'", true, true);
         if (isError == "" && isError != null) {
             console.log("EXEC :: CHOOESEGROUP:\t\tSUCCESS");
         }
@@ -71,7 +56,7 @@ class groupHandler {
     }
     static createGroup() {
 
-        let isError = runScript("group_create.sh '" + groupHandler.group + "'", true, true);
+        let isError = runScript("group_create.sh '" + Group.group + "'", true, true);
         if (isError == "" && isError != null) {
             console.log("EXEC :: CREATEGROUP:\t\tSUCCESS");
         }

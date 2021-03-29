@@ -7,10 +7,14 @@ const groupHandler = require('../services/groupHandler');
 const user = require('../models/MySQLUser');
 
 const exportAsync = require('../services/syncHandler');
+const { clearMongoDBOnStartUp } = require('../services/mongoDBHandler');
+const Group = require('../services/Group');
 
 
 
 function routes(app) {
+
+        clearMongoDBOnStartUp();
 
         startUp();
         exportAsync();
@@ -18,11 +22,11 @@ function routes(app) {
         * Default route.
         */
         app.get("/", function (req, res) {
-                if (!req.session.username && !groupHandler.mysqlIsImported) {
+                if (!req.session.username && !Group.mysqlIsImported) {
                         loadGroups();
-                        res.render(PATH_TO_VIEWS + "/login01.ejs", { groups: groupHandler.groups });
+                        res.render(PATH_TO_VIEWS + "/login01.ejs", { groups: Group.groups });
                 }
-                else if (!req.session.username && groupHandler.group != "") {
+                else if (!req.session.username && Group.group != "") {
                         return res.redirect("/login02.ejs");
                 }
                 else {
@@ -68,21 +72,21 @@ function routes(app) {
 
                 var replUserName = req.body.user.name.replace(/[^a-z0-9-_\s]/gi, '').replace(/\s+/g, "_").toLowerCase();
                 // Check if the choosen username is currently in use.
-                for (let i = 0; i < groupHandler.clients.length; i++) {
-                        if (groupHandler.clients[i].username == replUserName) {
+                for (let i = 0; i < Group.clients.length; i++) {
+                        if (Group.clients[i].username == replUserName) {
                                 nameIsInUse = true;
                         }
                 }
 
                 // Check if the choosen username is one of the illegal ones (admin, Teambox...).
-                for (let i = 0; i < groupHandler.illegalClients.length; i++) {
-                        if (groupHandler.illegalClients[i].toLowerCase() == replUserName) {
+                for (let i = 0; i < Group.illegalClients.length; i++) {
+                        if (Group.illegalClients[i].toLowerCase() == replUserName) {
                                 nameIsIllegal = true;
                         }
                 }
 
                 // Check if there are already the maximum number of users (currently 7).
-                if (groupHandler.clients.length > MAX_USER_COUNT) {
+                if (Group.clients.length > MAX_USER_COUNT) {
                         maxClientsReached = true;
                 }
 
@@ -122,18 +126,18 @@ function routes(app) {
                                 req.session.usercolor = result[0].color;
                                 req.session.userLanguage = result[0].language;
                                 req.session.save();
-                                groupHandler.clients.push(new user(result[0].user.toLowerCase(), result[0].color, result[0].language));
+                                Group.clients.push(new user(result[0].user.toLowerCase(), result[0].color, result[0].language));
                             });
                         res.end("loginSuccess");
                 }
         });
 
         app.get("/login01.ejs", function (req, res) {
-                if (!req.session.username && !groupHandler.mysqlIsImported) {
+                if (!req.session.username && !Group.mysqlIsImported) {
                         loadGroups();
-                        res.render(PATH_TO_VIEWS + "/login01.ejs", { groups: groupHandler.groups });
+                        res.render(PATH_TO_VIEWS + "/login01.ejs", { groups: Group.groups });
                 }
-                else if (!req.session.username && groupHandler.group != "") {
+                else if (!req.session.username && Group.group != "") {
                         return res.redirect("/login02.ejs");
                 }
                 else {
@@ -142,11 +146,11 @@ function routes(app) {
         });
 
         app.get("/login02.ejs", function (req, res) {
-                if (!req.session.username && !groupHandler.mysqlIsImported && groupHandler.group == "") {
+                if (!req.session.username && !Group.mysqlIsImported && Group.group == "") {
                         return res.redirect("/login01.ejs");
                 }
-                else if (!req.session.username && groupHandler.mysqlIsImported && groupHandler.group != "") {
-                        res.render(PATH_TO_VIEWS + "/login02.ejs", { group: groupHandler.group });
+                else if (!req.session.username && Group.mysqlIsImported && Group.group != "") {
+                        res.render(PATH_TO_VIEWS + "/login02.ejs", { group: Group.group });
                 }
                 else {
                         return res.redirect("/hub.ejs");
@@ -157,7 +161,7 @@ function routes(app) {
                 if (req.session.username) {
                         // LARA 02.08.2016
                         usbString = usbCheckFree();
-                        res.render(PATH_TO_VIEWS + "/hub.ejs", { username: req.session.username, group: groupHandler.group, color: req.session.usercolor, usbString: usbString });
+                        res.render(PATH_TO_VIEWS + "/hub.ejs", { username: req.session.username, group: Group.group, color: req.session.usercolor, usbString: usbString });
                         // LARA end
                 }
                 else {
@@ -167,9 +171,9 @@ function routes(app) {
 
         app.get("/logout.ejs", function (req, res) {
                 if (req.session.username) {
-                        for (var i = 0; i < groupHandler.clients.length; i++) {
-                                if (groupHandler.clients[i].username == req.session.username) {
-                                        groupHandler.clients.splice(i, 1);
+                        for (var i = 0; i < Group.clients.length; i++) {
+                                if (Group.clients[i].username == req.session.username) {
+                                        Group.clients.splice(i, 1);
                                 }
                         }
                         req.session.destroy();

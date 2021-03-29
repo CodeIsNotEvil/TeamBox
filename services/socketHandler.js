@@ -1,10 +1,10 @@
-const groupHandler = require("./groupHandler");
 const synchronizeTime = require('../services/syncHandler');
 const { saveDataDrawStringToDB, updateUserLanguage, getMindMapContentFromDB, writeMindmap, exportMysql } = require("./mysqlHandler");
 const { PATH_TO_GLOBAL_MODULES } = require("../config/server");
 const { JSDOM } = require(PATH_TO_GLOBAL_MODULES + 'jsdom');
 const { window } = new JSDOM("");
 const $ = require("../_jquery/jquery-1.12.3")(window);
+const Group = require('./Group');
 
 //SOCKET IO
 function socketHandler(app, io) {
@@ -16,7 +16,7 @@ function socketHandler(app, io) {
 
                 socket.on("shutdownPi", function () {
                         if(exportMysql()){
-                                groupHandler.mysqlIsImported = false;
+                                Group.mysqlIsImported = false;
                         }
                         //exportMysql();
                         io.sockets.emit('shutdownPi');
@@ -76,12 +76,12 @@ function socketHandler(app, io) {
                 //changes
 
                 socket.on('appUpdateUsers', function (user, fileName) {
-                        for (let i = 0; i < groupHandler.clients.length; i++) {
-                                if (groupHandler.clients[i].username == user) {
-                                        groupHandler.clients[i].mindMapValue002 = fileName;
+                        for (let i = 0; i < Group.clients.length; i++) {
+                                if (Group.clients[i].username == user) {
+                                        Group.clients[i].mindMapValue002 = fileName;
                                 }
                         }
-                        io.emit("appUpdateUsers", groupHandler.clients, groupHandler.user, fileName);
+                        io.emit("appUpdateUsers", Group.clients, Group.user, fileName);
                 });
 
                 //everytime a user loads a page (without login01.ejs or login02.ejs
@@ -92,9 +92,9 @@ function socketHandler(app, io) {
                 socket.on('appGetLanguage', function (user) {
                         let language = "";
 
-                        for (let i = 0; i < groupHandler.clients.length; i++) {
-                                if (groupHandler.clients[i].username == user) {
-                                        language = groupHandler.clients[i].userlanguage;
+                        for (let i = 0; i < Group.clients.length; i++) {
+                                if (Group.clients[i].username == user) {
+                                        language = Group.clients[i].userlanguage;
                                 }
                         }
                         io.to(socket.id).emit("appGetLanguage", language);
@@ -107,9 +107,9 @@ function socketHandler(app, io) {
 
                 socket.on('appChangeLanguage', function (user, value) {
                         updateUserLanguage(user, value);
-                        for (var i = 0; i < groupHandler.clients.length; i++) {
-                                if (groupHandler.clients[i].username == user) {
-                                        groupHandler.clients[i].userlanguage = value;
+                        for (var i = 0; i < Group.clients.length; i++) {
+                                if (Group.clients[i].username == user) {
+                                        Group.clients[i].userlanguage = value;
                                 }
                         }
                         io.to(socket.id).emit("appChangeLanguage", value);
@@ -124,9 +124,9 @@ function socketHandler(app, io) {
                 socket.on('appMindmaUpdateUserFocus', function (focusedElement, user, fileName) {
                         var index = -1;
 
-                        for (var i = 0; i < groupHandler.clients.length; i++) {
-                                if (groupHandler.clients[i].username == user) {
-                                        groupHandler.clients[i].mindMapValue001 = focusedElement;
+                        for (var i = 0; i < Group.clients.length; i++) {
+                                if (Group.clients[i].username == user) {
+                                        Group.clients[i].mindMapValue001 = focusedElement;
                                         index = i;
                                 }
                         }
@@ -163,7 +163,7 @@ function socketHandler(app, io) {
                 //If a user user disconnects, clients should be updated
                 //This function needs some further work
                 socket.on("disconnect", function () {
-                        io.emit("appUpdateUsers", groupHandler.clients);
+                        io.emit("appUpdateUsers", Group.clients);
                 });
 
 
