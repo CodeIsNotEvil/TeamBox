@@ -14,7 +14,8 @@ const Group = require('../services/Group');
 
 function routes(app) {
 
-        clearMongoDBOnStartUp();
+        //clearMongoDBOnStartUp(); this is not be required cause i drop before importing the group related or empty db
+        //mongorestore needs about 5-10sec so i only use it if it's necessary
 
         startUp();
         exportAsync();

@@ -1,6 +1,6 @@
 const runScript = require('./runScripts');
 const { importMysql } = require('./mysqlHandler');
-const { importGroupWekanDB } = require('./mongoDBHandler');
+const { importWekanDB } = require('./mongoDBHandler');
 const Group = require('./Group');
 
 class groupHandler {
@@ -17,8 +17,8 @@ class groupHandler {
     }
 
     static import() {
-        Group.mysqlIsImported = importMysql();
-        Group.wekanDBIsImported = importGroupWekanDB();
+        Group.mysqlIsImported = importMysql(); //checks if the group has a DB in the mysql_import.sh
+        Group.wekanDBIsImported = importWekanDB();
     }
 
     static isGroupSelected(bodyGroup) {
