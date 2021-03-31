@@ -40,13 +40,19 @@ exit_status=1
 function import_DB(){
 	# get all dumps
 	dumps_str=$(find "${dump_path}" -maxdepth 1 -type f | grep -oP "${1}_[0-9]{10}\.sql")
-	dumps=( $dumps_str )
-	dumps_num=${#dumps[@]}
+	#printf "$dumps_str"
+	unsorted_dumps=( $dumps_str )
+	dumps_num=${#unsorted_dumps[@]}
+	IFS=$'\n' dumps=($(sort <<<"${unsorted_dumps[*]}"))
+	unset IFS
 	# check if there are any dumps
 	if [ "$dumps_num" -gt 0 ]
 	then
 		# get latest dump
 		latest_dump=${dumps[(($dumps_num-1))]}
+		#printf "\ndumps_num: ${dumps_num}\ndumps:\n"
+		#printf "%s\n" "${dumps[@]}"
+		#printf "latest dump: ${latest_dump}\n"
 		# import
 		mysql --user="$user" --password="$password" "$1" < "${dump_path}${latest_dump}"
 		if [ "$?" = 0 ]
