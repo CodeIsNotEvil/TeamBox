@@ -255,7 +255,7 @@ function saveData() {
         draw(false);
         var image = canvas.toDataURL("image/png");
         content = $("content").html();
-        console.log("content:\n" + content);
+        //console.log("content:\n" + content);
         socket.emit("appMindmapSave", content, image, fileName);
 }
 
@@ -358,7 +358,7 @@ socket.on('appGetLanguage', function (value) {
 //case the server side array is sent to all clients as well.
 
 socket.on('appMindmapInitialUser', function (content, newFile) {
-        
+
         $("#content").html(content);
 
         if ($("#content").children().length > 0) {

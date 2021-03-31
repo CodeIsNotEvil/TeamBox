@@ -154,7 +154,7 @@ function socketHandler(app, io) {
                 socket.on('appMindmapInsertFileStructure', function (fileName) {
                         //let { content, newFile } = getMindMapContentFromDB(fileName);
                         getMindMapContentFromDB(fileName, (content, newFile) => {
-                                console.log("socketHander.js socketOn 'appMindmapInsertFileStructure' content: " + content);
+                                //console.log("socketHander.js socketOn 'appMindmapInsertFileStructure' content: " + content);
                                 if ($("data[name=" + fileName + "]").length == 0) {
                                         $("container").append(content);
                                 }
@@ -316,8 +316,8 @@ function socketHandler(app, io) {
                 //Parallel files are not saved.
 
                 socket.on('appMindmapSave', function (content, image, fileName) {
-                        // This should be on clinet side let content = $("data[name=" + fileName + "]").html();
-                        //console.log("content:\n" + image + "\nfileName: " + fileName);
+                        content = $("data[name=" + fileName + "]").html();
+                        //console.log("content:\n" + content + "\nfileName: " + fileName);
                         writeMindmap(content, fileName);
 
 
