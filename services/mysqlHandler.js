@@ -108,9 +108,8 @@ function updateUserLanguage(user, value) {
     mysqlConnection.query("UPDATE userData SET language = '" + value + "'    WHERE user =  '" + user + "'    ");
 }
 
-function getDrawData(res, req, group, route) {//FOUND THE ERROR!! THE callback function gets called afer this functions retruned his data variable
-    //https://stackoverflow.com/questions/18361930/node-js-returning-result-from-mysql-query
-    
+function getDrawData(res, req, group, route) {
+
     mysqlConnection.query("SELECT * FROM dataAppDraw", function (err, result) {
         let fileNames = [];
         if (err) {
@@ -161,34 +160,36 @@ function saveDataDrawStringToDB(string, fileName) {
     mysqlConnection.query("UPDATE dataAppDraw SET content = '" + string + "'    WHERE fileName =  '" + fileName + "'    ");
 }
 
-function getMindMapContentFromDB(fileName) {
-    var content;
-    var newFile = false;
-
+function getMindMapContentFromDB(fileName, emitContent) {
     mysqlConnection.query("SELECT * FROM dataAppMindmap WHERE fileName = '" + fileName + "' ", function (err, result, fields) {
-        if (result.length > 0) {
-            content = "<data name='" + fileName + "'>" + result[0].content + "</data>";
+        if (err) {
+            console.error(err);
+        } else {
+            let content, newFile;
+            if (result.length > 0) {
+                content = "<data name='" + fileName + "'>" + result[0].content + "</data>";
+            } else {
+                content = "<data name='" + fileName + "'><node id='0' posx='0' posy='0' type='root' width='120' height='30' text='' color='#2b2b2b'></node></data>";
+                newFile = true;
+            }
+            emitContent(content, newFile);
         }
-        else {
-            content = "<data name='" + fileName + "'><node id='0' posx='0' posy='0' type='root' width='120' height='30' text='' color='#2b2b2b'></node></data>";
-            newFile = true;
-        }
+
     });
-    return { content, newFile };
 }
 
 function writeMindmap(content, fileName) {
-    var errorMessage = "";
 
     mysqlConnection.query("INSERT IGNORE INTO dataAppMindmap (fileName) VALUES ('" + fileName + "')", function (err, rows, fields) {
-        if (err)
-            errorMessage += "Fehler beim Schreiben: SQL1<br>";
+        if (err) {
+            console.error(err);
+        }
     });
     mysqlConnection.query("UPDATE dataAppMindmap SET content = '" + content + "'    WHERE fileName =  '" + fileName + "'    ", function (err, rows, fields) {
-        if (err)
-            errorMessage += "Fehler beim Schreiben: SQL2<br>";
+        if (err) {
+            console.error(err);
+        }
     });
-    return errorMessage;
 }
 /**
  * Clears the drawing in the dataAppDraw MySQL database.

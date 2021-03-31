@@ -5,6 +5,7 @@ function user(cUserName, cUserColor) {
         this.mindMapValue002 = "";
         this.settingsLanguage = "ENG";
 }
+let content;
 
 //Initializiation of some variables.
 
@@ -253,7 +254,9 @@ function createFileStructure() {
 function saveData() {
         draw(false);
         var image = canvas.toDataURL("image/png");
-        socket.emit("appMindmapSave", image, fileName);
+        content = $("content").html();
+        console.log("content:\n" + content);
+        socket.emit("appMindmapSave", content, image, fileName);
 }
 
 socket.on('appMindmapSave', function (file, errorMessage) {
@@ -325,7 +328,7 @@ function initializePage() {
 }
 
 socket.on('appUpdateUsers', function (users, user, file) {
-        usersConnected = users;
+        let usersConnected = users;
 
         $("#containerOnlineUser").html("Online sind: ");
 
@@ -355,6 +358,7 @@ socket.on('appGetLanguage', function (value) {
 //case the server side array is sent to all clients as well.
 
 socket.on('appMindmapInitialUser', function (content, newFile) {
+        
         $("#content").html(content);
 
         if ($("#content").children().length > 0) {

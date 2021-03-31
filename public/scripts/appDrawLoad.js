@@ -39,7 +39,7 @@ socket.on('appSynchronizeTime', function () {
 //Die vom USB STICK geladenen Dateien:
 //Sofern Dateien existieren werden die
 //Einträge angehängt an das EingabeFeld
-
+/*
 if (data.length > 0) {
   for (var i = 0; i < data.length; i++) {
     if (data[i] != ',') {
@@ -48,6 +48,14 @@ if (data.length > 0) {
       );
     }
     
+  }
+}
+*/
+if (data.length > 0) {
+  for (var i = 0; i < data.length; i++) {
+    $("#dataListData").append(
+      "<option value='" + data[i] + "'/>"
+    );
   }
 }
 

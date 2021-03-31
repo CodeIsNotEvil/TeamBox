@@ -45,7 +45,7 @@
     </div>
     <script>
         var username        = "<%= username %>";
-        var data = "<%= data %>";
+        var data = <%- JSON.stringify(data) %>;
     </script>
     <script src="../scripts/appDrawLoad.js"></script>
   </body>

@@ -1,12 +1,14 @@
 const { exportData, synchronizeTime } = require('../services/syncHandler');
-const {updateUserLanguage, getMindMapContentFromDB, writeMindmap, clearDrawing } = require("./mysqlHandler");
+const { updateUserLanguage, getMindMapContentFromDB, writeMindmap, clearDrawing } = require("./mysqlHandler");
 const { PATH_TO_GLOBAL_MODULES } = require("../config/server");
-const { JSDOM } = require(PATH_TO_GLOBAL_MODULES + 'jsdom');
+/*const { JSDOM } = require(PATH_TO_GLOBAL_MODULES + 'jsdom');
 const { window } = new JSDOM("");
-const $ = require("../_jquery/jquery-1.12.3")(window);
+const $ = require("../_jquery/jquery-1.12.3")(window);*/
 const Group = require('./Group');
 const { shutdownPi } = require('./piHeandler');
 const drawApp = require('./drawApp/drawApp');
+const cheerio = require(PATH_TO_GLOBAL_MODULES + 'cheerio')
+const $ = cheerio.load("<container id='-1'></container>");
 
 //SOCKET IO
 function socketHandler(app, io) {
@@ -150,12 +152,17 @@ function socketHandler(app, io) {
                 //on client-side.
 
                 socket.on('appMindmapInsertFileStructure', function (fileName) {
-                        let { content, newFile } = getMindMapContentFromDB(fileName);
+                        //let { content, newFile } = getMindMapContentFromDB(fileName);
+                        getMindMapContentFromDB(fileName, (content, newFile) => {
+                                console.log("socketHander.js socketOn 'appMindmapInsertFileStructure' content: " + content);
+                                if ($("data[name=" + fileName + "]").length == 0) {
+                                        $("container").append(content);
+                                }
+                                io.to(socket.id).emit('appMindmapInitialUser', $("data[name=" + fileName + "]").html(), newFile);
+                                //io.to(socket.id).emit('appMindmapInitialUser', fileName, newFile);
+                                //io.to(socket.id).emit('appMindmapInitialUser', content, newFile);
+                        });
 
-                        if ($("data[name=" + fileName + "]").length == 0) {
-                                $("container").append(content);
-                        }
-                        io.to(socket.id).emit('appMindmapInitialUser', $("data[name=" + fileName + "]").html(), newFile);
 
 
                 });
@@ -308,9 +315,10 @@ function socketHandler(app, io) {
                 //Saves the whole mindmap. Only the open file is being saved.
                 //Parallel files are not saved.
 
-                socket.on('appMindmapSave', function (image, fileName) {
-                        let content = $("data[name=" + fileName + "]").html();
-                        var errorMessage = writeMindmap(content, fileName);
+                socket.on('appMindmapSave', function (content, image, fileName) {
+                        // This should be on clinet side let content = $("data[name=" + fileName + "]").html();
+                        //console.log("content:\n" + image + "\nfileName: " + fileName);
+                        writeMindmap(content, fileName);
 
 
                         var data = image.replace(/^data:image\/\w+;base64,/, '');
@@ -319,6 +327,7 @@ function socketHandler(app, io) {
                         var path = "/var/www/html/app/screenshots/mindmap_" + fileName + ".png";
 
                         fs.writeFile(path, data, { encoding: 'base64' }, function (err) {
+                                let errorMessage;
                                 if (err == "" || err == null) {
                                         console.log("EXEC :: IMAGESAVE:\t\tSUCCESS");
                                 }
@@ -335,19 +344,19 @@ function socketHandler(app, io) {
                 * function to handle obj Data and send to Clients
                 */
                 socket.on('sendObj', function (obj, username, fileName) {
-                                //console.log("object: " + obj);
-                                drawApp.addObject(obj);
-                                //console.log("allObj sendObjsfun:  " + obj);
-                                socket.broadcast.emit('receiveObj', obj, username, fileName);
-                        }
+                        //console.log("object: " + obj);
+                        drawApp.addObject(obj);
+                        //console.log("allObj sendObjsfun:  " + obj);
+                        socket.broadcast.emit('receiveObj', obj, username, fileName);
+                }
                 );
                 /*
                 * function to handle clear-command and send to Clients
                 */
                 socket.on('clear', function (fileName) {
-                                socket.broadcast.emit('clear', fileName);
-                                drawApp.clearDrawing(fileName);
-                        }
+                        socket.broadcast.emit('clear', fileName);
+                        drawApp.clearDrawing(fileName);
+                }
                 );
                 /*
                 * function to handle save Obj 
@@ -370,7 +379,7 @@ function socketHandler(app, io) {
         });
 
         //NENA BEGIN
-        
+
 }
 
 module.exports = socketHandler;
