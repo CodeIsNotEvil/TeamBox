@@ -508,7 +508,7 @@ socket.on('appMindmapUpdateAlterText', function (node, text, client, file) {
 //the amount of changed nodes is very large.
 
 function changeColor(color) {
-        console.log("node: " + focusedElement);
+        //console.log("node: " + focusedElement);
         socket.emit("appMindmapUpdateAlterColor", focusedElement, color, fileName);
 }
 

@@ -54,3 +54,4 @@ http.listen(PORT, function () {
 require('./routes/routes')(app);
 require('./routes/appRoutes')(app);
 require('./services/socketHandler')(app, io);
+//require('./services/authentification/ldapLoginHandler')(app);

@@ -42,9 +42,12 @@ socket.on('appSynchronizeTime', function () {
 
 if (data.length > 0) {
   for (var i = 0; i < data.length; i++) {
-    $("#dataListData").append(
-      "<option value='" + data[i] + "'/>"
-    );
+    if (data[i] != ',') {
+      $("#dataListData").append(
+        "<option value='" + data[i] + "'/>"
+      );
+    }
+    
   }
 }
 

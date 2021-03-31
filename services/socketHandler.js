@@ -1,11 +1,12 @@
 const { exportData, synchronizeTime } = require('../services/syncHandler');
-const { saveDataDrawStringToDB, updateUserLanguage, getMindMapContentFromDB, writeMindmap } = require("./mysqlHandler");
+const {updateUserLanguage, getMindMapContentFromDB, writeMindmap, clearDrawing } = require("./mysqlHandler");
 const { PATH_TO_GLOBAL_MODULES } = require("../config/server");
 const { JSDOM } = require(PATH_TO_GLOBAL_MODULES + 'jsdom');
 const { window } = new JSDOM("");
 const $ = require("../_jquery/jquery-1.12.3")(window);
 const Group = require('./Group');
 const { shutdownPi } = require('./piHeandler');
+const drawApp = require('./drawApp/drawApp');
 
 //SOCKET IO
 function socketHandler(app, io) {
@@ -333,33 +334,32 @@ function socketHandler(app, io) {
                 /*
                 * function to handle obj Data and send to Clients
                 */
-                socket.on('sendObj',
-                        function (obj, username, fileName) {
-                                allObj.push(obj);
+                socket.on('sendObj', function (obj, username, fileName) {
+                                //console.log("object: " + obj);
+                                drawApp.addObject(obj);
+                                //console.log("allObj sendObjsfun:  " + obj);
                                 socket.broadcast.emit('receiveObj', obj, username, fileName);
                         }
                 );
                 /*
                 * function to handle clear-command and send to Clients
                 */
-                socket.on('clear',
-                        function (fileName) {
+                socket.on('clear', function (fileName) {
                                 socket.broadcast.emit('clear', fileName);
-                                allObj.length = 0;
-                                mysqlConnection.query("UPDATE dataAppDraw SET content = '' WHERE fileName =  '" + fileName + "'    ");
+                                drawApp.clearDrawing(fileName);
                         }
                 );
                 /*
                 * function to handle save Obj 
                 */
                 socket.on('appDrawingSave', function (image, fileName) {
-                        createString(fileName); //save allObj as String in database
-                        var data = image.replace(/^data:image\/\w+;base64,/, '');
+                        drawApp.createString(fileName); //save allObj as String in database
+                        let data = image.replace(/^data:image\/\w+;base64,/, '');
                         var fs = require("fs");
-                        var date = new Date();
-                        let imgFileName = "draw_" + date.getTime() + ".png";
-                        var path = "/var/www/html/app/drawings/" + imgFileName;
-                        var path = "/var/www/html/app/drawings/draw_" + fileName + ".png";
+                        //var date = new Date();
+                        //let imgFileName = "draw_" + date.getTime() + ".png";
+                        //var path = "/var/www/html/app/drawings/" + imgFileName;
+                        let path = "/var/www/html/app/drawings/draw_" + fileName + ".png";
                         fs.writeFile(path, data, { encoding: 'base64' }, function (err) {
                                 //console.log("error: " + err);
                                 //console.log("fileName: " + fileName);
@@ -370,48 +370,7 @@ function socketHandler(app, io) {
         });
 
         //NENA BEGIN
-        /** 
-        * Function to create a string with objdata and save it to the DB.
-        */
-
-        var allObj = [];
-
-        function createString(filename) {
-                var string = "";
-                for (var i = 0; i < allObj.length; i++) {
-                        if (allObj[i].filename == filename) {
-                                switch (allObj[i].name) {
-                                        case 'pencil':
-                                                string = string + allObj[i].x + "###" + allObj[i].y + "###" + allObj[i].v + "###" + allObj[i].xp + "###" + allObj[i].yp + "###" + allObj[i].col + "###" + allObj[i].l + "###" + allObj[i].name + "###" + allObj[i].filename + "***";
-                                                break;
-                                        case 'pencilarray':
-                                                var allObjects = allObj[i].objArray[0].x + "###" + allObj[i].objArray[0].y + "###" + allObj[i].objArray[0].v + "###" + allObj[i].objArray[0].xp + "###" + allObj[i].objArray[0].yp + "###" + allObj[i].objArray[0].col + "###" + allObj[i].objArray[0].l + "###" + allObj[i].objArray[0].name + "###" + allObj[i].objArray[0].filename + "***";
-                                                for (let j = 1; j < allObj[i].objArray.length; j++) {
-                                                        allObjects += "+++" + allObj[i].objArray[j].x + "###" + allObj[i].objArray[j].y + "###" + allObj[i].objArray[j].v + "###" + allObj[i].objArray[j].xp + "###" + allObj[i].objArray[j].yp + "###" + allObj[i].objArray[j].col + "###" + allObj[i].objArray[j].l + "###" + allObj[i].objArray[j].name + "###" + allObj[i].objArray[j].filename + "***";
-                                                }
-                                                string = string + allObjects + "+++" + allObj[i].name + "###" + allObj[i].filename + "***";
-                                                break;
-                                        case 'line':
-                                                string = string + allObj[i].x + "###" + allObj[i].y + "###" + allObj[i].v + "###" + allObj[i].xp + "###" + allObj[i].yp + "###" + allObj[i].col + "###" + allObj[i].l + "###" + allObj[i].name + "###" + allObj[i].filename + "***";
-                                                break;
-                                        case 'rect':
-                                                string = string + allObj[i].x + "###" + allObj[i].y + "###" + allObj[i].v + "###" + allObj[i].width + "###" + allObj[i].height + "###" + allObj[i].col + "###" + allObj[i].filled + "###" + allObj[i].l + "###" + allObj[i].name + "###" + allObj[i].filename + "***";
-                                                break;
-                                        case 'circle':
-                                                string = string + allObj[i].x + "###" + allObj[i].y + "###" + allObj[i].v + "###" + allObj[i].width + "###" + allObj[i].height + "###" + allObj[i].col + "###" + allObj[i].filled + "###" + allObj[i].l + "###" + allObj[i].name + "###" + allObj[i].filename + "***";
-                                                break;
-                                        case 'text':
-                                                string = string + allObj[i].x + "###" + allObj[i].y + "###" + allObj[i].str + "###" + allObj[i].size + "###" + allObj[i].family + "###" + allObj[i].col + "###" + allObj[i].l + "###" + allObj[i].name + "###" + allObj[i].filename + "***";
-                                                break;
-                                        case 'img':
-                                                string = string + allObj[i].src + "###" + allObj[i].x + "###" + allObj[i].y + "###" + allObj[i].l + "###" + allObj[i].name + "###" + allObj[i].filename + "***";
-                                                break;
-                                }
-                        }
-                }
-                saveDataDrawStringToDB(string, filename);
-                //console.log("The OBJ String\n" + string);
-        }
+        
 }
 
 module.exports = socketHandler;

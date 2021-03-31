@@ -168,7 +168,7 @@ function setup() {
 	/*
 	* appendUser to #containerInfoRight
 	*/
-	socket.on('appUpdateUsers', function (users, username, file) {
+	socket.on('appUpdateUsers', function (users, username, fileName) {
 		usersConnected = users;
 		$("#containerInfoRight").html("Online sind: ");
 

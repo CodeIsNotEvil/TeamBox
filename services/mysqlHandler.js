@@ -65,13 +65,13 @@ function exportMysql() {
 function exportMysqlAsync() {
     asyncExec("sudo bash " + PATH_TO_BASH_SCRIPTS + "mysql_export.sh", (err, stdout, stderr) => {
         if (err == null) {
-          console.log("MySQL Databases were exported Successfully.")
-          return true;
+            console.log("MySQL Databases were exported Successfully.")
+            return true;
         } else {
-          console.error(error);
-          return false;
+            console.error(error);
+            return false;
         }
-      });
+    });
 }
 /**
  * Drops the dataAppMindmap and userData Tables from the MySQL Databases. 
@@ -108,30 +108,46 @@ function updateUserLanguage(user, value) {
     mysqlConnection.query("UPDATE userData SET language = '" + value + "'    WHERE user =  '" + user + "'    ");
 }
 
-function getDrawData() {
-    let data = [];
+function getDrawData(res, req, group, route) {//FOUND THE ERROR!! THE callback function gets called afer this functions retruned his data variable
+    //https://stackoverflow.com/questions/18361930/node-js-returning-result-from-mysql-query
+    
     mysqlConnection.query("SELECT * FROM dataAppDraw", function (err, result) {
-        for (var i = 0; i < result.length; i++) {
-            data.push(result[i].fileName);
+        let fileNames = [];
+        if (err) {
+            console.log(err);
         }
+        //console.log("result: " + result);
+        for (var i = 0; i < result.length; i++) {
+            fileNames.push(result[i].fileName);
+            //console.log("filename: " + result[i].fileName);
+        }
+        //console.log("Filenames: " + fileNames);
+        route(res, group, fileNames);
 
     });
-    return data;
 }
-function getDrawObjectData() {
-    let object = [];
+function getDrawObjectData(res, req, group, route) {
     mysqlConnection.query("SELECT * FROM dataAppDraw", function (err, result) {
+        let fileNames = [];
+        let contents = [];
+        if (err) {
+            console.log(err);
+        }
         for (var i = 0; i < result.length; i++) {
+            fileNames.push(result[i].fileName);
             object.push(result[i].content);
         }
+        route(res, req, group, fileNames, contents);
 
     });
-    return object;
 }
 
 function getMindmapData() {
     let data = [];
-    mysqlConnection.query("SELECT * FROM dataAppMindmap", function (err, result, fields) {
+    mysqlConnection.query("SELECT * FROM dataAppMindmap", function (err, result,) {
+        if (err) {
+            console.log(err);
+        }
         for (var i = 0; i < result.length; i++) {
             data.push(result[i].fileName);
         }
@@ -174,6 +190,17 @@ function writeMindmap(content, fileName) {
     });
     return errorMessage;
 }
+/**
+ * Clears the drawing in the dataAppDraw MySQL database.
+ * @param {String} fileName 
+ */
+function clearDrawingQuery(fileName) {
+    mysqlConnection.query("UPDATE dataAppDraw SET content = '' WHERE fileName =  '" + fileName + "'    ");
+}
+
+function getMySQLConnection() {
+    return mysqlConnection;
+}
 
 module.exports = {
     startUp,
@@ -184,9 +211,8 @@ module.exports = {
     getMindMapContentFromDB,
     saveDataDrawStringToDB,
     updateUserLanguage,
-    getMindmapData,
-    getDrawObjectData,
-    getDrawData,
     createAndSaveUserSession,
-    writeUserdata
+    writeUserdata,
+    clearDrawingQuery,
+    getMySQLConnection
 };
