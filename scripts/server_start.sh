@@ -22,8 +22,10 @@ cd "$parent_path"
 app=$(netstat -lt | grep "3000")
 if [ -z "$app" ]
 then
-	node ../server.js &
+	cd
+	sudo -H -u ubuntu bash -c node app/server.js &
 	printf "\nStarted app"
+	cd "$parent_path"
 else
 	printf "\nApp is already running"
 fi
