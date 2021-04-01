@@ -15,15 +15,17 @@
 
 # get the parent path and cd to it.
 # this assures that we alway have te right paths if we use relatives
-parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+# parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+parent_path=$( cd "$(dirname "$0")" ; pwd -P )
 cd "$parent_path"
+printf "parent path:\n$parent_path"
 
 # start own NodeJs app on port 3000
 app=$(netstat -lt | grep "3000")
 if [ -z "$app" ]
 then
-	cd
-	sudo -H -u ubuntu bash -c node app/server.js &
+	cd /home/ubuntu/
+	sudo -H -u ubuntu node app/server.js &
 	printf "\nStarted app"
 	cd "$parent_path"
 else
