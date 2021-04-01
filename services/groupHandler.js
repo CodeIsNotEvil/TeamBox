@@ -41,7 +41,16 @@ class groupHandler {
     }
 
     static loadGroups() {
-        Group.groups = runScript("group_show.sh", false, false).split("\n");
+        let shellPrints = runScript("group_show.sh", false, false).split("\n");
+        shellPrints.forEach(print => {
+            if (print === "Device mounted") {
+                console.log("DEBUG: Device was mounted");
+                
+            } else {
+                Group.groups.push(print);
+            }
+        });
+        //Group.groups = runScript("group_show.sh", false, false).split("\n");
     }
 
     static chooseGroup() {
