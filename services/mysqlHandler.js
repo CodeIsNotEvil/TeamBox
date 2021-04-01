@@ -79,6 +79,7 @@ function exportMysqlAsync() {
 function startUp() {
     mysqlConnection.query("DROP TABLE IF EXISTS `dataAppMindmap`");
     mysqlConnection.query("DROP TABLE IF EXISTS `userData`");
+    mysqlConnection.query("DROP TABLE IF EXISTS `dataAppDraw`");
 }
 
 /**
