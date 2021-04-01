@@ -1,6 +1,6 @@
 const { PATH_TO_VIEWS, MAX_USER_COUNT } = require('../config/server');
 const { getMySQLConnection } = require('../services/mysqlHandler');
-const getEthercalcEntries = require('../services/ethercalcHandler');
+const Ethercalc = require('../services/ethercalcHandler');
 const getEtherpadEntries = require('../services/etherpadHandler');
 const Group = require('../services/Group');
 
@@ -57,7 +57,6 @@ function appRoutes(app) {
 
         app.get("/appMindmapLoad.ejs", function (req, res) {
                 if (req.session.username) {
-
                         //let data = getMindmapData();
                         let mysqlconnection = getMySQLConnection();
                         mysqlconnection.query("SELECT * FROM dataAppMindmap", function (err, result,) {
@@ -104,8 +103,7 @@ function appRoutes(app) {
 
         app.get("/appEthercalcLoad.ejs", function (req, res) {
                 if (req.session.username) {
-
-                        let data = getEthercalcEntries();
+                        let data = Ethercalc.getEntries();
                         console.log("EthercalcData: " + data);
 
                         res.render(PATH_TO_VIEWS + "/appEthercalcLoad.ejs", { username: req.session.username, group: Group.group, color: req.session.usercolor, data: data });
