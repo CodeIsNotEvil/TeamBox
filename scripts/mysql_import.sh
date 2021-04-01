@@ -39,7 +39,7 @@ exit_status=1
 # param $1 : database to import
 function import_DB(){
 	# get all dumps
-	dumps_str=$(find "${dump_path}" -maxdepth 1 -type f | grep -oP "${1}_[0-9]{10}\.sql")
+	dumps_str=$(find "${dump_path}" -maxdepth 1 -type f | grep -oP "${1}_[0-9]*\.sql")
 	#printf "$dumps_str"
 	unsorted_dumps=( $dumps_str )
 	dumps_num=${#unsorted_dumps[@]}
