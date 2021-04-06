@@ -2,7 +2,7 @@ const runScript = require('./runScripts');
 const { importMysql } = require('./mysqlHandler');
 const { importWekanDB } = require('./mongoDBHandler');
 const Group = require('./Group');
-const Ethercalc = require('./ethercalcHandler');
+const Ethercalc = require('./ethercalc/ethercalcHandler');
 
 class groupHandler {
     static importCheck() {

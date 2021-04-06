@@ -3,7 +3,7 @@ const { exportMysqlAsync, exportMysql } = require("./mysqlHandler");
 const syncExec = require(PATH_TO_GLOBAL_MODULES + 'sync-exec');
 const Group = require('./Group');
 const { exportWekanDB } = require("./mongoDBHandler");
-const Ethercalc = require("./ethercalcHandler");
+const Ethercalc = require("./ethercalc/ethercalcHandler");
 
 /**
  * Exports the Groups Databases Syncron

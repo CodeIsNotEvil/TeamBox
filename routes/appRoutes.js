@@ -1,6 +1,6 @@
 const { PATH_TO_VIEWS, MAX_USER_COUNT } = require('../config/server');
 const { getMySQLConnection } = require('../services/mysqlHandler');
-const Ethercalc = require('../services/ethercalcHandler');
+const Ethercalc = require('../services/ethercalc/ethercalcHandler');
 const getEtherpadEntries = require('../services/etherpadHandler');
 const Group = require('../services/Group');
 

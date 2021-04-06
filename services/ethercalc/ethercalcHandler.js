@@ -1,8 +1,8 @@
-const { PATH_TO_GLOBAL_MODULES } = require("../config/server");
-const runScript = require("./runScripts");
+const { PATH_TO_GLOBAL_MODULES } = require("../../config/server");
+const runScript = require("../runScripts");
 const fs = require('fs');
 const fse = require(PATH_TO_GLOBAL_MODULES + 'fs-extra');
-const Group = require("./Group");
+const Group = require("../Group");
 
 const LOCAL_DUMP_PATH = "/home/ubuntu/dump/";
 const USB_PRE_PATH = "/media/USB-TeamBox/TeamBox/";
