@@ -94,6 +94,7 @@ function import_DB(){
 		fi
 	else
 		printf "There are no ${1} sql dumps for this group yet!\n"
+		mysql --user="$user" --password="$password" "$1" -e "DROP TABLE IF EXISTS store"
 		# import an empty table
 		mysql --user="$user" --password="$password" "$1" < "${empty_db_path}${1}_emptyDB.sql"
 		exit_status="$?"
