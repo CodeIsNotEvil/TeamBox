@@ -52,7 +52,7 @@
 				<ul id="submen">
 					<li id="submenItemName">Name: <%= username %></li>
 					<li id="submenItemGroup">Group: <%= group %></li>
-					<li><a href="hub.ejs" id="back" title="Home" class="back">Home</a></li>
+					<li><a href="javascript:void(0)" id="back" title="Home" class="back">Home</a></li>
 					<li><a href="javascript:void(0)" id="save" class="download" title="Download Image">Download Image</a></li>
 					<li><a href="javascript:void(0)" id="saveFile" class="save" title="Save to USB">Save to USB</a></li>
 					<li>
@@ -71,7 +71,7 @@
 	<div id="foreground"></div>
 	<script>var username = "<%= username %>";</script>
 	<script>var group = "<%= group %>";</script>
-	<script>var drawObjData = "<%= drawObjData %>";</script>
+	<script>var drawObjData = "<%= drawObjData %>"; console.log(drawObjData);</script>
 	<script>var data = "<%= data %>";</script>
 	<script src="../scripts/appDrawFunctions.js"></script>
 	</body>

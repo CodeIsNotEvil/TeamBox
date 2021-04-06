@@ -1,5 +1,5 @@
 const { exportData, synchronizeTime } = require('../services/syncHandler');
-const { updateUserLanguage, getMindMapContentFromDB, writeMindmap, clearDrawing } = require("./mysqlHandler");
+const { saveDataDrawStringToDB, updateUserLanguage, getMindMapContentFromDB, writeMindmap, clearDrawing } = require("./mysqlHandler");
 const { PATH_TO_GLOBAL_MODULES } = require("../config/server");
 /*const { JSDOM } = require(PATH_TO_GLOBAL_MODULES + 'jsdom');
 const { window } = new JSDOM("");
@@ -362,18 +362,17 @@ function socketHandler(app, io) {
                 * function to handle save Obj 
                 */
                 socket.on('appDrawingSave', function (image, fileName) {
-                        drawApp.createString(fileName); //save allObj as String in database
-                        let data = image.replace(/^data:image\/\w+;base64,/, '');
-                        var fs = require("fs");
-                        //var date = new Date();
-                        //let imgFileName = "draw_" + date.getTime() + ".png";
-                        //var path = "/var/www/html/app/drawings/" + imgFileName;
-                        let path = "/var/www/html/app/drawings/draw_" + fileName + ".png";
-                        fs.writeFile(path, data, { encoding: 'base64' }, function (err) {
-                                //console.log("error: " + err);
-                                //console.log("fileName: " + fileName);
-                                io.emit('appDrawingSave', fileName);
-                        });
+                        let string = drawApp.createString(fileName); //get the image string
+                        saveDataDrawStringToDB(string, image, fileName, (image, fileName) => {
+                                let data = image.replace(/^data:image\/\w+;base64,/, '');
+                                var fs = require("fs");
+                                let path = "/var/www/html/app/drawings/draw_" + fileName + ".png";
+                                fs.writeFile(path, data, { encoding: 'base64' }, function (err) {
+                                        io.emit('appDrawingSave', fileName);
+                                });
+
+                        }); //save allObj as String in database
+
                 });
                 //NENA END
         });

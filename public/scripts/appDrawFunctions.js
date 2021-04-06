@@ -502,6 +502,7 @@ $(document).ready(function () {
 	});
 	$('#back').on("click", function () {
 		saveFile(fileName);
+		document.location.href ="/";
 	});
 	$('#pencil').on("click", function () {
 		$("#" + state).attr('class', '');

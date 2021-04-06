@@ -52,7 +52,7 @@ class drawApp {
                 }
             }
         }
-        saveDataDrawStringToDB(string, filename);
+        return string
         //console.log("The OBJ String\n" + string);
     }
 

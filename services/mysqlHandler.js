@@ -156,9 +156,21 @@ function getMindmapData() {
     return data;
 }
 
-function saveDataDrawStringToDB(string, fileName) {
-    mysqlConnection.query("INSERT IGNORE INTO dataAppDraw (fileName,content) VALUES ('" + fileName + "','" + string + "')");
-    mysqlConnection.query("UPDATE dataAppDraw SET content = '" + string + "'    WHERE fileName =  '" + fileName + "'    ");
+function saveDataDrawStringToDB(string, image, fileName, callback) {
+    mysqlConnection.query("INSERT IGNORE INTO dataAppDraw (fileName,content) VALUES ('" + fileName + "','" + string + "')", function (err, result, fields) {
+        if (err) {
+            console.error(err);
+        } else {
+            mysqlConnection.query("UPDATE dataAppDraw SET content = '" + string + "'    WHERE fileName =  '" + fileName + "'    ", function (err, result, fields) {
+                if (err) {
+                    console.error(err);
+                } else {
+                    callback(image, fileName);
+                }       
+            });
+        }
+    });
+    
 }
 
 function getMindMapContentFromDB(fileName, emitContent) {
@@ -197,7 +209,11 @@ function writeMindmap(content, fileName) {
  * @param {String} fileName 
  */
 function clearDrawingQuery(fileName) {
-    mysqlConnection.query("UPDATE dataAppDraw SET content = '' WHERE fileName =  '" + fileName + "'    ");
+    mysqlConnection.query("UPDATE dataAppDraw SET content = '' WHERE fileName =  '" + fileName + "'    ", function (err, rows, fields) {
+        if (err) {
+            console.error(err);
+        }
+    });
 }
 
 function getMySQLConnection() {
