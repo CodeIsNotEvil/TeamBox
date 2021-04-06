@@ -3,6 +3,7 @@ const { exportMysqlAsync, exportMysql } = require("./mysqlHandler");
 const syncExec = require(PATH_TO_GLOBAL_MODULES + 'sync-exec');
 const Group = require('./Group');
 const { exportWekanDB } = require("./mongoDBHandler");
+const Ethercalc = require("./ethercalcHandler");
 
 /**
  * Exports the Groups Databases Syncron
@@ -16,6 +17,10 @@ function exportData() {
         }
         if (!exportWekanDB(true)) {
                 console.error("Wekan DB could not be exported.");
+                return false;
+        }
+        if (!Ethercalc.exportDump()) {
+                console.error("Ethercalc Dump could not be exported.");
                 return false;
         }
         return true;
@@ -33,6 +38,7 @@ function exportAsync() {
                 if (Group.wekanDBIsImported == true) {
                         exportWekanDB(false);
                 }
+                Ethercalc.exportDump(); //NOTE: this call is not Async
         }, 120000);//120000ms = 2minutes
 }
 

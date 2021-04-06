@@ -104,7 +104,7 @@ function appRoutes(app) {
         app.get("/appEthercalcLoad.ejs", function (req, res) {
                 if (req.session.username) {
                         let data = Ethercalc.getEntries();
-                        console.log("EthercalcData: " + data);
+                        //console.log("EthercalcData: " + data);
 
                         res.render(PATH_TO_VIEWS + "/appEthercalcLoad.ejs", { username: req.session.username, group: Group.group, color: req.session.usercolor, data: data });
                 }

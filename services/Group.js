@@ -2,6 +2,7 @@ class Group {
     static group = "";
     static groupIsFromUsb = false;
     static mysqlIsImported = false;
+    static ethercalcIsImported = false;
     static wekanDBIsImported = false;
     static groups = [];
     static clients = [];

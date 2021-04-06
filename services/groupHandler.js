@@ -2,6 +2,7 @@ const runScript = require('./runScripts');
 const { importMysql } = require('./mysqlHandler');
 const { importWekanDB } = require('./mongoDBHandler');
 const Group = require('./Group');
+const Ethercalc = require('./ethercalcHandler');
 
 class groupHandler {
     static importCheck() {
@@ -18,6 +19,7 @@ class groupHandler {
 
     static import() {
         Group.mysqlIsImported = importMysql(); //checks if the group has a DB in the mysql_import.sh
+        Group.ethercalcIsImported = Ethercalc.importDump();
         Group.wekanDBIsImported = importWekanDB();
     }
 

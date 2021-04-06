@@ -25,7 +25,7 @@ app=$(netstat -lt | grep "3000")
 if [ -z "$app" ]
 then
 	cd /home/ubuntu/
-	sudo -H -u ubuntu node app/server.js &
+	sudo -H -u root node app/server.js &
 	printf "\nStarted app"
 	cd "$parent_path"
 else
