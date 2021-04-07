@@ -156,7 +156,8 @@ function getMindmapData() {
     return data;
 }
 
-function saveDataDrawStringToDB(string, image, fileName, callback) {
+function saveDataDrawStringToDB(string, image, fileName, saveAsImageAndEmit) {
+    //console.log(string);
     mysqlConnection.query("INSERT IGNORE INTO dataAppDraw (fileName,content) VALUES ('" + fileName + "','" + string + "')", function (err, result, fields) {
         if (err) {
             console.error(err);
@@ -165,7 +166,7 @@ function saveDataDrawStringToDB(string, image, fileName, callback) {
                 if (err) {
                     console.error(err);
                 } else {
-                    callback(image, fileName);
+                    saveAsImageAndEmit(image, fileName);
                 }       
             });
         }

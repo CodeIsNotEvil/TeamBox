@@ -1,5 +1,5 @@
 const { exportData, synchronizeTime } = require('../services/syncHandler');
-const { saveDataDrawStringToDB, updateUserLanguage, getMindMapContentFromDB, writeMindmap, clearDrawing } = require("./mysqlHandler");
+const { saveDataDrawStringToDB, updateUserLanguage, getMindMapContentFromDB, writeMindmap } = require("./mysqlHandler");
 const { PATH_TO_GLOBAL_MODULES } = require("../config/server");
 /*const { JSDOM } = require(PATH_TO_GLOBAL_MODULES + 'jsdom');
 const { window } = new JSDOM("");
@@ -361,14 +361,20 @@ function socketHandler(app, io) {
                 /*
                 * function to handle save Obj 
                 */
-                socket.on('appDrawingSave', function (image, fileName) {
+                socket.on('appDrawingSave', function (image, fileName, callback) {
                         let string = drawApp.createString(fileName); //get the image string
                         saveDataDrawStringToDB(string, image, fileName, (image, fileName) => {
                                 let data = image.replace(/^data:image\/\w+;base64,/, '');
                                 var fs = require("fs");
                                 let path = "/var/www/html/app/drawings/draw_" + fileName + ".png";
                                 fs.writeFile(path, data, { encoding: 'base64' }, function (err) {
-                                        io.emit('appDrawingSave', fileName);
+                                        if(err){
+                                                console.log(err);
+                                                callback({error : "content could not be saved as Image"});
+                                        } else {
+                                                callback({fileName : fileName});
+                                                //io.emit('appDrawingSave', fileName);
+                                        }
                                 });
 
                         }); //save allObj as String in database

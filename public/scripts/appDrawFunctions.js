@@ -56,7 +56,7 @@ function setup() {
 		function (obj, username, fileName) {
 			drawX(obj);
 			allObj.push(obj);
-
+			//console.log("allObj length: " + allObj.length);
 			//displays username on mousex and mousey from obj and fadeOut after 3000
 			if (obj.fileName == fileName) {
 				$("#foreground").html(username);
@@ -404,10 +404,28 @@ function saveWindow(fileName) {
 function saveFile(fileName) {
 	var draw_canvas = document.getElementById('visible');
 	var image = draw_canvas.toDataURL("image/png");
-	socket.emit("appDrawingSave", image, fileName); //fileName!
-	$("#sidebarItemSaveNotice").css({ 'left': '40%', 'top': '40%', 'padding': '20px' });
-	$("#sidebarItemSaveNotice").html("saved successfully");
-	$("#sidebarItemSaveNotice").show().delay(2000).fadeOut();
+	//console.log(image);
+	socket.emit("appDrawingSave", image, fileName, function (message) {
+		if (message.error) {
+			console.log(message.error);
+			$("#sidebarItemSaveNotice").css({ 'left': '40%', 'top': '40%', 'padding': '20px' });
+			$("#sidebarItemSaveNotice").html(message.error);
+			$("#sidebarItemSaveNotice").show().delay(2000).fadeOut();
+		} else if (message.fileName){
+			console.log("saved " + message.fileName + " successfully");
+			$("#sidebarItemSaveNotice").css({ 'left': '40%', 'top': '40%', 'padding': '20px' });
+			$("#sidebarItemSaveNotice").html("saved " + message.fileName + " successfully");
+			$("#sidebarItemSaveNotice").show().delay(2000).fadeOut();
+		} else {
+			console.log("Someting went wrong appDrawFunction.js");
+			$("#sidebarItemSaveNotice").css({ 'left': '40%', 'top': '40%', 'padding': '20px' });
+			$("#sidebarItemSaveNotice").html("Someting went wrong appDrawFunction.js");
+			$("#sidebarItemSaveNotice").show().delay(2000).fadeOut();
+		}
+	}); //fileName!
+	//$("#sidebarItemSaveNotice").css({ 'left': '40%', 'top': '40%', 'padding': '20px' });
+	//$("#sidebarItemSaveNotice").html("saved successfully");
+	//$("#sidebarItemSaveNotice").show().delay(2000).fadeOut();
 }
 
 /* 
@@ -502,7 +520,10 @@ $(document).ready(function () {
 	});
 	$('#back').on("click", function () {
 		saveFile(fileName);
-		document.location.href ="/";
+		setTimeout(function () {
+			document.location.href ="/";
+		}, 500);
+		
 	});
 	$('#pencil').on("click", function () {
 		$("#" + state).attr('class', '');

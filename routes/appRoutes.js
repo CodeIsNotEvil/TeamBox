@@ -11,16 +11,16 @@ function appRoutes(app) {
                         mysqlconnection.query("SELECT * FROM dataAppDraw", function (err, result) {
                                 let fileNames = [];
                                 if (err) {
-                                    console.log(err);
+                                        console.log(err);
                                 }
                                 for (var i = 0; i < result.length; i++) {
-                                    fileNames.push(result[i].fileName);
+                                        fileNames.push(result[i].fileName);
                                 }
                                 //let data = JSON.stringify(fileNames);
                                 //data = fileNames.toString();
                                 res.render(PATH_TO_VIEWS + "/appDrawLoad.ejs", { username: req.session.username, group: Group.group, color: req.session.usercolor, data: fileNames });
                         });
-                        
+
                 }
                 else {
 
@@ -40,14 +40,19 @@ function appRoutes(app) {
                                 let fileNames = [];
                                 let contents = [];
                                 if (err) {
-                                    console.log(err);
+                                        console.log(err);
+                                } else {
+                                        for (var i = 0; i < result.length; i++) {
+                                                fileNames.push(result[i].fileName);
+                                                contents.push(result[i].content);
+                                                //content did not get updated on the first reload a secound one is requiered
+                                                //console.log(contents[i]);
+                                                //console.log("\n\n" + fileNames[i]+ "\n");
+                                        }
+                                        //data = fileNames.toString();
+                                        res.render(PATH_TO_VIEWS + "/appDraw.ejs", { username: req.session.username, group: Group.group, color: req.session.usercolor, drawObjData: contents, data: fileNames });
                                 }
-                                for (var i = 0; i < result.length; i++) {
-                                    fileNames.push(result[i].fileName);
-                                    contents.push(result[i].content);
-                                }
-                                //data = fileNames.toString();
-                                res.render(PATH_TO_VIEWS + "/appDraw.ejs", { username: req.session.username, group: Group.group, color: req.session.usercolor, drawObjData: contents, data: fileNames });
+
                         });
                 } else {
                         return res.redirect("/login01.ejs");
@@ -62,15 +67,15 @@ function appRoutes(app) {
                         mysqlconnection.query("SELECT * FROM dataAppMindmap", function (err, result,) {
                                 let data = [];
                                 if (err) {
-                                    console.log(err);
+                                        console.log(err);
                                 }
                                 for (var i = 0; i < result.length; i++) {
-                                    data.push(result[i].fileName);
+                                        data.push(result[i].fileName);
                                 }
                                 res.render(PATH_TO_VIEWS + "/appMindmapLoad.ejs", { username: req.session.username, group: Group.group, color: req.session.usercolor, data: data });
                         });
 
-                        
+
                 }
                 else {
                         return res.redirect("/login01.ejs");
