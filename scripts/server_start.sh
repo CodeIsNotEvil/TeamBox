@@ -54,14 +54,14 @@ else
 	printf "\nEthercalc is already running"
 fi
 
-filebrowser_status=$(sudo service filebrowser status | grep -oP "(?<=Active:\ )[^\ ]*(?=\ )")
-	if [ "$filebrowser_status" = "active" ]
-	then
-		printf "\nFile Browser is Active"
-	else
-		printf "\nFile Browser is not Active start the service..."
-		sudo systemctl start filebrowser
-	fi
+#filebrowser_status=$(sudo service filebrowser status | grep -oP "(?<=Active:\ )[^\ ]*(?=\ )")
+#	if [ "$filebrowser_status" = "active" ]
+#	then
+#		printf "\nFile Browser is Active"
+#	else
+#		printf "\nFile Browser is not Active start the service..."
+#		sudo systemctl start filebrowser
+#	fi
 
 # start WEKAN on port 2000
 wekan=$(netstat -lt | grep "2000")

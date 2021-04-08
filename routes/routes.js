@@ -8,6 +8,7 @@ const { loadGroups } = require('../services/groupHandler');
 const groupHandler = require('../services/groupHandler');
 const user = require('../models/MySQLUser');
 const Group = require('../services/Group');
+const fileBrowser = require('../services/fileBrowser/fileBrowser');
 
 
 
@@ -54,6 +55,7 @@ function routes(app) {
                                         res.end(errorMessage); 
                                 }
                         }
+                        fileBrowser.startfilebrowser();
                         res.end("loginSuccess");
                 }
         });
