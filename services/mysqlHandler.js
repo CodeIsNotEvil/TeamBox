@@ -220,6 +220,24 @@ function clearDrawingQuery(fileName) {
 function getMySQLConnection() {
     return mysqlConnection;
 }
+/*
+function loadContentFromDB(filename, saveToAllObject) {
+    mysqlConnection.query("SELECT content FROM dataAppDraw WHERE fileName LIKE '" + filename + "'" , function (err, result) {
+        
+        if (err) {
+            console.log(err);
+        } else {
+            let content = [];
+            for (let index = 0; index < result.length; index++) {
+                content.push(result[index]);
+                
+            }
+            console.log(content);
+            saveToAllObject(content);
+        }
+    });
+}
+*/
 
 module.exports = {
     startUp,

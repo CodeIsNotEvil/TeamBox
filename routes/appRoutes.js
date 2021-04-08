@@ -1,4 +1,4 @@
-const { PATH_TO_VIEWS, MAX_USER_COUNT } = require('../config/server');
+const { PATH_TO_VIEWS} = require('../config/server');
 const { getMySQLConnection } = require('../services/mysqlHandler');
 const Ethercalc = require('../services/ethercalc/ethercalcHandler');
 const getEtherpadEntries = require('../services/etherpadHandler');
@@ -50,6 +50,7 @@ function appRoutes(app) {
                                                 //console.log("\n\n" + fileNames[i]+ "\n");
                                         }
                                         //data = fileNames.toString();
+                                        //drawApp.initAllObj(contents);
                                         res.render(PATH_TO_VIEWS + "/appDraw.ejs", { username: req.session.username, group: Group.group, color: req.session.usercolor, drawObjData: contents, data: fileNames });
                                 }
 

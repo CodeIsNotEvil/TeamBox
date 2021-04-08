@@ -82,8 +82,12 @@ function setup() {
 		}
 	);
 	//handle messages end
-
-
+    /*
+	function loadObject(fileName) {
+		socket.emit('appDrawingLoad', fileName);
+	}
+	loadObject(fileName);
+	*/
 	/*
 	* updateUserList, updates the user list and convert loaded string data from db to create obj
 	*/

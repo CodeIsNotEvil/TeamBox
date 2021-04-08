@@ -381,6 +381,12 @@ function socketHandler(app, io) {
 
                 });
                 //NENA END
+               /* socket.on('appDrawingLoad', function (fileName) {
+                        loadContentFromDB(fileName, (content) => {
+                                drawApp.allObj = content;
+                        });
+                });
+                */
         });
 
         //NENA BEGIN

@@ -1,9 +1,13 @@
-const { saveDataDrawStringToDB, clearDrawingQuery } = require("../mysqlHandler");
+const {clearDrawingQuery } = require("../mysqlHandler");
 
 class drawApp {
 
     static allObj = [];
 
+/*    static initAllObj(content){
+        this.allObj = content;
+    }
+*/
     static addObject(object) {
         this.allObj.push(object);
     }
