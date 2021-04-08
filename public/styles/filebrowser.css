@@ -1,0 +1,38 @@
+body, html {
+    width: 100%; 
+    height: 100%; 
+    margin: 0; 
+    padding: 0
+}
+.row-container {
+    display: flex; 
+    width: 100%; 
+    height: 100%; 
+    flex-direction: column; 
+    background-color: blue; 
+    overflow: hidden;
+}
+.first-row {
+    background-color: white;
+}
+.second-row { 
+    flex-grow: 1; 
+    border: none; 
+    margin: 0; 
+    padding: 0; 
+}
+
+#first-colum{
+  text-align: center;
+}
+
+#homeLink{
+  padding: 10px;
+  color: black;
+  text-decoration: none;
+  font-size: 21px;
+}
+
+#homeLink:hover {
+    background-color: rgb(240, 240, 240);
+} 

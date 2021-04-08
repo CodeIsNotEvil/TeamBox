@@ -1,0 +1,21 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="../styles/filebrowser.css">
+        <meta name="viewport" content="width=device-width, height=device-height,  initial-scale=1.0, user-scalable=no, user-scalable=0"/>
+        <script type="application/javascript" src="http://teambox.local:3000/_jquery/jquery-1.12.3.js"></script>
+        <!-- It must be a direkt http link to the server or it will not work, the documentation of socket.io is not quite right-->
+        <script src="http://teambox.local:3000/socket.io/socket.io.js"></script>
+    </head>
+    <body>
+        <div class="row-container">
+          <div class="first-row">
+            <div id="first-colum">
+              <a href="/" id="homeLink">Home</a>
+              <!--<button onClick="redirectToHome()" id="homeButton" title="Home">Home</button>-->
+            </div>
+          </div>
+            <iframe src="http://192.168.42.1:8080" class="second-row"></iframe>
+        </div>
+        <script src="../scripts/filebrowser.js"></script>
+    </body>
+</html>

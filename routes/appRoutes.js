@@ -128,6 +128,15 @@ function appRoutes(app) {
                         return res.redirect("/login01.ejs");
                 }
         });
+
+        app.get("/filebrowserLoad.ejs", function (req, res) {
+                if (req.session.username) {
+                        res.render(PATH_TO_VIEWS + "/filebrowserLoad.ejs", { username: req.session.username, group: Group.group, color: req.session.usercolor });
+                }
+                else {
+                        return res.redirect("/login01.ejs");
+                }
+        });
 }
 
 module.exports = appRoutes;
