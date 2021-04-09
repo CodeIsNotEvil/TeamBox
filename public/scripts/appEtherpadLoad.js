@@ -92,7 +92,7 @@ function loginResult(result) {
 
     // LARA 09.08.2016
     //window.open("http://192.168.42.1:9001/p/" + url, "_parent");
-    window.open("http://teambox.local:9001/p/" + url + "?username=" + escUsername + "&usercolor=" + color, "_parent");
+    window.open("http://teambox.local:9001/p/" + url + "?userName=" + escUsername + "&userColor=" + color, "_parent");
     // LARA end
   }
   else if (result == "noText") {
