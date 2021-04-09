@@ -3,7 +3,7 @@ const Group = require("../Group");
 const SYNC_EXEC = require(PATH_TO_GLOBAL_MODULES + 'sync-exec');
 const asyncExec = require('child_process').exec;
 const PORT = "8080";
-const ADDRESS = "192.168.42.1";
+const ADDRESS = "0.0.0.0"; //All interfaces
 const AUTH_METHODE = "noauth";
 
 class fileBrowser {
