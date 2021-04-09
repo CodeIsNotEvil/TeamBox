@@ -1,21 +1,15 @@
-<html>
-    <head>
-        <link rel="stylesheet" type="text/css" href="../styles/filebrowser.css">
-        <meta name="viewport" content="width=device-width, height=device-height,  initial-scale=1.0, user-scalable=no, user-scalable=0"/>
-        <script type="application/javascript" src="http://teambox.local:3000/_jquery/jquery-1.12.3.js"></script>
-        <!-- It must be a direkt http link to the server or it will not work, the documentation of socket.io is not quite right-->
-        <script src="http://teambox.local:3000/socket.io/socket.io.js"></script>
-    </head>
-    <body>
-        <div class="row-container">
-          <div class="first-row">
-            <div id="first-colum">
-              <a href="/" id="homeLink">Home</a>
-              <!--<button onClick="redirectToHome()" id="homeButton" title="Home">Home</button>-->
-            </div>
-          </div>
-            <iframe src="http://teambox.local:8080" class="second-row"></iframe>
-        </div>
-        <script src="../scripts/filebrowser.js"></script>
-    </body>
+<%- include('navbar'); -%>
+<link rel="stylesheet" href="../styles/filebrowserNavbar.css">
+    </div>
+      <iframe src="http://teambox.local:8080" class="second-row"></iframe>
+    </div>
+    <script>
+      //sets the filebrowser navbar element to active
+      $(document).ready(function(){
+        $("#filebrowser").addClass("active");
+      });
+    </script>
+    <script>var username = "<%= username %>";</script>
+    <script src="../scripts/filebrowser.js"></script>
+  </body>
 </html>

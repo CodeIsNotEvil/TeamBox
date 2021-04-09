@@ -1,0 +1,22 @@
+nav, ul{
+    background-color: rgb(255, 255, 255);
+}
+
+label.logo, nav ul li a{
+    color: #6f6f6f;
+}
+
+a:hover, a.active, .checkbtn:hover {
+    background-color: #dcdcdc;
+}
+
+
+/*Hamburger ICON*/
+.hamburger {
+    border-top: 0.2em solid #6f6f6f;
+    border-bottom: 0.2em solid #6f6f6f;
+}
+
+.hamburger:before {
+    border-top: 0.2em solid #6f6f6f;
+}

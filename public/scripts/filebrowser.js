@@ -35,7 +35,3 @@ socket.on('appExportMysqlEnd', function () {
 socket.on('appSynchronizeTime', function () {
   $("#containerWarningServertime").show().delay(1000).fadeOut().animate({ opacity: 1, }, 1500);
 });
-
-function redirectToHome() {
-    document.location.href="/";
-}
