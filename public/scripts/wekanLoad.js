@@ -1,1 +1,0 @@
-window.open("http://teambox.local:2000/", "_parent");

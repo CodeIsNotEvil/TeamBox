@@ -1,12 +1,13 @@
-<%- include('header'); -%>
-  <body>
-    <script>
-        var username        = "<%= username %>";
-	// LARA 09.08.2016
-	var escUsername	= username.replace("&", "%26").replace("=", "%3D").replace("?", "%3F");
-	var color	= "<%= color %>";
-	// LARA end
-    </script>
-    <script src="scripts/wekanLoad.js"></script>
-  </body>
+<%- include('navbar'); -%>
+    </div>
+    <iframe src="http://teambox.local:2000/" class="second-row"></iframe>
+  </div>
+  <script>
+    //sets the wekan navbar element to active
+    $(document).ready(function(){
+      console.log("document is ready");
+      $("#wekan").addClass("active");
+    });
+  </script>
+</body>
 </html>
