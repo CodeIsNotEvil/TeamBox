@@ -1,171 +1,178 @@
-*{
-    padding: 0;
-    margin: 0;
-    text-decoration: none;
-    list-style: none;
-    /*box-sizing: border-box;*/
+* {
+  padding: 0;
+  margin: 0;
+  text-decoration: none;
+  list-style: none;
+  /*box-sizing: border-box;*/
+}
+
+body, html {
+  font-family: montserrat;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0
+}
+
+.row-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.second-row {
+  flex-grow: 1;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav {
+  background: #2573a7;
+  height: 80px;
+  width: 100%;
+}
+
+label.logo {
+  color: white;
+  font-size: 35px;
+  line-height: 80px;
+  padding: 0 100px;
+  font-weight: bold;
+}
+
+nav ul {
+  float: right;
+  margin-right: 20px;
+}
+
+nav ul li {
+  display: inline-block;
+  line-height: 80px;
+  margin: 0 5px;
+}
+
+nav ul li a {
+  color: white;
+  font-size: 17px;
+  padding: 7px 13px;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+
+a.active, a:hover {
+  background: #1b9bff;
+  transition: .5s;
+}
+
+.checkbtn {
+  font-size: 30px;
+  color: white;
+  float: right;
+  line-height: 80px;
+  margin-right: 40px;
+  cursor: pointer;
+  display: none;
+}
+
+#check {
+  display: none;
+}
+
+@media (max-width: 440px) {
+  label.logo {
+    font-size: 25px;
+    padding-left: 15px;
   }
-  
-  body, html {
-      font-family: montserrat;
-      width: 100%; 
-      height: 100%; 
-      margin: 0; 
-      padding: 0
+  nav ul li a {
+    font-size: 16px;
   }
-  
-  .row-container {
-      display: flex; 
-      width: 100%; 
-      height: 100%; 
-      flex-direction: column; 
-      overflow: hidden;
+}
+
+@media (max-width: 1490px) {
+  .checkbtn {
+    display: block;
   }
-  
-  .second-row {
-      flex-grow: 1; 
-      border: none; 
-      margin: 0; 
-      padding: 0;
-  }
-  
-  nav{
-    background: #2573a7;
-    height: 80px;
-    width: 100%;
-  }
-  
-  label.logo{
-    color: white;
-    font-size: 35px;
-    line-height: 80px;
-    padding: 0 100px;
-    font-weight: bold;
-  }
-  nav ul{
-    float: right;
-    margin-right: 20px;
-  }
-  nav ul li{
-    display: inline-block;
-    line-height: 80px;
-    margin: 0 5px;
-  }
-  nav ul li a{
-    color: white;
-    font-size: 17px;
-    padding: 7px 13px;
-    border-radius: 3px;
-    text-transform: uppercase;
-  }
-  a.active,a:hover{
-    background: #1b9bff;
-    transition: .5s;
-  }
-  .checkbtn{
-    font-size: 30px;
-    color: white;
-    float: right;
-    line-height: 80px;
-    margin-right: 40px;
-    cursor: pointer;
-    display: none;
-  }
-  #check{
-    display: none;
-  }
-  @media (max-width: 440px){
-    label.logo{
-        font-size: 25px;
-        padding-left: 15px;
-      }
-    nav ul li a{
-      font-size: 16px;
-    }
-  }
-  @media (max-width: 1490px){
-    .checkbtn{
-      display: block;
-    }
   @media (max-height: 690px) and (max-width: 1490px) {
-    .active{
+    .active {
       display: none;
     }
   }
-  ul{
-      position: fixed;
-      width: 100%;
-      height: 100vh;
-      background: #2c3e50;
-      top: 80px;
-      left: -100%;
-      text-align: center;
-      transition: all .5s;
-    }
-    nav ul li{
-      display: block;
-      margin: 50px 0;
-      line-height: 30px;
-    }
-    nav ul li a{
-      font-size: 20px;
-    }
-    a:hover,a.active{
-      background: none;
-      color: #0082e6;
-    }
-    #check:checked ~ ul{
-      left: 0;
-    }
+  ul {
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    background: #2c3e50;
+    top: 80px;
+    left: -100%;
+    text-align: center;
+    transition: all .5s;
   }
-  section{
-    background: url(bg1.jpg) no-repeat;
-    background-size: cover;
-    height: calc(100vh - 80px);
+  nav ul li {
+    display: block;
+    margin: 50px 0;
+    line-height: 30px;
   }
+  nav ul li a {
+    font-size: 20px;
+  }
+  a:hover, a.active {
+    background: none;
+    color: #0082e6;
+  }
+  #check:checked~ul {
+    left: 0;
+  }
+}
+
+section {
+  background: url(bg1.jpg) no-repeat;
+  background-size: cover;
+  height: calc(100vh - 80px);
+}
 
 /*Hamburger ICON*/
+
 .hamburger {
-    position: relative;
-    display: inline-block;
-    width: 1.25em;
-    height: 0.8em;
-    margin-left: 0.3em;
-    margin-right: 0.3em;
-    border-top: 0.2em solid #fff;
-    border-bottom: 0.2em solid #fff;
+  position: relative;
+  display: inline-block;
+  width: 1.25em;
+  height: 0.8em;
+  margin-left: 0.3em;
+  margin-right: 0.3em;
+  border-top: 0.2em solid #fff;
+  border-bottom: 0.2em solid #fff;
 }
 
 .hamburger:before {
-    content: "";
-    position: absolute;
-    top: 0.3em;
-    left: 0px;
-    width: 100%;
-    border-top: 0.2em solid #fff;
+  content: "";
+  position: absolute;
+  top: 0.3em;
+  left: 0px;
+  width: 100%;
+  border-top: 0.2em solid #fff;
 }
 
 @media (max-height: 580px) and (max-width: 1490px) {
-  nav ul li{
+  nav ul li {
     margin: 25px;
   }
 }
 
 @media (max-height: 430px) and (max-width: 1490px) {
-  nav ul li{
+  nav ul li {
     margin: 5px;
   }
 }
 
 @media (max-height: 300px) and (max-width: 1490px) {
-  nav ul li{
+  nav ul li {
     margin: auto;
   }
-  nav ul{
-    overflow:hidden; 
-    overflow-y:scroll;
+  nav ul {
+    overflow: hidden;
+    overflow-y: scroll;
   }
-  
-
-
 }
