@@ -362,22 +362,28 @@ function socketHandler(app, io) {
                 * function to handle save Obj 
                 */
                 socket.on('appDrawingSave', function (image, fileName, callback) {
+                        //Image and fileName are in the right state after sytsem startup
                         let string = drawApp.createString(fileName); //get the image string
-                        saveDataDrawStringToDB(string, image, fileName, (image, fileName) => {
-                                let data = image.replace(/^data:image\/\w+;base64,/, '');
-                                var fs = require("fs");
-                                let path = "/var/www/html/app/drawings/draw_" + fileName + ".png";
-                                fs.writeFile(path, data, { encoding: 'base64' }, function (err) {
-                                        if(err){
-                                                console.log(err);
-                                                callback({error : "content could not be saved as Image"});
-                                        } else {
-                                                callback({fileName : fileName});
-                                                //io.emit('appDrawingSave', fileName);
-                                        }
-                                });
+                        //ERROR the string is empty after systemstartup
+                        //console.log("appDrawingSave_string\n" + fileName + "\n" + string);
+                        if(string){
+                                //console.log("appDrawingSave_string\n" + fileName);
+                                saveDataDrawStringToDB(string, image, fileName, (image, fileName) => {
+                                        let data = image.replace(/^data:image\/\w+;base64,/, '');
+                                        var fs = require("fs");
+                                        let path = "/var/www/html/app/drawings/draw_" + fileName + ".png";
+                                        fs.writeFile(path, data, { encoding: 'base64' }, function (err) {
+                                                if(err){
+                                                        console.log(err);
+                                                        callback({error : "content could not be saved as Image"});
+                                                } else {
+                                                        callback({fileName : fileName});
+                                                        //io.emit('appDrawingSave', fileName);
+                                                }
+                                        });
 
-                        }); //save allObj as String in database
+                                }); //save allObj as String in database
+                        }
 
                 });
                 //NENA END

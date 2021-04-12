@@ -408,7 +408,8 @@ function saveWindow(fileName) {
 function saveFile(fileName) {
 	var draw_canvas = document.getElementById('visible');
 	var image = draw_canvas.toDataURL("image/png");
-	//console.log(image);
+	console.log(image);
+	//Image and Filename are in the right state after system startup
 	socket.emit("appDrawingSave", image, fileName, function (message) {
 		if (message.error) {
 			console.log(message.error);

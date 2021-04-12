@@ -1,13 +1,46 @@
 const {clearDrawingQuery } = require("../mysqlHandler");
 
 class drawApp {
-
+    static allObjWasInitilized = false;
     static allObj = [];
 
-/*    static initAllObj(content){
-        this.allObj = content;
+    static initAllObj(fileNames, contents){
+        if (!this.allObjWasInitilized) {
+            //this.allObj = this.dbStringToObj(fileNames, contents);
+            this.allObjWasInitilized = true;
+        }
     }
-*/
+
+/*    static dbStringToObj(fileNames, contents){
+        let allObjects = [];
+        for (let fileIndex = 0; fileIndex < fileNames.length; fileIndex++) {
+
+            let drawElem = contents.toString().split("***");
+            let nameOfFile;
+            let objName;
+
+            for (let i = 0; i < drawElem.length; i++) {
+                let elem = drawElem[i]; //something like 1775###187###15###1775###187###black###0###pencil###Nena###Ship
+                elem = elem.replace("+++", "");
+                let elem2 = elem.split("###"); //something like 1775,187,15,1775,187,black,0,pencil,Nena, Ship
+                let lastNum = elem2.length - 1;
+                objName = elem2.length - 2;
+                let nameOfObj = elem2[objName];		//something like pencil
+                nameOfFile = elem2[lastNum];	//something like Ship
+                if (fileNames[fileIndex] == nameOfFile) {
+                    switch (nameOfObj) {
+                        case 'pencil':
+                            let newObject = new PencilObj(elem2[0], elem2[1], elem2[2], elem2[3], elem2[4], elem2[5], elem2[6], elem2[7]);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            allObjects.push(object)
+        }
+    }*/
+
     static addObject(object) {
         this.allObj.push(object);
     }
@@ -22,11 +55,15 @@ class drawApp {
         */
     static createString(filename) {
         let string = "";
-        //console.log("filename: " + filename);
-        //console.log("allObj:");
+        //The filename is in correct state after system startup
+        //allObj is emty after system startup
+        //console.log("allObj:" + this.allObj);
         for (let i = 0; i < this.allObj.length; i++) {
-            //console.log(this.allObj[i].fileName);
+            //console.log("\n\nObjectName\n" +  this.allObj[i].fileName);
+            //console.log("Objects_content\n" + this.allObj[i].content);
             if (this.allObj[i].fileName == filename) {
+                //console.log("\n\nObjectName\n" +  this.allObj[i].fileName);
+                //console.log("Objects_content\n" + this.allObj[i].content);
                 switch (this.allObj[i].name) {
                     case 'pencil':
                         string = string + this.allObj[i].x + "###" + this.allObj[i].y + "###" + this.allObj[i].v + "###" + this.allObj[i].xp + "###" + this.allObj[i].yp + "###" + this.allObj[i].col + "###" + this.allObj[i].l + "###" + this.allObj[i].name + "###" + this.allObj[i].fileName + "***";
@@ -56,7 +93,11 @@ class drawApp {
                 }
             }
         }
-        return string
+        if (string == "") {
+            return null;
+        } else {
+            return string
+        }
         //console.log("The OBJ String\n" + string);
     }
 

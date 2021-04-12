@@ -3,6 +3,7 @@ const { getMySQLConnection } = require('../services/mysqlHandler');
 const Ethercalc = require('../services/ethercalc/ethercalcHandler');
 const getEtherpadEntries = require('../services/etherpadHandler');
 const Group = require('../services/Group');
+const drawApp = require('../services/drawApp/drawApp');
 
 function appRoutes(app) {
         app.get("/appDrawLoad.ejs", function (req, res) {
@@ -50,7 +51,7 @@ function appRoutes(app) {
                                                 //console.log("\n\n" + fileNames[i]+ "\n");
                                         }
                                         //data = fileNames.toString();
-                                        //drawApp.initAllObj(contents);
+                                        drawApp.initAllObj(fileNames, contents);
                                         res.render(PATH_TO_VIEWS + "/appDraw.ejs", { username: req.session.username, group: Group.group, color: req.session.usercolor, drawObjData: contents, data: fileNames });
                                 }
 
