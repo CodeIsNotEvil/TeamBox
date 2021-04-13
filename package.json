@@ -1,8 +1,13 @@
 {
   "name": "app",
   "version": "1.0.0",
+  "scripts": {
+    "test": "mocha test/**/**/**"
+  },
   "dependencies": {
     "exe": "^1.0.2",
+    "mocha": "^8.3.2",
+    "mongoose": "^5.12.3",
     "socket.io": "^4.0.0"
   }
 }
