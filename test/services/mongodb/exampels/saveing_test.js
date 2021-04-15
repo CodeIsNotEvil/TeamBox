@@ -9,7 +9,8 @@ describe('Saveing records', function () {
     it('Testing-enviorment setup test', function () {
         assert(true);
     });
-
+    
+    //This will be used for group creation
     it('Saves a record with no files to the database', function (done) {
         //Arrange
         let data = new AppDrawData({
