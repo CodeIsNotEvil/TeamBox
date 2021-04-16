@@ -14,13 +14,13 @@ describe('DrawApp Test', function () {
             console.log(error);
             assert(false);
         }
-        
+
     });
 
     it('getAppDrawDataDocument: find and return the group document', async () => {
 
         let groupName = "testGroup";
-        
+
         try {
             await DrawApp.createNewAppDrawDataDocument(groupName);
             await DrawApp.getAppDrawDataDocument(groupName);
@@ -28,13 +28,13 @@ describe('DrawApp Test', function () {
             console.log(error);
             assert(false);
         }
-        
+
     });
 
     it('init: createsDB connection, and create the group', async () => {
 
         let groupName = "testGroup";
-        
+
         try {
             Group.group = groupName;
             await DrawApp.init();
@@ -43,13 +43,13 @@ describe('DrawApp Test', function () {
             console.log(error);
             assert(false);
         }
-        
+
     });
 
     it('init: createsDB connection, and load the group', async () => {
 
         let groupName = "testGroup";
-        
+
         try {
             Group.group = groupName;
             await DrawApp.createNewAppDrawDataDocument(groupName);
@@ -59,7 +59,34 @@ describe('DrawApp Test', function () {
             console.log(error);
             assert(false);
         }
-        
+
+    });
+
+    it('extractAllFileNames: extract two filenames from a predefined document', () => {
+        let document = {
+            "_id": "6075987c77acceb2c8d8789a",
+            "group": "testGroup",
+            "files": [
+                {
+                    "_id": "6075987c77acceb2c8d8789b",
+                    "filename": "extractAllFileNamesTest1",
+                    "drawObjects": []
+                },
+                {
+                    "_id": "6075987c77acceb2c8d8789b",
+                    "filename": "extractAllFileNamesTest2",
+                    "drawObjects": []
+                }
+            ],
+            "__v": 0
+        }
+        let expected = ["extractAllFileNamesTest1", "extractAllFileNamesTest2"];
+
+        let actual = DrawApp.extractAllFileNames(document);
+
+        assert(actual.toString() === expected.toString());
+
+
     });
 
 });

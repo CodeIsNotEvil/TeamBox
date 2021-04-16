@@ -4,26 +4,24 @@ const Group = require('../Group.js');
 
 class DrawApp {
 
-    static currentGroup;
     static allFiles;
     static currentFile;
 
 
     /**
-     * 
-     * @returns weather it was success full or the error
+     * Loads the group specific Document.
+     * @returns a error if it was not successfull
      */
     static async init() {
         try {
             await DrawApp.connectToDB();
-            DrawApp.currentGroup = Group.group;
             try {
-                DrawApp.allFiles = await DrawApp.getAppDrawDataDocument(DrawApp.currentGroup);
+                DrawApp.allFiles = await DrawApp.getAppDrawDataDocument(Group.group);
                 //When allFiles is still null there were no db entry for this group.
                 if (DrawApp.allFiles === null) {
                     console.log("there were no group document createing one...");
                     try {
-                        DrawApp.allFiles = await DrawApp.createNewAppDrawDataDocument(DrawApp.currentGroup);
+                        DrawApp.allFiles = await DrawApp.createNewAppDrawDataDocument(Group.group);
                     } catch (error) {
                         return error;
                     }
@@ -38,6 +36,11 @@ class DrawApp {
 
     }
 
+    /**
+     * Returns the document of the specified group.
+     * @param {String} group the name of the logged in group
+     * @returns the full database document
+     */
     static async getAppDrawDataDocument(group) {
         try {
             let appDrawDataDocument = await AppDrawData.findOne({ group: group });
@@ -85,6 +88,33 @@ class DrawApp {
         return mongoose.disconnect().then(() => {
             console.log("Disconected from DB");
         });
+    }
+
+    /**
+     * Returns the File Names of the current group as an array.
+     * This function will be called if a client loads requests the /appDraw.ejs Page
+     * @returns {Array} Filenames of the current group
+     */
+    static async getAllFileNames() {
+        try {
+            let document = await DrawApp.getAppDrawDataDocument(Group.group); 
+            return DrawApp.extractAllFileNames(document);
+        } catch (error){
+            return error;
+        }
+
+    }
+    /**
+     * Takes very filename and put it in a array
+     * @param {JSON} document the AppDrawData document of any group 
+     * @returns returns the filename
+     */
+    static extractAllFileNames(document) {
+        let fileNames = [];
+        document.files.forEach(element => {
+            fileNames.push(element.filename);
+        });
+        return fileNames;
     }
 }
 /*
