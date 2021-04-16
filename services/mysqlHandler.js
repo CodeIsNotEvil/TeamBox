@@ -1,4 +1,4 @@
-const { PATH_TO_GLOBAL_MODULES, PATH_TO_BASH_SCRIPTS } = require('../config/server');
+const { PATH_TO_GLOBAL_MODULES, PATH_TO_BASH_SCRIPTS, DRAW_PAD_USE_NEW_DATA_STRUCTURE } = require('../config/server');
 const mysql = require(PATH_TO_GLOBAL_MODULES + 'mysql');
 const asyncExec = require('child_process').exec;
 const Group = require('./Group');
@@ -22,8 +22,13 @@ function importMysql() {
 
     let isError = runScript("mysql_import.sh", true, true);
     if (isError == "" && isError != null) {
-        mysqlConnection.query("CREATE TABLE IF NOT EXISTS dataAppDraw (id int NOT NULL AUTO_INCREMENT, fileName VARCHAR(50), content LONGTEXT, PRIMARY KEY(id,fileName) )");
-        mysqlConnection.query("ALTER TABLE dataAppDraw ADD UNIQUE (fileName)");
+        
+        if(DRAW_PAD_USE_NEW_DATA_STRUCTURE){
+            //do nothing sql related
+        }else {
+            mysqlConnection.query("CREATE TABLE IF NOT EXISTS dataAppDraw (id int NOT NULL AUTO_INCREMENT, fileName VARCHAR(50), content LONGTEXT, PRIMARY KEY(id,fileName) )");
+            mysqlConnection.query("ALTER TABLE dataAppDraw ADD UNIQUE (fileName)");
+        }
         mysqlConnection.query("CREATE TABLE IF NOT EXISTS dataAppMindmap (id int NOT NULL AUTO_INCREMENT, fileName VARCHAR(50), content TEXT, PRIMARY KEY(id,fileName) )");
         mysqlConnection.query("ALTER TABLE dataAppMindmap ADD UNIQUE (fileName)");
         mysqlConnection.query("CREATE TABLE IF NOT EXISTS userData (id int NOT NULL AUTO_INCREMENT, user VARCHAR(20), color VARCHAR(25), language VARCHAR(10), ip VARCHAR(20), PRIMARY KEY(id,user) )");

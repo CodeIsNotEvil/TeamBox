@@ -6,5 +6,6 @@ module.exports = {
     //PATH_TO_VIEWS: __dirname + '/public/views'
     PATH_TO_VIEWS: '../app/public/views',
     PATH_TO_MODELS: '/home/ubuntu/app/models',
-    MAX_USER_COUNT: 7
+    MAX_USER_COUNT: 7,
+    DRAW_PAD_USE_NEW_DATA_STRUCTURE: true
 };

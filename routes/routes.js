@@ -1,4 +1,4 @@
-const { PATH_TO_VIEWS, MAX_USER_COUNT } = require('../config/server');
+const { PATH_TO_VIEWS, MAX_USER_COUNT, DRAW_PAD_USE_NEW_DATA_STRUCTURE } = require('../config/server');
 const { exportAsync } = require('../services/syncHandler');
 
 const { startUp, writeUserdata, createAndSaveUserSession: createAndSaveUserSession } = require('../services/mysqlHandler');
@@ -9,6 +9,7 @@ const groupHandler = require('../services/groupHandler');
 const user = require('../models/MySQLUser');
 const Group = require('../services/Group');
 const fileBrowser = require('../services/fileBrowser/fileBrowser');
+const DrawApp = require('../services/draw-app/DrawApp');
 
 
 
@@ -56,6 +57,9 @@ function routes(app) {
                                 }
                         }
                         fileBrowser.startfilebrowser();
+                        if(DRAW_PAD_USE_NEW_DATA_STRUCTURE){
+                                DrawApp.init();
+                        }
                         res.end("loginSuccess");
                 }
         });

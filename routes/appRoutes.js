@@ -1,33 +1,55 @@
-const { PATH_TO_VIEWS} = require('../config/server');
+const { PATH_TO_VIEWS, DRAW_PAD_USE_NEW_DATA_STRUCTURE } = require('../config/server');
 const { getMySQLConnection } = require('../services/mysqlHandler');
 const Ethercalc = require('../services/ethercalc/ethercalcHandler');
 const getEtherpadEntries = require('../services/etherpadHandler');
 const Group = require('../services/Group');
-const drawApp = require('../services/drawApp/drawApp');
+
+let DrawApp;
+let drawApp;
+
+if (DRAW_PAD_USE_NEW_DATA_STRUCTURE) {
+        DrawApp = require('../services/draw-app/DrawApp');
+} else {
+        drawApp = require('../services/drawApp/drawApp');
+}
 
 function appRoutes(app) {
         app.get("/appDrawLoad.ejs", function (req, res) {
-                if (req.session.username) {
-                        let mysqlconnection = getMySQLConnection();
-                        mysqlconnection.query("SELECT * FROM dataAppDraw", function (err, result) {
-                                let fileNames = [];
-                                if (err) {
-                                        console.log(err);
-                                }
-                                for (var i = 0; i < result.length; i++) {
-                                        fileNames.push(result[i].fileName);
-                                }
-                                //let data = JSON.stringify(fileNames);
-                                //data = fileNames.toString();
-                                res.render(PATH_TO_VIEWS + "/appDrawLoad.ejs", { username: req.session.username, group: Group.group, color: req.session.usercolor, data: fileNames });
+                if (DRAW_PAD_USE_NEW_DATA_STRUCTURE) {
+                        DrawApp.getAllFileNames(Group.group).then((fileNames) => {
+                                res.render(PATH_TO_VIEWS + "/newappDrawLoad.ejs", {
+                                        username: req.session.username,
+                                        group: Group.group,
+                                        color: req.session.usercolor,
+                                        data: fileNames
+                                });
                         });
 
-                }
-                else {
 
-                        return res.redirect("/login01.ejs");
+                } else {
+                        if (req.session.username) {
+                                let mysqlconnection = getMySQLConnection();
+                                mysqlconnection.query("SELECT * FROM dataAppDraw", function (err, result) {
+                                        let fileNames = [];
+                                        if (err) {
+                                                console.log(err);
+                                        }
+                                        for (var i = 0; i < result.length; i++) {
+                                                fileNames.push(result[i].fileName);
+                                        }
+                                        //let data = JSON.stringify(fileNames);
+                                        //data = fileNames.toString();
+                                        res.render(PATH_TO_VIEWS + "/appDrawLoad.ejs", { username: req.session.username, group: Group.group, color: req.session.usercolor, data: fileNames });
+                                });
 
+                        }
+                        else {
+
+                                return res.redirect("/login01.ejs");
+
+                        }
                 }
+
 
         });
 
@@ -36,29 +58,51 @@ function appRoutes(app) {
         */
         app.get("/appDraw.ejs", function (req, res) {
                 if (req.session.username) {
-                        let mysqlconnection = getMySQLConnection();
-                        mysqlconnection.query("SELECT * FROM dataAppDraw", function (err, result) {
-                                let fileNames = [];
-                                let contents = [];
-                                if (err) {
-                                        console.log(err);
-                                } else {
-                                        for (var i = 0; i < result.length; i++) {
-                                                fileNames.push(result[i].fileName);
-                                                contents.push(result[i].content);
-                                                //content did not get updated on the first reload a secound one is requiered
-                                                //console.log(contents[i]);
-                                                //console.log("\n\n" + fileNames[i]+ "\n");
-                                        }
-                                        //data = fileNames.toString();
-                                        drawApp.initAllObj(fileNames, contents);
-                                        res.render(PATH_TO_VIEWS + "/appDraw.ejs", { username: req.session.username, group: Group.group, color: req.session.usercolor, drawObjData: contents, data: fileNames });
+                        if (DRAW_PAD_USE_NEW_DATA_STRUCTURE) {
+                                //TODO load the group specific document from db and attach it to the response data object
+
+                                try {
+                                        //let data = async () => { await DrawApp.getAppDrawDataDocument(Group.group); }
+                                        DrawApp.getAppDrawDataDocument(Group.group).then((data)=>{
+                                                res.render(PATH_TO_VIEWS + "/newappDraw.ejs", {
+                                                        username: req.session.username,
+                                                        group: Group.group,
+                                                        color: req.session.usercolor,
+                                                        data: data
+                                                });
+                                        });
+                                        
+                                } catch (error) {
+                                        console.log(error);
                                 }
 
-                        });
+
+                        } else {
+                                let mysqlconnection = getMySQLConnection();
+                                mysqlconnection.query("SELECT * FROM dataAppDraw", function (err, result) {
+                                        let fileNames = [];
+                                        let contents = [];
+                                        if (err) {
+                                                console.log(err);
+                                        } else {
+                                                for (var i = 0; i < result.length; i++) {
+                                                        fileNames.push(result[i].fileName);
+                                                        contents.push(result[i].content);
+                                                        //content did not get updated on the first reload a secound one is requiered
+                                                        //console.log(contents[i]);
+                                                        //console.log("\n\n" + fileNames[i]+ "\n");
+                                                }
+                                                //data = fileNames.toString();
+                                                drawApp.initAllObj(fileNames, contents);
+                                                res.render(PATH_TO_VIEWS + "/appDraw.ejs", { username: req.session.username, group: Group.group, color: req.session.usercolor, drawObjData: contents, data: fileNames });
+                                        }
+
+                                });
+                        }
                 } else {
                         return res.redirect("/login01.ejs");
                 }
+
         });
 
 

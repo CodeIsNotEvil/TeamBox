@@ -1,6 +1,6 @@
 const { exportData, synchronizeTime } = require('../services/syncHandler');
 const { saveDataDrawStringToDB, updateUserLanguage, getMindMapContentFromDB, writeMindmap } = require("./mysqlHandler");
-const { PATH_TO_GLOBAL_MODULES } = require("../config/server");
+const { PATH_TO_GLOBAL_MODULES, DRAW_PAD_USE_NEW_DATA_STRUCTURE} = require("../config/server");
 /*const { JSDOM } = require(PATH_TO_GLOBAL_MODULES + 'jsdom');
 const { window } = new JSDOM("");
 const $ = require("../_jquery/jquery-1.12.3")(window);*/
@@ -344,8 +344,12 @@ function socketHandler(app, io) {
                 * function to handle obj Data and send to Clients
                 */
                 socket.on('sendObj', function (obj, username, fileName) {
+                        if(DRAW_PAD_USE_NEW_DATA_STRUCTURE){
+                                //TODO add DrawApp.addObjectToFile(obj, fileName);
+                        } else {
+                                drawApp.addObject(obj);
+                        }
                         //console.log("object: " + obj);
-                        drawApp.addObject(obj);
                         //console.log("allObj sendObjsfun:  " + obj);
                         socket.broadcast.emit('receiveObj', obj, username, fileName);
                 }
