@@ -34,7 +34,7 @@ console.log(data); //Transmitted group document
  * @param {JSON} document the document with the filedata
  * @returns The currnt file
  */
-function getCurrentFile(document){
+function getCurrentFile(document) {
 	if (currentFile == null) {
 		for (let file = 0; file < document.files.length; file++) {
 			if (document.files[file].filename === fileName) {
@@ -47,16 +47,65 @@ function getCurrentFile(document){
 		return currentFile;
 	}
 }
-
-function printObject(element){
+/**
+ * Prints the drawObject to the canvas
+ * @param {JSON} element a single drawObject like a penicl or a circle
+ */
+function printObject(element) {
 	switch (element.type) {
 		case "pencil":
 			canvasBackground.strokeWeight(element.v);
 			canvasBackground.stroke(element.col);
 			canvasBackground.line(element.x, element.y, element.xp, element.yp);
 			break;
-	
+		case 'circle':
+			canvasBackground.strokeWeight(element.v);
+			canvasBackground.stroke(element.col);
+			if (element.filled === "true") {
+				canvasBackground.fill(element.col);
+			}
+			else {
+				canvasBackground.noFill();
+			}
+			canvasBackground.ellipse(element.x, element.y, element.width, element.height);
+			break;
+		case 'rect':
+			canvasBackground.strokeWeight(element.v);
+			canvasBackground.stroke(element.col);
+			if (element.filled === "true") {
+				canvasBackground.fill(element.col);
+			}
+			else {
+				canvasBackground.noFill();
+			}
+			canvasBackground.rect(element.x, element.y, element.width, element.height);
+			break;
+		case 'line':
+			canvasBackground.strokeWeight(element.v);
+			canvasBackground.stroke(element.col);
+			canvasBackground.noFill();
+			canvasBackground.line(element.x, element.y, element.xp, element.yp);
+			break;
+		case 'text':
+			canvasBackground.textSize(element.size);
+			canvasBackground.textFont(element.family);
+			canvasBackground.noStroke();
+			canvasBackground.fill(element.col);
+			canvasBackground.text(element.str, element.x, element.y);
+			break;
+		case 'img':
+			let image = new Image();
+			image.src = element.src;
+			image.onload = function () {
+				drawingContext.drawImage(image, 0, 0);
+			}
+			break;
 		default:
+			try {
+				throw new Error("Shape " + element.type + " not Found the shape will be skipped");
+			} catch (error) {
+				console.log(error);
+			}
 			break;
 	}
 }
