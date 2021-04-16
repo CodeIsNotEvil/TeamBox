@@ -4,9 +4,7 @@ const Group = require('../Group.js');
 
 class DrawApp {
 
-    static allFiles;
-    static currentFile;
-
+    static document;
 
     /**
      * Loads the group specific Document.
@@ -16,12 +14,12 @@ class DrawApp {
         try {
             await DrawApp.connectToDB();
             try {
-                DrawApp.allFiles = await DrawApp.getAppDrawDataDocument(Group.group);
-                //When allFiles is still null there were no db entry for this group.
-                if (DrawApp.allFiles === null) {
+                DrawApp.document = await DrawApp.getAppDrawDataDocument(Group.group);
+                //When document is still null there were no db entry for this group.
+                if (DrawApp.document === null) {
                     console.log("there were no group document createing one...");
                     try {
-                        DrawApp.allFiles = await DrawApp.createNewAppDrawDataDocument(Group.group);
+                        DrawApp.document = await DrawApp.createNewAppDrawDataDocument(Group.group);
                     } catch (error) {
                         return error;
                     }
@@ -51,13 +49,13 @@ class DrawApp {
     }
 
     static async createNewAppDrawDataDocument(group) {
-        let allFiles = new AppDrawData({
+        let document = new AppDrawData({
             group: group,
             files: []
         });
         try {
-            await allFiles.save();
-            let savedDocument = await AppDrawData.findOne({ group: allFiles.group });
+            await document.save();
+            let savedDocument = await AppDrawData.findOne({ group: document.group });
             return savedDocument;
         } catch (error) {
             return error;
@@ -116,6 +114,25 @@ class DrawApp {
         });
         return fileNames;
     }
+
+    /**
+     * Adds a object to a file.
+     * @param {DrawObject} obj the drawObject wich will be appended to the drawObjects array. 
+     * @param {String} filename name of the file to add the object 
+     */
+    static addObjectToFile(obj, filename){
+
+        DrawApp.document.files.forEach(element => {
+            if(element.filename === filename){
+                element.drawObjects.push(obj);
+            }
+        });
+    }
+
+    static addFileToDocument(file){
+        DrawApp.document.files.push(file);
+    }
+
 }
 /*
 let init =  async () => {
