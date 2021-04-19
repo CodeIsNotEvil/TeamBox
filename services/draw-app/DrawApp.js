@@ -95,9 +95,9 @@ class DrawApp {
      */
     static async getAllFileNames() {
         try {
-            let document = await DrawApp.getAppDrawDataDocument(Group.group); 
+            let document = await DrawApp.getAppDrawDataDocument(Group.group);
             return DrawApp.extractAllFileNames(document);
-        } catch (error){
+        } catch (error) {
             return error;
         }
 
@@ -120,16 +120,22 @@ class DrawApp {
      * @param {DrawObject} obj the drawObject wich will be appended to the drawObjects array. 
      * @param {String} filename name of the file to add the object 
      */
-    static addObjectToFile(obj, filename){
+    static addObjectToFile(obj, filename) {
 
-        DrawApp.document.files.forEach(element => {
-            if(element.filename === filename){
-                element.drawObjects.push(obj);
-            }
-        });
+        try {
+            DrawApp.document.files.forEach(element => {
+                if (element.filename === filename) {
+                    element.drawObjects.push(obj);
+                }
+            });
+        } catch(error) {
+            //Only throws an error if someone tries to draw something after the server has restarted but no group is seleced yet.
+            //To solve this it would be enought to redirect all clients to the hub or lock the canvas.
+            console.error(error);
+        }
     }
 
-    static addFileToDocument(file){
+    static addFileToDocument(file) {
         DrawApp.document.files.push(file);
     }
 
