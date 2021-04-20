@@ -189,11 +189,17 @@ class DrawApp {
      * @returns {Boolean} wether the file exsists or not.
      */
     static checkIfFileExsists(filename) {
-        for (let file = 0; file < DrawApp.document.files.length; file++) {
-            if(DrawApp.document.files[file].filename === filename){
-                return true;
-            }   
+        try {
+            for (let file = 0; file < DrawApp.document.files.length; file++) {
+                if(DrawApp.document.files[file].filename === filename){
+                    return true;
+                }   
+            }
+        } catch (error) {
+            console.log(error);
+            return false;
         }
+        
         return false;
     }
 

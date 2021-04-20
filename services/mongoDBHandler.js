@@ -1,32 +1,15 @@
 const { PATH_TO_GLOBAL_MODULES } = require("../config/server");
 const SYNC_EXEC = require(PATH_TO_GLOBAL_MODULES + 'sync-exec');
 const Group = require('./Group');
-const fs = require('fs');
 const asyncExec = require('child_process').exec;
-
-/**
- * Checks if the Selected Group has already a wekan database,
- * wich should be stored on the USB Stick at the folder of that Group
- * @returns {boolean} true if the group has a wekan database and false if not.
- */
-function hasSelectedGroupWekanDB() {
-  try {
-    fs.readdirSync("/media/USB-TeamBox/TeamBox/" + Group.group + "/.meta/wekan");
-    return true;
-  } catch (error) {
-    //console.debug(error);
-    return false;
-  } finally {
-    fs.close;
-  }
-}
+const MongoBackupHandler = require("./mongodb/MongoBackupHandler");
 
 /**
  * Imports the Wekan Database accordingly to wether a group has already a Wekan Database or not.
  * @returns {boolean} Wether the import was successful.
  */
 function importWekanDB() {
-  if (hasSelectedGroupWekanDB()) {
+  if (MongoBackupHandler.hasSelectedGroupDB("wekan")) {
     console.log("The Wekan Database exists and is associated with this group.\nImporting the Wekan Database of this group...");
     if (importGroupWekanDB()) {
       console.log("The Wekan Database was imported.");
@@ -62,7 +45,7 @@ function importEmptyWekanDB() {
  * @returns {boolean} Wether the import was successfully or not.
  */
 function importGroupWekanDB() {
-  let error = SYNC_EXEC("sudo mongorestore --drop /media/USB-TeamBox/TeamBox/" + Group.group + "/.meta/").stderr;
+  let error = SYNC_EXEC("sudo mongorestore --drop /media/USB-TeamBox/TeamBox/" + Group.group + "/.meta/").stderr; //this could load and drop all dbs, test it!!!
   if (error == "") {
     Group.wekanDBIsImported = true;
   } else {
@@ -102,8 +85,9 @@ function exportWekanDB(synchron) {
 
 }
 
-
+/*
 module.exports = {
   importWekanDB,
   exportWekanDB
 }
+*/

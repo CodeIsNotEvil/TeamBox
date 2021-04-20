@@ -3,15 +3,13 @@ const { importMysql } = require('./mysqlHandler');
 const { importWekanDB } = require('./mongoDBHandler');
 const Group = require('./Group');
 const Ethercalc = require('./ethercalc/ethercalcHandler');
+const MongoBackupHandler = require('./mongodb/MongoBackupHandler');
+const MongoDBs = require('./mongodb/MongoDBs');
 
 class groupHandler {
     static importCheck() {
-        if (Group.mysqlIsImported && Group.wekanDBIsImported) {
+        if (Group.mysqlIsImported && MongoBackupHandler.isImported(MongoDBs.Wekan) && MongoBackupHandler.isImported(MongoDBs.DrawPad)) {
             return true;
-        } else if (Group.mysqlIsImported) {
-            return false;
-        } else if (Group.wekanDBIsImported) {
-            return false;
         } else {
             return false;
         }
@@ -20,7 +18,8 @@ class groupHandler {
     static import() {
         Group.mysqlIsImported = importMysql(); //checks if the group has a DB in the mysql_import.sh
         Group.ethercalcIsImported = Ethercalc.importDump();
-        Group.wekanDBIsImported = importWekanDB();
+        //Group.wekanDBIsImported = importWekanDB();
+        MongoBackupHandler.importAllDBs();
     }
 
     static isGroupSelected(bodyGroup) {
