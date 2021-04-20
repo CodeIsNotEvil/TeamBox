@@ -167,7 +167,7 @@ function drawObjects(document) {
 	if(typeof currentFile === "undefined") {
 		let emptyFile = {
 			filename: fileName,
-			drawObject: []
+			drawObjects: []
 		}
 		currentFile = emptyFile;
 	}
