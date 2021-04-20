@@ -56,6 +56,7 @@ const RectangleAndCircleObjectSchema = new Schema({
 /**
  * Represents a Image Object
  */
+ /*
  const ImageObjectSchema = new Schema({
     type: String,
     src: String,
@@ -63,19 +64,38 @@ const RectangleAndCircleObjectSchema = new Schema({
     y: Number,
     l: Number
 });
+*/
+
+/**
+ * Represents a DrawObject
+ */
+
+const DrawObjectSchema = new Schema({
+    type: String,
+    src: String,
+    x: Number,
+    y: Number,
+    v: Number,
+    xp: Number,
+    yp: Number,
+    width: Number,
+    height: Number,
+    str: String,
+    size: Number,
+    family: String,
+    col: String,
+    filled: Boolean,
+    l: Number,
+    objArray: [PencilAndLineObjectSchema]
+});
 
 /**
  * Represents a AppDraw file
  */
 const AppDrawFileSchema = new Schema({
     filename: String,
-    drawObjects: [
-        PencilAndLineObjectSchema, 
-        PencilArrayObjectSchema, 
-        RectangleAndCircleObjectSchema,
-        TextObjectSchema,
-        ImageObjectSchema
-    ]
+    drawObjects: [DrawObjectSchema]
+    //drawObjects: [mongoose.Schema.Types.Mixed]
 });
 
 /**

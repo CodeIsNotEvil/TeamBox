@@ -43,8 +43,6 @@ function getCurrentFile(document) {
 			}
 
 		}
-	} else {
-		return currentFile;
 	}
 }
 /**
@@ -59,10 +57,12 @@ function drawObject(element) {
 			canvasBackground.line(element.x, element.y, element.xp, element.yp);
 			break;
 		case 'pencilarray':
-			for (var i = 0; i < element.objArray.length; i++) {
-				drawObject(element.objArray[i]);
-				//currentFile.drawObjects.push(curObj.objArray[i]);
-
+			try {
+				for (var i = 0; i < element.objArray.length; i++) {
+					drawObject(element.objArray[i]);
+				}
+			} catch (error) {
+				console.log(error);
 			}
 			break;
 		case 'circle':
@@ -164,6 +164,13 @@ function drawObject(element) {
 function drawObjects(document) {
 	//Select the currentFile
 	currentFile = getCurrentFile(document);
+	if(typeof currentFile === "undefined") {
+		let emptyFile = {
+			filename: fileName,
+			drawObject: []
+		}
+		currentFile = emptyFile;
+	}
 	currentFile.drawObjects.forEach(element => {
 		drawObject(element);
 	});
@@ -466,6 +473,8 @@ function mouseReleased() {
 		case 'pencil':
 			if (stroke == true) {
 				activeObj = new PencilArray(pencilObj, fileName);
+				console.log("PencilArray:");
+				console.log(activeObj);
 				currentFile.drawObjects.push(activeObj);
 				socket.emit('sendObj', activeObj, username, fileName);
 			}
@@ -593,7 +602,7 @@ function saveFile(fileName) {
 			$("#sidebarItemSaveNotice").html("saved " + message.fileName + " successfully");
 			$("#sidebarItemSaveNotice").show().delay(2000).fadeOut();
 		} else {
-			console.log("Someting went wrong appDrawFunction.js");
+			console.log(message);
 			$("#sidebarItemSaveNotice").css({ 'left': '40%', 'top': '40%', 'padding': '20px' });
 			$("#sidebarItemSaveNotice").html("Someting went wrong appDrawFunction.js");
 			$("#sidebarItemSaveNotice").show().delay(2000).fadeOut();

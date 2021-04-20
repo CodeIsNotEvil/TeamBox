@@ -59,23 +59,12 @@ function appRoutes(app) {
         app.get("/appDraw.ejs", function (req, res) {
                 if (req.session.username) {
                         if (DRAW_PAD_USE_NEW_DATA_STRUCTURE) {
-                                //TODO load the group specific document from db and attach it to the response data object
-
-                                try {
-                                        //let data = async () => { await DrawApp.getAppDrawDataDocument(Group.group); }
-                                        DrawApp.getAppDrawDataDocument(Group.group).then((data)=>{
-                                                res.render(PATH_TO_VIEWS + "/newappDraw.ejs", {
-                                                        username: req.session.username,
-                                                        group: Group.group,
-                                                        color: req.session.usercolor,
-                                                        data: data
-                                                });
-                                        });
-                                        
-                                } catch (error) {
-                                        console.log(error);
-                                }
-
+                                res.render(PATH_TO_VIEWS + "/newappDraw.ejs", {
+                                        username: req.session.username,
+                                        group: Group.group,
+                                        color: req.session.usercolor,
+                                        data: DrawApp.document
+                                });
 
                         } else {
                                 let mysqlconnection = getMySQLConnection();
