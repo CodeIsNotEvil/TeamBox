@@ -1,6 +1,6 @@
 const { exportData, synchronizeTime } = require('../services/syncHandler');
 const { saveDataDrawStringToDB, updateUserLanguage, getMindMapContentFromDB, writeMindmap } = require("./mysqlHandler");
-const { PATH_TO_GLOBAL_MODULES, DRAW_PAD_USE_NEW_DATA_STRUCTURE } = require("../config/server");
+const { PATH_TO_GLOBAL_MODULES, DRAW_PAD_USE_NEW_DATA_STRUCTURE, PATH_TO_SCREENSHOTS, PATH_TO_DRAWINGS } = require("../config/server");
 /*const { JSDOM } = require(PATH_TO_GLOBAL_MODULES + 'jsdom');
 const { window } = new JSDOM("");
 const $ = require("../_jquery/jquery-1.12.3")(window);*/
@@ -325,8 +325,18 @@ function socketHandler(app, io) {
                         var data = image.replace(/^data:image\/\w+;base64,/, '');
                         var fs = require("fs");
 
-                        var path = "/var/www/html/app/screenshots/mindmap_" + fileName + ".png";
-
+                        var path = PATH_TO_SCREENSHOTS + "/mindmap_" + fileName + ".png";
+                        console.log("path to mindmapScreenshots", path);
+                        try {
+                                fs.accessSync(PATH_TO_SCREENSHOTS, fs.constants.W_OK);
+                                console.log(`file ${PATH_TO_SCREENSHOTS} folder is writeable`);
+                        } catch (error) {
+                                fs.mkdir(PATH_TO_SCREENSHOTS, error => {
+                                        if (error) {
+                                                console.error(error);
+                                        }
+                                });
+                        }
                         fs.writeFile(path, data, { encoding: 'base64' }, function (err) {
                                 let errorMessage;
                                 if (err == "" || err == null) {
@@ -397,13 +407,25 @@ function socketHandler(app, io) {
 
                                 let data = image.replace(/^data:image\/\w+;base64,/, '');
                                 var fs = require("fs");
-                                let path = "/var/www/html/app/drawings/draw_" + fileName + ".png";
+                                try {
+                                        fs.accessSync(PATH_TO_DRAWINGS, fs.constants.W_OK);
+                                        console.log(`file ${PATH_TO_DRAWINGS} folder is writeable`);
+                                } catch (error) {
+                                        fs.mkdir(PATH_TO_DRAWINGS, error => {
+                                                if (error) {
+                                                        console.error(error);
+                                                }
+                                        });
+                                }
+                                let path = PATH_TO_DRAWINGS + "/draw_" + fileName + ".png";
+                                console.log("path to DrawPadDrawings", path);
                                 fs.writeFile(path, data, { encoding: 'base64' }, err => {
                                         if (err) {
                                                 console.log(err);
-                                                callback({ error: "content could not be saved as Image" });
+                                                //callback({ error: "content could not be saved as Image" });
                                         } else {
-                                                callback({ fileName: fileName });
+                                                console.log("the path were it were saved: ", path);
+                                                //callback({ fileName: fileName });
                                                 //io.emit('appDrawingSave', fileName);
                                         }
                                 });
