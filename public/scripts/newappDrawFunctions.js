@@ -392,8 +392,8 @@ function handleFile(files) {
 		var src = window.URL.createObjectURL(files[0]);
 		loadImage(src, function (img) {
 			canvasBackground.image(img, 0, 0);
-			var draw1_canvas = document.getElementById('visible');
-			var dataurl = draw1_canvas.toDataURL("image/png");
+			let draw1_canvas = document.getElementById('visible');
+			let dataurl = draw1_canvas.toDataURL("image/png");
 			activeObj = new ImgObj(dataurl, mouseX, mouseY, 0, fileName);
 			socket.emit('sendObj', activeObj, username, fileName);
 		});
@@ -419,7 +419,36 @@ function getUrlVariable(variable) {
 	return (false);
 }
 
-$(document).ready(function () {
+/**
+ * Calls all nesesarry initialisation methodes,
+ * and will be called after the client has loaded the whole HTML document.
+ */
+ function init() {
+	//Sets the FileName to the one passed by the query parameter
+	initFileNameFromURL();
+
+	//Createing the color set in the Toolbar, so the user can select a color
+	createColorset();
+
+	//Selects the Pencil after startup, so the user can start drawing after the page has loaded.
+	$('#pencil').attr('class', 'active');
+
+	//every wich is clickable will be defined in this function 
+	declareJqueryOnClickEvents();
+
+	loadImageIntoHTML();
+}
+
+
+/**
+ * will be triggert after a client has loaded the HTML document
+ */
+$(document).ready(init());
+
+/**
+ * Sets the fileName variable to the URL query parameter value of file.
+ */
+function initFileNameFromURL() {
 	/*
 	* fileName Start
 	* The document fills the filename variable with
@@ -439,34 +468,12 @@ $(document).ready(function () {
 	else if (/^[a-zA-Z0-9- ]*$/.test(fileName) == false) {
 		fileName = "-name-";
 	}
+}
 
-	/*
-	* functions to create colorset start
-	*/
-	for (var i = 0, n = colors.length; i < n; i++) {
-		var swatch = document.createElement('div'); //create new div
-		swatch.className = 'swatch ' + colors[i];		//classname swatch + color bsp: swatch black
-		if (i == 0) {
-			swatch.className += 'swatch ' + colors[i] + ' active';
-		}
-		swatch.style.backgroundColor = colors[i];	//dem jeweiligen swatch die hintergrundfarbe geben
-		swatch.addEventListener('click', setSwatch);	//durch klick die setSwatch aufrufen
-		document.getElementById('colors').appendChild(swatch);	//dem div "colors" das div swatch anhängen
-	}
-	function setSwatch(e) {
-		var swatch = e.target; //identifiy swatch
-		myCol = swatch.style.backgroundColor; //set color
-		var x = document.getElementsByClassName('swatch');
-		for (var i = 0; i < x.length; i++) {
-			x[i].className = 'swatch';
-		}
-		swatch.className += ' active'; //give active class
-	}
-	$('#pencil').attr('class', 'active');
-
-	/*
-	* on.('click') Events Start 
-	*/
+/**
+ * In this function are all jquery onClick Events listed.
+ */
+function declareJqueryOnClickEvents() {
 	$('#clear').on("click", function () {
 		clearCanvas();
 		socket.emit('clear', fileName);
@@ -478,6 +485,21 @@ $(document).ready(function () {
 		}, 500);
 
 	});
+	$('#save').on("click", function () {
+		saveWindow(fileName);
+	});
+	$('#saveFile').on("click", function () {
+		saveFile(fileName);
+	});
+
+	//Toolbar onClick Events are in a seperate function, in order to make this function more readable
+	jqueryToolBarOnClickEvents();
+}
+
+/**
+ * Contains Toolbar related onClick Events.
+ */
+function jqueryToolBarOnClickEvents() {
 	$('#pencil').on("click", function () {
 		$("#" + state).attr('class', '');
 		state = 'pencil';
@@ -604,19 +626,15 @@ $(document).ready(function () {
 		state = 'colorrange';
 		$('#colorrange').attr('class', 'active');
 	});
-	$('#save').on("click", function () {
-		saveWindow(fileName);
-	});
-	$('#saveFile').on("click", function () {
-		saveFile(fileName);
-	});
+}
 
-	/* 
-	* Function to load Image Start
-	*/
+/** 
+ * Function to load Image Start
+ */
+function loadImageIntoHTML() {
 	window.URL = window.URL || window.webkitURL;
-	var fileSelect = document.getElementById("fileSelect");
-	var fileElem = document.getElementById("fileElem");
+	let fileSelect = document.getElementById("fileSelect");
+	let fileElem = document.getElementById("fileElem");
 
 	fileSelect.addEventListener("click", function (e) {
 		if (fileElem) {
@@ -624,4 +642,30 @@ $(document).ready(function () {
 		}
 		e.preventDefault();
 	}, false);
-});
+}
+
+/**
+ * Creates the colorset in the Toolbar
+ */
+function createColorset() {
+	for (let i = 0, n = colors.length; i < n; i++) {
+		let swatch = document.createElement('div'); //create new div
+		swatch.className = 'swatch ' + colors[i]; //classname swatch + color bsp: swatch black
+		if (i == 0) {
+			swatch.className += 'swatch ' + colors[i] + ' active';
+		}
+		swatch.style.backgroundColor = colors[i]; //dem jeweiligen swatch die hintergrundfarbe geben
+		swatch.addEventListener('click', setSwatch); //durch klick die setSwatch aufrufen
+		document.getElementById('colors').appendChild(swatch); //dem div "colors" das div swatch anhängen
+	}
+	function setSwatch(e) {
+		let swatch = e.target; //identifiy swatch
+		myCol = swatch.style.backgroundColor; //set color
+		let x = document.getElementsByClassName('swatch');
+		for (let i = 0; i < x.length; i++) {
+			x[i].className = 'swatch';
+		}
+		swatch.className += ' active';
+	}
+}
+
