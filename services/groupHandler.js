@@ -46,7 +46,7 @@ class groupHandler {
         shellPrints.forEach(print => {
             if (print === "Device mounted") {
                 console.log("DEBUG: Device was mounted");
-                
+
             } else {
                 Group.groups.push(print);
             }

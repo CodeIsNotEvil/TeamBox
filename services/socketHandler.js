@@ -387,7 +387,7 @@ function socketHandler(app, io) {
                                 } else {
                                         console.log("Not exsist");
                                         DrawApp.createNewFile(fileName);
-                                        console.log("create "+ fileName);
+                                        console.log("create " + fileName);
                                         try {
                                                 DrawApp.saveDocumentToTheDatabase();
                                         } catch (error) {

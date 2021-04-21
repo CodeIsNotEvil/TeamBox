@@ -49,15 +49,15 @@ function routes(app) {
                 }
                 else {
                         if (groupHandler.importCheck() == false) {
-                                if(groupHandler.isGroupSelected(req.body.user.group)){
+                                if (groupHandler.isGroupSelected(req.body.user.group)) {
                                         groupHandler.import();
                                 } else {
                                         errorMessage += "\ngroup could not be selected";
-                                        res.end(errorMessage); 
+                                        res.end(errorMessage);
                                 }
                         }
                         fileBrowser.startfilebrowser();
-                        if(DRAW_PAD_USE_NEW_DATA_STRUCTURE){
+                        if (DRAW_PAD_USE_NEW_DATA_STRUCTURE) {
                                 DrawApp.init();
                         }
                         res.end("loginSuccess");
@@ -133,7 +133,7 @@ function routes(app) {
                                 req.session.userLanguage = result[0].language;
                                 req.session.save();
                                 Group.clients.push(new user(result[0].user.toLowerCase(), result[0].color, result[0].language));
-                            });
+                        });
                         res.end("loginSuccess");
                 }
         });

@@ -62,7 +62,7 @@ describe('Finding records', function () {
                 ]
             }
             */
-           //its not relavant that the file id matches because the filename is already a unique value
+            //its not relavant that the file id matches because the filename is already a unique value
             assert(result.files[0].filename === file.filename);
             done();
         }).catch(done);

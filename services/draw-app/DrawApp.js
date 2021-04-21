@@ -103,15 +103,15 @@ class DrawApp {
 
     }
 
-    static getAllFileNamesWithContent(){
+    static getAllFileNamesWithContent() {
         let fileNames = [];
         let emptyFilesNames = [];
         for (let file = 0; file < DrawApp.document.files.length; file++) {
-            if(DrawApp.document.files[file].drawObjects.length > 1){
+            if (DrawApp.document.files[file].drawObjects.length > 1) {
                 fileNames.push(DrawApp.document.files[file].filename);
             } else {
                 emptyFilesNames.push(DrawApp.document.files[file].filename);
-            }    
+            }
         }
         return fileNames;
     }
@@ -191,15 +191,15 @@ class DrawApp {
     static checkIfFileExsists(filename) {
         try {
             for (let file = 0; file < DrawApp.document.files.length; file++) {
-                if(DrawApp.document.files[file].filename === filename){
+                if (DrawApp.document.files[file].filename === filename) {
                     return true;
-                }   
+                }
             }
         } catch (error) {
             console.log(error);
             return false;
         }
-        
+
         return false;
     }
 
@@ -214,10 +214,10 @@ class DrawApp {
         DrawApp.document.files.push(file);
     }
 
-    static hasContent(filename){
+    static hasContent(filename) {
         for (let file = 0; file < DrawApp.document.files.length; file++) {
-            if(DrawApp.document.files[file].filename === filename){
-                if(DrawApp.document.files[file].drawObjects.length > 0){
+            if (DrawApp.document.files[file].filename === filename) {
+                if (DrawApp.document.files[file].drawObjects.length > 0) {
                     return true;
                 }
             }

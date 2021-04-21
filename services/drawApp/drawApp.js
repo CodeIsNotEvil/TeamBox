@@ -1,45 +1,45 @@
-const {clearDrawingQuery } = require("../mysqlHandler");
+const { clearDrawingQuery } = require("../mysqlHandler");
 
 class drawApp {
     static allObjWasInitilized = false;
     static allObj = [];
 
-    static initAllObj(fileNames, contents){
+    static initAllObj(fileNames, contents) {
         if (!this.allObjWasInitilized) {
             //this.allObj = this.dbStringToObj(fileNames, contents);
             this.allObjWasInitilized = true;
         }
     }
 
-/*    static dbStringToObj(fileNames, contents){
-        let allObjects = [];
-        for (let fileIndex = 0; fileIndex < fileNames.length; fileIndex++) {
-
-            let drawElem = contents.toString().split("***");
-            let nameOfFile;
-            let objName;
-
-            for (let i = 0; i < drawElem.length; i++) {
-                let elem = drawElem[i]; //something like 1775###187###15###1775###187###black###0###pencil###Nena###Ship
-                elem = elem.replace("+++", "");
-                let elem2 = elem.split("###"); //something like 1775,187,15,1775,187,black,0,pencil,Nena, Ship
-                let lastNum = elem2.length - 1;
-                objName = elem2.length - 2;
-                let nameOfObj = elem2[objName];		//something like pencil
-                nameOfFile = elem2[lastNum];	//something like Ship
-                if (fileNames[fileIndex] == nameOfFile) {
-                    switch (nameOfObj) {
-                        case 'pencil':
-                            let newObject = new PencilObj(elem2[0], elem2[1], elem2[2], elem2[3], elem2[4], elem2[5], elem2[6], elem2[7]);
-                            break;
-                        default:
-                            break;
+    /*    static dbStringToObj(fileNames, contents){
+            let allObjects = [];
+            for (let fileIndex = 0; fileIndex < fileNames.length; fileIndex++) {
+    
+                let drawElem = contents.toString().split("***");
+                let nameOfFile;
+                let objName;
+    
+                for (let i = 0; i < drawElem.length; i++) {
+                    let elem = drawElem[i]; //something like 1775###187###15###1775###187###black###0###pencil###Nena###Ship
+                    elem = elem.replace("+++", "");
+                    let elem2 = elem.split("###"); //something like 1775,187,15,1775,187,black,0,pencil,Nena, Ship
+                    let lastNum = elem2.length - 1;
+                    objName = elem2.length - 2;
+                    let nameOfObj = elem2[objName];		//something like pencil
+                    nameOfFile = elem2[lastNum];	//something like Ship
+                    if (fileNames[fileIndex] == nameOfFile) {
+                        switch (nameOfObj) {
+                            case 'pencil':
+                                let newObject = new PencilObj(elem2[0], elem2[1], elem2[2], elem2[3], elem2[4], elem2[5], elem2[6], elem2[7]);
+                                break;
+                            default:
+                                break;
+                        }
                     }
                 }
+                allObjects.push(object)
             }
-            allObjects.push(object)
-        }
-    }*/
+        }*/
 
     static addObject(object) {
         this.allObj.push(object);

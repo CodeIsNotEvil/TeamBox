@@ -22,10 +22,10 @@ function importMysql() {
 
     let isError = runScript("mysql_import.sh", true, true);
     if (isError == "" && isError != null) {
-        
-        if(DRAW_PAD_USE_NEW_DATA_STRUCTURE){
+
+        if (DRAW_PAD_USE_NEW_DATA_STRUCTURE) {
             //do nothing sql related
-        }else {
+        } else {
             mysqlConnection.query("CREATE TABLE IF NOT EXISTS dataAppDraw (id int NOT NULL AUTO_INCREMENT, fileName VARCHAR(50), content LONGTEXT, PRIMARY KEY(id,fileName) )");
             mysqlConnection.query("ALTER TABLE dataAppDraw ADD UNIQUE (fileName)");
         }
@@ -172,11 +172,11 @@ function saveDataDrawStringToDB(string, image, fileName, saveAsImageAndEmit) {
                     console.error(err);
                 } else {
                     saveAsImageAndEmit(image, fileName);
-                }       
+                }
             });
         }
     });
-    
+
 }
 
 function getMindMapContentFromDB(fileName, emitContent) {

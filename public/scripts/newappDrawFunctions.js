@@ -81,7 +81,7 @@ function drawObject(element) {
 				canvas.strokeWeight(element.v);
 				canvas.stroke(element.col);
 				ellipse(element.x, element.y, element.width, element.height);
-				
+
 			}
 
 			break;
@@ -101,7 +101,7 @@ function drawObject(element) {
 				canvas.clear();
 				canvas.strokeWeight(element.v);
 				canvas.stroke(element.col);
-				rect(element.x, element.y, element.width, element.height);	
+				rect(element.x, element.y, element.width, element.height);
 			}
 			break;
 
@@ -150,7 +150,7 @@ function drawObject(element) {
 function drawObjects(document) {
 	//Select the currentFile
 	currentFile = getCurrentFile(document);
-	if(typeof currentFile === "undefined") {
+	if (typeof currentFile === "undefined") {
 		let emptyFile = {
 			filename: fileName,
 			drawObjects: []
@@ -423,7 +423,7 @@ function getUrlVariable(variable) {
  * Calls all nesesarry initialisation methodes,
  * and will be called after the client has loaded the whole HTML document.
  */
- function init() {
+function init() {
 	//Sets the FileName to the one passed by the query parameter
 	initFileNameFromURL();
 

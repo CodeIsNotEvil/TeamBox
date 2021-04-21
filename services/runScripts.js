@@ -8,7 +8,7 @@ const SYNC_EXEC = require(PATH_TO_GLOBAL_MODULES + 'sync-exec');
  * @param {If it is true return stderr if it is false returns stdout} err 
  * @returns {Standart error}
  */
-function runScript(name, rootPrvillages , err) {
+function runScript(name, rootPrvillages, err) {
     if (err == true) {
         if (rootPrvillages == true) {
             return SYNC_EXEC("sudo bash " + PATH_TO_BASH_SCRIPTS + name).stderr;
@@ -22,7 +22,7 @@ function runScript(name, rootPrvillages , err) {
             return SYNC_EXEC("bash " + PATH_TO_BASH_SCRIPTS + name).stdout;
         }
     }
-    
+
 }
 
 module.exports = runScript;

@@ -37,10 +37,10 @@ function exportAsync() {
                 } else {
                         console.log("MysqlDB was not exported, there were never imported one for this group");
                 }
-                
+
                 MongoBackupHandler.exportAllDBsAsync();
 
-                if(Group.ethercalcIsImported == true){
+                if (Group.ethercalcIsImported == true) {
                         let success = Ethercalc.exportDump(); //NOTE: this call is not Async
                         if (success) {
                                 console.log("Ethercalc Dump was exported Successfully.");
@@ -48,7 +48,7 @@ function exportAsync() {
                 } else {
                         console.log("The Ethercalc dump was not exported, there were never imported one for this group");
                 }
-                
+
         }, 120000);//120000ms = 2minutes
 }
 

@@ -9,7 +9,7 @@ describe('Saveing records', function () {
     it('Testing-enviorment setup test', function () {
         assert(true);
     });
-    
+
     //This will be used for group creation
     it('Saves a record with no files to the database', function (done) {
         //Arrange
@@ -42,7 +42,7 @@ describe('Saveing records', function () {
         //act
         data.save().then(function () {
             //assert
-            AppDrawData.findOne({ group: data.group}).then(function (result) {
+            AppDrawData.findOne({ group: data.group }).then(function (result) {
                 assert(result.files.length === 1);
                 done();
             }).catch(done);
@@ -63,7 +63,7 @@ describe('Saveing records', function () {
         });
 
         data.save().then(function () {
-            AppDrawData.findOne({ group: data.group}).then(function (result) {
+            AppDrawData.findOne({ group: data.group }).then(function (result) {
                 //Arrange
                 let newFile = {
                     filename: "newFile",
@@ -76,11 +76,11 @@ describe('Saveing records', function () {
 
                 //assert
                 result.save().then(function () {
-                    AppDrawData.findOne({ group: data.group}).then(function (result) {
+                    AppDrawData.findOne({ group: data.group }).then(function (result) {
                         assert(length < result.files.length);
                         done();
                     }).catch(done);
-                });     
+                });
             });
         });
     });

@@ -128,7 +128,7 @@ class MongoBackupHandler {
 
     static exportAllDBsSync() {
         for (let dbName in MongoDBs) {
-            if(!MongoBackupHandler.exportSync(MongoDBs[dbName])){
+            if (!MongoBackupHandler.exportSync(MongoDBs[dbName])) {
                 return false;
             }
         }

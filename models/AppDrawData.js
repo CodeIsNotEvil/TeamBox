@@ -42,7 +42,7 @@ const RectangleAndCircleObjectSchema = new Schema({
 /**
  * Represents a Text Object
  */
- const TextObjectSchema = new Schema({
+const TextObjectSchema = new Schema({
     type: String,
     x: Number,
     y: Number,
@@ -56,13 +56,13 @@ const RectangleAndCircleObjectSchema = new Schema({
 /**
  * Represents a Image Object
  */
- /*
- const ImageObjectSchema = new Schema({
-    type: String,
-    src: String,
-    x: Number,
-    y: Number,
-    l: Number
+/*
+const ImageObjectSchema = new Schema({
+   type: String,
+   src: String,
+   x: Number,
+   y: Number,
+   l: Number
 });
 */
 

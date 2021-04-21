@@ -82,7 +82,7 @@ function setup() {
 		}
 	);
 	//handle messages end
-    /*
+	/*
 	function loadObject(fileName) {
 		socket.emit('appDrawingLoad', fileName);
 	}
@@ -416,7 +416,7 @@ function saveFile(fileName) {
 			$("#sidebarItemSaveNotice").css({ 'left': '40%', 'top': '40%', 'padding': '20px' });
 			$("#sidebarItemSaveNotice").html(message.error);
 			$("#sidebarItemSaveNotice").show().delay(2000).fadeOut();
-		} else if (message.fileName){
+		} else if (message.fileName) {
 			console.log("saved " + message.fileName + " successfully");
 			$("#sidebarItemSaveNotice").css({ 'left': '40%', 'top': '40%', 'padding': '20px' });
 			$("#sidebarItemSaveNotice").html("saved " + message.fileName + " successfully");
@@ -526,9 +526,9 @@ $(document).ready(function () {
 	$('#back').on("click", function () {
 		saveFile(fileName);
 		setTimeout(function () {
-			document.location.href ="/";
+			document.location.href = "/";
 		}, 500);
-		
+
 	});
 	$('#pencil').on("click", function () {
 		$("#" + state).attr('class', '');

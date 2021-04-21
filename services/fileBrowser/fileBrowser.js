@@ -15,7 +15,7 @@ class fileBrowser {
                 console.log(stderr);
             } else {
                 console.log(stdout);
-                
+
                 //Configure Authentification
                 asyncExec(`sudo /usr/local/bin/filebrowser config set --auth.method=${AUTH_METHODE}`, (error, stdout, stderr) => {
                     if (error || stderr) {

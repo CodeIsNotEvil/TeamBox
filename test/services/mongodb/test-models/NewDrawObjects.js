@@ -2,7 +2,7 @@
  * Function to create PencilArray-Objects 
  * @param {PencilObj} obj 
  */
- function PencilArray(obj) {
+function PencilArray(obj) {
     this.type = 'pencilarray';
     this.objArray = obj;
 }

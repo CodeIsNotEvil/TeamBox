@@ -1,5 +1,5 @@
 class user {
-    constructor (username, usercolor, userlanguage) {
+    constructor(username, usercolor, userlanguage) {
         this.username = username;
         this.usercolor = usercolor;
         this.userlanguage = userlanguage;

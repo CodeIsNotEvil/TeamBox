@@ -13,7 +13,7 @@ const app = express();
 const http = require('http').Server(app);
 const io = require(PATH_TO_GLOBAL_MODULES + 'socket.io')(http, {
         allowEIO3: true // false by default
-      });
+});
 const cheerio = require(PATH_TO_GLOBAL_MODULES + 'cheerio'),
         $ = cheerio.load("<container id='-1'></container>");
 const crypto = require('crypto');
@@ -44,7 +44,7 @@ app.use(expressSession({
 
 http.listen(PORT, function () {
         console.log(
-                "\n===================" + 
+                "\n===================" +
                 "\nServer started ...." +
                 "\nPort: " + PORT +
                 "\n==================="

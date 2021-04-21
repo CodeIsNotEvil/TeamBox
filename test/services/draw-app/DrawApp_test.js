@@ -91,7 +91,7 @@ describe('DrawApp Test', function () {
     });
 
     it('addFileToDocument: a new file to a document', async () => {
-        
+
         groupName = "testGroup";
         let file = {
             _id: "6075987c77acceb2c8d8789b",
@@ -100,16 +100,16 @@ describe('DrawApp Test', function () {
         };
         DrawApp.document = await DrawApp.createNewAppDrawDataDocument(groupName);
         let initialFileCount = DrawApp.document.files.length;
-        
-        
+
+
         DrawApp.addFileToDocument(file);
-        
+
 
         assert(initialFileCount < DrawApp.document.files.length);
     });
 
     it('addObjectToFile: add a drawObject to a exsisting file', async () => {
-        
+
         groupName = "testGroup";
         let file = {
             _id: "6075987c77acceb2c8d8789b",
@@ -130,7 +130,7 @@ describe('DrawApp Test', function () {
         DrawApp.document = await DrawApp.createNewAppDrawDataDocument(groupName);
         DrawApp.addFileToDocument(file);
         let initialDocLength = DrawApp.document.files[0].drawObjects.length;
-        
+
         DrawApp.addObjectToFile(drawObject, file.filename);
 
         assert(initialDocLength < DrawApp.document.files[0].drawObjects.length);
@@ -138,7 +138,7 @@ describe('DrawApp Test', function () {
     });
 
     it('addObjectToFile: add a pencilArray as seperate pencilObjects to a exsisting file', async () => {
-        
+
         groupName = "testGroup";
         let file = {
             _id: "6075987c77acceb2c8d8789b",
@@ -167,18 +167,18 @@ describe('DrawApp Test', function () {
         };
         let drawObject = {
             type: "pencilarray",
-            objArray: [pencilObj1,pencilObj2]
+            objArray: [pencilObj1, pencilObj2]
         }
         DrawApp.document = await DrawApp.createNewAppDrawDataDocument(groupName);
         DrawApp.addFileToDocument(file);
         let initialDocLength = DrawApp.document.files[0].drawObjects.length;
-        
+
         DrawApp.addObjectToFile(drawObject, file.filename);
-        
-        assert(DrawApp.document.files[0].drawObjects[0] != null && 
-            DrawApp.document.files[0].drawObjects[0].objArray[0] != null && 
+
+        assert(DrawApp.document.files[0].drawObjects[0] != null &&
+            DrawApp.document.files[0].drawObjects[0].objArray[0] != null &&
             DrawApp.document.files[0].drawObjects[0].objArray[1] != null
-            );
+        );
 
     });
 
@@ -189,13 +189,13 @@ describe('DrawApp Test', function () {
             filename: "addObjectToFileTest1",
             drawObjects: []
         };
-        DrawApp.document = await DrawApp.createNewAppDrawDataDocument(groupName);     
+        DrawApp.document = await DrawApp.createNewAppDrawDataDocument(groupName);
         DrawApp.addFileToDocument(file);
 
 
         await DrawApp.saveDocumentToTheDatabase();
 
-        
+
         let databaseDocuemnt = await DrawApp.getAppDrawDataDocumentFromDB(groupName);
         assert(DrawApp.document.toString() === databaseDocuemnt.toString());
     });
@@ -226,12 +226,12 @@ describe('DrawApp Test', function () {
 
 
         DrawApp.removeFileFormDocument(file2.filename);
-        
-        
+
+
         assert(DrawApp.document.files[0].filename === file1.filename && DrawApp.document.files[1].filename === file3.filename);
     });
 
-    it('checkIfFileExsists: checks if a created file exsists', async() => {
+    it('checkIfFileExsists: checks if a created file exsists', async () => {
         groupName = "testGroup";
         let file1 = {
             _id: "6075987c77abbbb2c8d8789b",
@@ -264,7 +264,7 @@ describe('DrawApp Test', function () {
         assert(DrawApp.checkIfFileExsists(filename));
     });
 
-    it('hasContent: checks if a file with drawObjcts has some drawObjects' , async () => {
+    it('hasContent: checks if a file with drawObjcts has some drawObjects', async () => {
         groupName = "testGroup";
         let pencilObj1 = {
             type: 'pencil',
@@ -281,7 +281,7 @@ describe('DrawApp Test', function () {
             filename: "checkIfFileExsistsFile",
             drawObjects: [pencilObj1]
         };
-        
+
         DrawApp.document = await DrawApp.createNewAppDrawDataDocument(groupName);
         DrawApp.addFileToDocument(file1);
 

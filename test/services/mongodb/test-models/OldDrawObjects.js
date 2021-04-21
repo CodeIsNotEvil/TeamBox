@@ -3,7 +3,7 @@
  * @param {PencilObj} obj 
  * @param {String} fileName 
  */
- function PencilArray(obj, fileName) {
+function PencilArray(obj, fileName) {
     this.objArray = obj;
     this.name = 'pencilarray';
     this.fileName = fileName;
