@@ -103,6 +103,11 @@ class DrawApp {
 
     }
 
+    /**
+     * Returns File Names of not empty files of the current group as an array.
+     * This function will be called if a client loads requests the /appDraw.ejs Page
+     * @returns {Array} Filenames of the current group
+     */
     static getAllFileNamesWithContent() {
         let fileNames = [];
         let emptyFilesNames = [];
@@ -147,6 +152,11 @@ class DrawApp {
         }
     }
 
+    /**
+     * Adds a file to the current document without saveing it to the database.
+     * This should be called if a client sends drawObject data for a file wich does not exsist.
+     * @param {AppDrawFile} file the file wich will get added to the document 
+     */
     static addFileToDocument(file) {
         DrawApp.document.files.push(file);
     }
