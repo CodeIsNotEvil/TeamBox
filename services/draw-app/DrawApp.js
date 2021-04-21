@@ -210,7 +210,6 @@ class DrawApp {
     static createNewFile(filename) {
         let file = {
             filename: filename,
-            drawObjects: []
         }
         DrawApp.document.files.push(file);
     }

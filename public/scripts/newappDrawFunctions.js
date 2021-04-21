@@ -22,12 +22,11 @@ var filled = false;
 //color array, create colorbar
 var colors = ['black', 'grey', 'lightgray', 'brown', 'orange', 'yellow', 'lightyellow', 'red', 'crimson', 'darkred', 'firebrick', 'purple', 'pink', 'hotpink', 'darkblue', 'blue', 'lightblue', 'cyan', 'darkcyan', 'green', 'lightgreen', 'white'];
 
-var allObj = [];
 var pencilObj = [];
 var fileName = "/draw/";
 
 let currentFile = null;
-console.log(data); //Transmitted group document
+//console.log(data); //Transmitted group document
 
 /**
  * Returns the file content with the same name of urlFileName(fileName) from the document.
@@ -69,7 +68,7 @@ function drawObject(element) {
 			if (element.l == 0) { //main canvas
 				canvasBackground.strokeWeight(element.v);
 				canvasBackground.stroke(element.col);
-				if (element.filled === "true") {
+				if (element.filled === true) {
 					canvasBackground.fill(element.col);
 				}
 				else {
@@ -81,12 +80,6 @@ function drawObject(element) {
 				canvas.clear();
 				canvas.strokeWeight(element.v);
 				canvas.stroke(element.col);
-				/*if (element.filled === "true") {
-					canvas.fill(element.col);
-				}
-				else {
-					canvas.noFill();
-				}*/
 				ellipse(element.x, element.y, element.width, element.height);
 				
 			}
@@ -96,7 +89,7 @@ function drawObject(element) {
 			if (element.l == 0) { //main canvas
 				canvasBackground.strokeWeight(element.v);
 				canvasBackground.stroke(element.col);
-				if (element.filled === "true") {
+				if (element.filled === true) {
 					canvasBackground.fill(element.col);
 				}
 				else {
@@ -108,12 +101,6 @@ function drawObject(element) {
 				canvas.clear();
 				canvas.strokeWeight(element.v);
 				canvas.stroke(element.col);
-				/*if (element.filled === "true") {
-					canvasBackground.fill(element.col);
-				}
-				else {
-					canvasBackground.noFill();
-				}*/
 				rect(element.x, element.y, element.width, element.height);	
 			}
 			break;
@@ -129,7 +116,6 @@ function drawObject(element) {
 				canvas.clear();
 				canvas.strokeWeight(element.v);
 				canvas.stroke(element.col);
-				// canvas.noFill();  Uncaught TypeError: canvas.noFill is not a function
 				line(element.x, element.y, element.xp, element.yp);
 			}
 			break;
@@ -178,8 +164,8 @@ function drawObjects(document) {
 
 function createCanvases() {
 	/*
-* create forground-canvas with id "foregroundCanvas" 
-*/
+	* create forground-canvas with id "foregroundCanvas" 
+	*/
 	canvas = createCanvas(window.innerWidth, window.innerHeight - 50);
 	canvas.position(0, 50);
 	canvas.id("foregroundCanvas");
@@ -194,83 +180,7 @@ function createCanvases() {
 	$('#visible').attr('style', 'display: inline;');
 	var backgroundContext = document.getElementById("visible").getContext("2d");
 }
-/*
-function parseAndDrawString() {
-	var drawElem = drawObjData.split("***");
-	var nameOfFile;
-	var objName;
 
-	for (var i = 0; i < drawElem.length; i++) {
-		var elem = drawElem[i]; //something like 1775###187###15###1775###187###black###0###pencil###Nena###Ship
-		elem = elem.replace("+++", "");
-		var elem2 = elem.split("###"); //something like 1775,187,15,1775,187,black,0,pencil,Nena, Ship
-		var lastNum = elem2.length - 1;
-		objName = elem2.length - 2;
-		nameOfObj = elem2[objName];		//something like pencil
-		nameOfFile = elem2[lastNum];	//something like Ship
-		if (fileName == nameOfFile) {
-			switch (nameOfObj) {
-				case 'pencil':
-					var newObject = new PencilObj(elem2[0], elem2[1], elem2[2], elem2[3], elem2[4], elem2[5], elem2[6], elem2[7]);
-					oldObject = new PencilObj(elem2[0], elem2[1], elem2[2], elem2[3], elem2[4], elem2[5], elem2[6], elem2[7]);
-					canvasBackground.strokeWeight(newObject.v);
-					canvasBackground.stroke(newObject.col);
-					canvasBackground.line(newObject.x, newObject.y, newObject.xp, newObject.yp);
-					break;
-				case 'rect':
-					var newObject = new RectObj(elem2[0], elem2[1], elem2[2], elem2[3], elem2[4], elem2[5], elem2[6], elem2[7], elem2[8], elem2[9], elem2[10]);
-
-					canvasBackground.strokeWeight(newObject.v);
-					canvasBackground.stroke(newObject.col);
-					if (newObject.filled === "true") {
-						canvasBackground.fill(newObject.col);
-					}
-					else {
-						canvasBackground.noFill();
-					}
-					canvasBackground.rect(newObject.x, newObject.y, newObject.width, newObject.height);
-					break;
-				case 'line':
-					var newObject = new LineObj(elem2[0], elem2[1], elem2[2], elem2[3], elem2[4], elem2[5], elem2[6], elem2[7]);
-					canvasBackground.strokeWeight(newObject.v);
-					canvasBackground.stroke(newObject.col);
-					canvasBackground.noFill();
-					canvasBackground.line(newObject.x, newObject.y, newObject.xp, newObject.yp);
-					break;
-				case 'text':
-					var newObject = new TextObj(elem2[0], elem2[1], elem2[2], elem2[3], elem2[4], elem2[5], elem2[6], elem2[7]);
-					canvasBackground.textSize(newObject.size);
-					canvasBackground.textFont(newObject.family);
-					canvasBackground.noStroke();
-					canvasBackground.fill(newObject.col);
-					canvasBackground.text(newObject.str, newObject.x, newObject.y);
-					break;
-				case 'img':
-					var newObject = new ImgObj(elem2[0], elem2[1], elem2[2], elem2[3], elem2[4]);
-					var path = newObject.src;
-					var image2 = new Image();
-					image2.src = path;
-					image2.onload = function () {
-						drawingContext.drawImage(image2, 0, 0);
-					}
-					break;
-				case 'circle':
-					var newObject = new CircleObj(elem2[0], elem2[1], elem2[2], elem2[3], elem2[4], elem2[5], elem2[6], elem2[7]);
-					canvasBackground.strokeWeight(newObject.v);
-					canvasBackground.stroke(newObject.col);
-					if (newObject.filled === "true") {
-						canvasBackground.fill(newObject.col);
-					}
-					else {
-						canvasBackground.noFill();
-					}
-					canvasBackground.ellipse(newObject.x, newObject.y, newObject.width, newObject.height);
-					break;
-			}
-		}
-	}
-}
-*/
 /*
 * updateUserList, updates the user list and convert loaded string data from db to create obj
 */
@@ -278,10 +188,12 @@ function updateUserList() {
 	socket.emit("appUpdateUsers", username, fileName);
 }
 
-/*
-* is run once, when the program starts. 
-* important functions to receive Objects and load Objects. 
-*/
+/**
+ * It run once, when the program starts.
+ * It will create the canvas.
+ *  
+ * Socket listeners are declared inside.
+ */
 function setup() {
 	createCanvases();
 
@@ -292,16 +204,9 @@ function setup() {
 	socket.on('receiveObj', function (obj, username, filename) {
 		drawObject(obj);
 		currentFile.drawObjects.push(obj);
-		//allObj.push(obj);
-		//console.log("allObj length: " + allObj.length);
 		//displays username on mousex and mousey from obj and fadeOut after 3000
 		if (filename == fileName) {
 			$("#foreground").html(username);
-			/*if (obj.name == 'pencilarray') {
-				for (var i = 1; i < obj.objArray.length; i++) {
-					$("#foreground").css({ 'top': obj.objArray[i].y, 'left': obj.objArray[i].x, 'background-color': 'moccasin', 'padding': '5px' }).fadeIn('fast');
-				}
-			}*/
 			$("#foreground").css({ 'top': obj.y, 'left': obj.x, 'background-color': 'moccasin', 'padding': '5px' }).fadeIn('fast');
 			$("#foreground").delay(3000).fadeOut();
 		}
@@ -318,13 +223,6 @@ function setup() {
 			$("#foreground").css({ 'display': 'none' });
 		}
 	);
-	//handle messages end
-	/*
-	function loadObject(fileName) {
-		socket.emit('appDrawingLoad', fileName);
-	}
-	loadObject(fileName);
-	*/
 
 	updateUserList();
 	drawObjects(data); // replaces parseAndDrawString();
@@ -348,116 +246,6 @@ function setup() {
 }
 
 /*
-* drawX function: draws something with the currentObject from the Server to the canvas
-*/
-/*
-function drawX(curObj) {
-	var elem = document.getElementById("submen");
-	var top = 48;
-	var body = document.body;
-	var doc = document.documentElement;
-
-	var rectangle = elem.getBoundingClientRect();
-	var scrollX = window.pageXOffset || doc.scrollLeft || body.scrollLeft;
-	var scrollY = window.pageYOffset || doc.scrollTop || body.scrollTop;
-	var clientX = doc.clientLeft || body.clientLeft || 0;
-	var clientY = doc.clientTop || body.clientTop || 0;
-
-	var posX = rectangle.left + scrollX - clientY;
-	var posY = rectangle.top + scrollY - clientX - top;
-
-	if (!((mouseX > posX && mouseX < (posX + elem.offsetWidth)) && (mouseY > 0 && mouseY < (elem.offsetHeight)))) {
-		if (fileName == curObj.fileName) {
-			switch (curObj.name) {
-				case 'img':
-					var path = curObj.src;
-					var image2 = new Image();
-					image2.src = curObj.src;
-					drawingContext.drawImage(image2, 0, 0);
-					break;
-				case 'pencilarray':
-					for (var i = 0; i < curObj.objArray.length; i++) {
-						drawX(curObj.objArray[i]);
-					}
-					break;
-				case 'pencil':
-					canvasBackground.strokeWeight(curObj.v);
-					canvasBackground.stroke(curObj.col);
-					canvasBackground.line(curObj.x, curObj.y, curObj.xp, curObj.yp);
-					break;
-				case 'line':
-					if (curObj.l == 0) {
-						canvasBackground.strokeWeight(curObj.v);
-						canvasBackground.stroke(curObj.col);
-						canvasBackground.noFill();
-						canvasBackground.line(curObj.x, curObj.y, curObj.xp, curObj.yp);
-						clear();
-					}
-					else {
-						clear();
-						canvasBackground.strokeWeight(curObj.v);
-						canvasBackground.stroke(curObj.col);
-						canvasBackground.noFill();
-						line(curObj.x, curObj.y, curObj.xp, curObj.yp);
-					}
-					break;
-				case 'rect':
-					if (curObj.l == 0) {
-						canvasBackground.strokeWeight(curObj.v);
-						canvasBackground.stroke(curObj.col);
-						if (curObj.filled == true) {
-							canvasBackground.fill(curObj.col);
-						}
-						else {
-							canvasBackground.noFill();
-						}
-						canvasBackground.rect(curObj.x, curObj.y, curObj.width, curObj.height);
-						clear();
-					}
-					else {
-						clear();
-						canvasBackground.strokeWeight(curObj.v);
-						canvasBackground.stroke(curObj.col);
-						noFill();
-						rect(curObj.x, curObj.y, curObj.width, curObj.height);
-					}
-					break;
-				case 'circle':
-					if (curObj.l == 0) {
-						canvasBackground.strokeWeight(curObj.v);
-						canvasBackground.stroke(curObj.col);
-						if (curObj.filled == true) {
-							canvasBackground.fill(curObj.col);
-						}
-						else {
-							canvasBackground.noFill();
-						}
-						canvasBackground.ellipse((curObj.x + curObj.width / 2), (curObj.y + curObj.height / 2), curObj.width, curObj.height);
-						clear();
-					}
-					else {
-						clear();
-						canvasBackground.strokeWeight(curObj.v);
-						canvasBackground.stroke(curObj.col);
-						noFill();
-						ellipse((curObj.x + curObj.width / 2), (curObj.y + curObj.height / 2), curObj.width, curObj.height);
-						rect(curObj.x - 1, curObj.y - 1, curObj.width + 2, curObj.height + 2);
-					}
-					break;
-				case 'text':
-					canvasBackground.textSize(curObj.size);
-					canvasBackground.textFont(curObj.family);
-					canvasBackground.noStroke();
-					canvasBackground.fill(curObj.col);
-					canvasBackground.text(curObj.str, curObj.x, curObj.y);
-					clear();
-					break;
-			}
-		}
-	}
-}
-*/
-/*
 * trigger when mouse pressed
 */
 function mousePressed() {
@@ -473,14 +261,11 @@ function mouseReleased() {
 		case 'pencil':
 			if (stroke == true) {
 				activeObj = new PencilArray(pencilObj, fileName);
-				console.log("PencilArray:");
-				console.log(activeObj);
 				currentFile.drawObjects.push(activeObj);
 				socket.emit('sendObj', activeObj, username, fileName);
 			}
 			else {
 				var newObject = new PencilObj(mouseX, mouseY, document.getElementById("slid").value, mouseX, mouseY, myCol, 0, fileName);
-				//drawX(newObject);
 				drawObject(newObject);
 				currentFile.drawObjects.push(newObject);
 				socket.emit('sendObj', newObject, username, fileName);
@@ -489,22 +274,18 @@ function mouseReleased() {
 			break;
 		case 'rect':
 			activeObj.l = 0;
-			//drawX(activeObj);
 			drawObject(activeObj);
 			currentFile.drawObjects.push(activeObj);
 			socket.emit('sendObj', activeObj, username, fileName);
 			break;
 		case 'circle':
 			activeObj.l = 0;
-			//drawX(activeObj);
 			drawObject(activeObj);
 			currentFile.drawObjects.push(activeObj);
 			socket.emit('sendObj', activeObj, username, fileName);
 			break;
 		case 'line':
 			activeObj.l = 0;
-			//console.log(activeObj);
-			//drawX(activeObj);
 			drawObject(activeObj);
 			currentFile.drawObjects.push(activeObj);
 			socket.emit('sendObj', activeObj, username, fileName);
@@ -519,24 +300,20 @@ function mouseDragged() {
 	switch (state) {
 		case 'pencil':
 			var newObject = new PencilObj(mouseX, mouseY, document.getElementById("slid").value, pmouseX, pmouseY, myCol, 0, fileName); //0 ist hinten
-			//drawX(newObject);
 			drawObject(newObject);
 			pencilObj.push(newObject);
 			stroke = true;
 			break;
 		case 'rect':
 			activeObj = new RectObj(startPosX, startPosY, document.getElementById("slid").value, mouseX - startPosX, mouseY - startPosY, myCol, filled, 1, fileName);
-			//drawX(activeObj);
 			drawObject(activeObj);
 			break;
 		case 'circle':
 			activeObj = new CircleObj(startPosX, startPosY, document.getElementById("slid").value, mouseX - startPosX, mouseY - startPosY, myCol, filled, 1, fileName);
-			//drawX(activeObj);
 			drawObject(activeObj);
 			break;
 		case 'line':
 			activeObj = new LineObj(startPosX, startPosY, document.getElementById("slid").value, mouseX, mouseY, myCol, 1, fileName);
-			//drawX(activeObj);
 			drawObject(activeObj);
 			break;
 	}
@@ -552,7 +329,6 @@ function mouseClicked() {
 			fontSize = elem.options[elem.selectedIndex].value;
 			fontFamily = elem2.options[elem2.selectedIndex].value;
 			activeObj = new TextObj(mouseX, mouseY, myText, fontSize, fontFamily, myCol, 0, fileName);
-			//drawX(activeObj);
 			drawObject(activeObj);
 			currentFile.drawObjects.push(activeObj);
 			socket.emit('sendObj', activeObj, username, fileName);
@@ -565,13 +341,10 @@ function mouseClicked() {
 */
 function clearCanvas() {
 	canvasBackground.clear();
-	clear();
 	currentFile.drawObjects.length = 0;
-	allObj.length = 0;
 	pencilObj.length = 0;
 	$("#foreground").html("");
 	$("#foreground").css({ 'display': 'none' });
-	saveFile(fileName);
 }
 
 /*
@@ -588,8 +361,6 @@ function saveWindow(fileName) {
 function saveFile(fileName) {
 	var draw_canvas = document.getElementById('visible');
 	var image = draw_canvas.toDataURL("image/png");
-	//console.log(image);
-	//Image and Filename are in the right state after system startup
 	socket.emit("appDrawingSave", image, fileName, function (message) {
 		if (message.error) {
 			console.log(message.error);
@@ -607,10 +378,7 @@ function saveFile(fileName) {
 			$("#sidebarItemSaveNotice").html("Someting went wrong appDrawFunction.js");
 			$("#sidebarItemSaveNotice").show().delay(2000).fadeOut();
 		}
-	}); //fileName!
-	//$("#sidebarItemSaveNotice").css({ 'left': '40%', 'top': '40%', 'padding': '20px' });
-	//$("#sidebarItemSaveNotice").html("saved successfully");
-	//$("#sidebarItemSaveNotice").show().delay(2000).fadeOut();
+	});
 }
 
 /* 

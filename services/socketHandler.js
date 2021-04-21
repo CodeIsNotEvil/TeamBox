@@ -375,24 +375,26 @@ function socketHandler(app, io) {
                 */
                 socket.on('appDrawingSave', function (image, fileName, callback) {
                         if (DRAW_PAD_USE_NEW_DATA_STRUCTURE) {
-                                if(DrawApp.checkIfFileExsists(fileName)){
-                                        if(DrawApp.hasContent(fileName)){
-                                                try{
+                                if (DrawApp.checkIfFileExsists(fileName)) {
+                                        if (DrawApp.hasContent(fileName)) {
+                                                console.log("exsist");
+                                                try {
                                                         DrawApp.saveDocumentToTheDatabase();
-                                                } catch (error){
-                                                    //console.log(error);   
+                                                } catch (error) {
+                                                        //console.log(error);   
                                                 }
-                                                
-                                        }  
+                                        }
                                 } else {
+                                        console.log("Not exsist");
                                         DrawApp.createNewFile(fileName);
+                                        console.log("create "+ fileName);
+                                        try {
+                                                DrawApp.saveDocumentToTheDatabase();
+                                        } catch (error) {
+                                                console.log(error);
+                                        }
                                 }
-                                try{
-                                        console.log(DrawApp.document.file[0].drawObjects);
-                                } catch {
 
-                                }
-                                
                                 let data = image.replace(/^data:image\/\w+;base64,/, '');
                                 var fs = require("fs");
                                 let path = "/var/www/html/app/drawings/draw_" + fileName + ".png";

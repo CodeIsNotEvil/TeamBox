@@ -61,7 +61,7 @@ if (data.length > 0) {
 
 
 $("#appLoadForm").bind('input', function () {
-  console.log(data);
+  //console.log(data);
   if (jQuery.inArray($("#inputAppLoadFilename").val(), data) != -1) {
     $("#thumbnailContainer").css("background-image", "url(drawings/draw_" + $("#inputAppLoadFilename").val() + ".png)");
     $("#thumbnailContainer").css("background-size", "contain");
