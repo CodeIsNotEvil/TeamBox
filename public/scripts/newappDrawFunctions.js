@@ -22,9 +22,11 @@ var filled = false;
 //color array, create colorbar
 var colors = ['black', 'grey', 'lightgray', 'brown', 'orange', 'yellow', 'lightyellow', 'red', 'crimson', 'darkred', 'firebrick', 'purple', 'pink', 'hotpink', 'darkblue', 'blue', 'lightblue', 'cyan', 'darkcyan', 'green', 'lightgreen', 'white'];
 
+var activeObj = [];
 var pencilObj = [];
 var fileName = "/draw/";
 
+let blockDrawing = false;
 let currentFile = null;
 //console.log(data); //Transmitted group document
 
@@ -245,94 +247,132 @@ function setup() {
 	});
 }
 
+function positionMatchesOverlay(startPosX, startPosY) {
+	let offset = $(".menu").offset();
+	let toolbar = {
+		top: offset.top,
+		height: $('.menu').height()
+	}
+	console.log("toolbar: ", toolbar);
+	offset = $("#submen").offset();
+	let submenu = {
+		top: offset.top,
+		left: offset.left,
+		height: $('#submen').height()
+	}
+	console.log("Submenu: ", submenu);
+
+	//check toolbar only allow drawing below the toolbar
+
+	if (startPosY < (toolbar.top + toolbar.height) || //The sum of offset and height is represents the bottomline of the Toolbar.
+		startPosX > submenu.left && startPosY < (submenu.top + submenu.height)) { //
+		return true;
+	} else {
+		return false;
+	}
+}
 /*
 * trigger when mouse pressed
 */
 function mousePressed() {
 	startPosX = mouseX;
 	startPosY = mouseY;
+	if (positionMatchesOverlay(startPosX, startPosY)) {
+		blockDrawing = true;
+		console.log("blocking");
+	} else {
+		console.log("noBlock");
+		blockDrawing = false;
+	}
 }
 
 /*
 * trigger when mouse released
 */
 function mouseReleased() {
-	switch (state) {
-		case 'pencil':
-			if (stroke == true) {
-				activeObj = new PencilArray(pencilObj, fileName);
+	if (!blockDrawing) {
+		switch (state) {
+			case 'pencil':
+				if (stroke == true) {
+					activeObj = new PencilArray(pencilObj, fileName);
+					currentFile.drawObjects.push(activeObj);
+					socket.emit('sendObj', activeObj, username, fileName);
+				}
+				else {
+					var newObject = new PencilObj(mouseX, mouseY, document.getElementById("slid").value, mouseX, mouseY, myCol, 0, fileName);
+					drawObject(newObject);
+					currentFile.drawObjects.push(newObject);
+					socket.emit('sendObj', newObject, username, fileName);
+				}
+				stroke = false;
+				break;
+			case 'rect':
+				activeObj.l = 0;
+				drawObject(activeObj);
 				currentFile.drawObjects.push(activeObj);
 				socket.emit('sendObj', activeObj, username, fileName);
-			}
-			else {
-				var newObject = new PencilObj(mouseX, mouseY, document.getElementById("slid").value, mouseX, mouseY, myCol, 0, fileName);
-				drawObject(newObject);
-				currentFile.drawObjects.push(newObject);
-				socket.emit('sendObj', newObject, username, fileName);
-			}
-			stroke = false;
-			break;
-		case 'rect':
-			activeObj.l = 0;
-			drawObject(activeObj);
-			currentFile.drawObjects.push(activeObj);
-			socket.emit('sendObj', activeObj, username, fileName);
-			break;
-		case 'circle':
-			activeObj.l = 0;
-			drawObject(activeObj);
-			currentFile.drawObjects.push(activeObj);
-			socket.emit('sendObj', activeObj, username, fileName);
-			break;
-		case 'line':
-			activeObj.l = 0;
-			drawObject(activeObj);
-			currentFile.drawObjects.push(activeObj);
-			socket.emit('sendObj', activeObj, username, fileName);
-			break;
+				break;
+			case 'circle':
+				activeObj.l = 0;
+				drawObject(activeObj);
+				currentFile.drawObjects.push(activeObj);
+				socket.emit('sendObj', activeObj, username, fileName);
+				break;
+			case 'line':
+				activeObj.l = 0;
+				drawObject(activeObj);
+				currentFile.drawObjects.push(activeObj);
+				socket.emit('sendObj', activeObj, username, fileName);
+				break;
+		}
 	}
+
 }
 
 /*
 * trigger when mouse dragged
 */
 function mouseDragged() {
-	switch (state) {
-		case 'pencil':
-			var newObject = new PencilObj(mouseX, mouseY, document.getElementById("slid").value, pmouseX, pmouseY, myCol, 0, fileName); //0 ist hinten
-			drawObject(newObject);
-			pencilObj.push(newObject);
-			stroke = true;
-			break;
-		case 'rect':
-			activeObj = new RectObj(startPosX, startPosY, document.getElementById("slid").value, mouseX - startPosX, mouseY - startPosY, myCol, filled, 1, fileName);
-			drawObject(activeObj);
-			break;
-		case 'circle':
-			activeObj = new CircleObj(startPosX, startPosY, document.getElementById("slid").value, mouseX - startPosX, mouseY - startPosY, myCol, filled, 1, fileName);
-			drawObject(activeObj);
-			break;
-		case 'line':
-			activeObj = new LineObj(startPosX, startPosY, document.getElementById("slid").value, mouseX, mouseY, myCol, 1, fileName);
-			drawObject(activeObj);
-			break;
+	if (!blockDrawing) {
+		switch (state) {
+			case 'pencil':
+				var newObject = new PencilObj(mouseX, mouseY, document.getElementById("slid").value, pmouseX, pmouseY, myCol, 0, fileName); //0 ist hinten
+				drawObject(newObject);
+				pencilObj.push(newObject);
+				stroke = true;
+				break;
+			case 'rect':
+				activeObj = new RectObj(startPosX, startPosY, document.getElementById("slid").value, mouseX - startPosX, mouseY - startPosY, myCol, filled, 1, fileName);
+				drawObject(activeObj);
+				break;
+			case 'circle':
+				activeObj = new CircleObj(startPosX, startPosY, document.getElementById("slid").value, mouseX - startPosX, mouseY - startPosY, myCol, filled, 1, fileName);
+				drawObject(activeObj);
+				break;
+			case 'line':
+				activeObj = new LineObj(startPosX, startPosY, document.getElementById("slid").value, mouseX, mouseY, myCol, 1, fileName);
+				drawObject(activeObj);
+				break;
+		}
 	}
 }
 /*
 * trigger when mouse clicked
 */
 function mouseClicked() {
-	switch (state) {
-		case 'text':
-			elem = document.getElementById("fontSize");
-			elem2 = document.getElementById("fontFamily");
-			fontSize = elem.options[elem.selectedIndex].value;
-			fontFamily = elem2.options[elem2.selectedIndex].value;
-			activeObj = new TextObj(mouseX, mouseY, myText, fontSize, fontFamily, myCol, 0, fileName);
-			drawObject(activeObj);
-			currentFile.drawObjects.push(activeObj);
-			socket.emit('sendObj', activeObj, username, fileName);
-			break;
+	if (!blockDrawing) {
+		switch (state) {
+			case 'text':
+				elem = document.getElementById("fontSize");
+				elem2 = document.getElementById("fontFamily");
+				fontSize = elem.options[elem.selectedIndex].value;
+				fontFamily = elem2.options[elem2.selectedIndex].value;
+				activeObj = new TextObj(mouseX, mouseY, myText, fontSize, fontFamily, myCol, 0, fileName);
+				drawObject(activeObj);
+				currentFile.drawObjects.push(activeObj);
+				socket.emit('sendObj', activeObj, username, fileName);
+				break;
+		}
 	}
 }
 
