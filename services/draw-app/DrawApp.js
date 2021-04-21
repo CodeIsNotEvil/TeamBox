@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 const AppDrawData = require('../../models/AppDrawData.js');
 const Group = require('../Group.js');
 
+/**
+ * Static class to hold all the requiered information and functions for the Drawing Pad application.
+ */
 class DrawApp {
 
     static document;
@@ -48,6 +51,11 @@ class DrawApp {
         }
     }
 
+    /**
+     * Creates a new DataDocument for the group to use.
+     * @param {String} group name of the group.
+     * @returns {*} The document of the group in AppDrawData format or the error if there was one.
+     */
     static async createNewAppDrawDataDocument(group) {
         let document = new AppDrawData({
             group: group,
@@ -61,6 +69,7 @@ class DrawApp {
             return error;
         }
     }
+
     /**
      * connects to the DrawPad database, this will not work in the current testsetup wich prevents tests on running on the productionDB.
      * The Code to use this is located at the bottom of this file.
@@ -82,8 +91,12 @@ class DrawApp {
         });
     }
 
+
+    /**
+     * Disconnects mongoose form the Database
+     */
     static async diconnectFromDB() {
-        return mongoose.disconnect().then(() => {
+        mongoose.disconnect().then(() => {
             console.log("Disconected from DB");
         });
     }
@@ -215,7 +228,7 @@ class DrawApp {
 
     /**
      * Creates a new File.
-     * @param {Strin} filename the name of the file wich should be created.
+     * @param {String} filename the name of the file wich should be created.
      */
     static createNewFile(filename) {
         let file = {
@@ -224,6 +237,11 @@ class DrawApp {
         DrawApp.document.files.push(file);
     }
 
+    /**
+     * Checks if the file with the filename as name has drawObjects(content). 
+     * @param {String} filename the name of the file to check.
+     * @returns {Boolean}
+     */
     static hasContent(filename) {
         for (let file = 0; file < DrawApp.document.files.length; file++) {
             if (DrawApp.document.files[file].filename === filename) {
