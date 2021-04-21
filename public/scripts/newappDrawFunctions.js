@@ -253,15 +253,12 @@ function positionMatchesOverlay(startPosX, startPosY) {
 		top: offset.top,
 		height: $('.menu').height()
 	}
-	console.log("toolbar: ", toolbar);
 	offset = $("#submen").offset();
 	let submenu = {
 		top: offset.top,
 		left: offset.left,
 		height: $('#submen').height()
 	}
-	console.log("Submenu: ", submenu);
-
 	//check toolbar only allow drawing below the toolbar
 
 	if (startPosY < (toolbar.top + toolbar.height) || //The sum of offset and height is represents the bottomline of the Toolbar.
@@ -279,9 +276,7 @@ function mousePressed() {
 	startPosY = mouseY;
 	if (positionMatchesOverlay(startPosX, startPosY)) {
 		blockDrawing = true;
-		console.log("blocking");
 	} else {
-		console.log("noBlock");
 		blockDrawing = false;
 	}
 }

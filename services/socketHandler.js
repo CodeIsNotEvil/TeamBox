@@ -326,10 +326,8 @@ function socketHandler(app, io) {
                         var fs = require("fs");
 
                         var path = PATH_TO_SCREENSHOTS + "/mindmap_" + fileName + ".png";
-                        console.log("path to mindmapScreenshots", path);
                         try {
                                 fs.accessSync(PATH_TO_SCREENSHOTS, fs.constants.W_OK);
-                                console.log(`file ${PATH_TO_SCREENSHOTS} folder is writeable`);
                         } catch (error) {
                                 fs.mkdir(PATH_TO_SCREENSHOTS, error => {
                                         if (error) {
@@ -387,7 +385,6 @@ function socketHandler(app, io) {
                         if (DRAW_PAD_USE_NEW_DATA_STRUCTURE) {
                                 if (DrawApp.checkIfFileExsists(fileName)) {
                                         if (DrawApp.hasContent(fileName)) {
-                                                console.log("exsist");
                                                 try {
                                                         DrawApp.saveDocumentToTheDatabase();
                                                 } catch (error) {
@@ -395,7 +392,6 @@ function socketHandler(app, io) {
                                                 }
                                         }
                                 } else {
-                                        console.log("Not exsist");
                                         DrawApp.createNewFile(fileName);
                                         console.log("create " + fileName);
                                         try {
@@ -409,7 +405,6 @@ function socketHandler(app, io) {
                                 var fs = require("fs");
                                 try {
                                         fs.accessSync(PATH_TO_DRAWINGS, fs.constants.W_OK);
-                                        console.log(`file ${PATH_TO_DRAWINGS} folder is writeable`);
                                 } catch (error) {
                                         fs.mkdir(PATH_TO_DRAWINGS, error => {
                                                 if (error) {
@@ -418,15 +413,14 @@ function socketHandler(app, io) {
                                         });
                                 }
                                 let path = PATH_TO_DRAWINGS + "/draw_" + fileName + ".png";
-                                console.log("path to DrawPadDrawings", path);
                                 fs.writeFile(path, data, { encoding: 'base64' }, err => {
                                         if (err) {
                                                 console.log(err);
-                                                //callback({ error: "content could not be saved as Image" });
+                                                callback({ error: "content could not be saved as Image" });
                                         } else {
-                                                console.log("the path were it were saved: ", path);
-                                                //callback({ fileName: fileName });
-                                                //io.emit('appDrawingSave', fileName);
+                                                //console.log("the path were it were saved: ", path);
+                                                callback({ fileName: fileName });
+                                                io.emit('appDrawingSave', fileName);
                                         }
                                 });
 
