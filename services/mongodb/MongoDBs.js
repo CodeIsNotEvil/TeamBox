@@ -1,5 +1,5 @@
 const MongoDBs = {
-    DrawPad: "DrawPad",
-    Wekan: "wekan"
+    Wekan: "wekan",
+    TeamBox: "TeamBox"
 }
 module.exports = MongoDBs;

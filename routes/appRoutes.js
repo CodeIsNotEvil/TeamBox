@@ -1,4 +1,4 @@
-const { PATH_TO_VIEWS, DRAW_PAD_USE_NEW_DATA_STRUCTURE } = require('../config/server');
+const { DRAW_PAD_USE_NEW_DATA_STRUCTURE } = require('../config/server');
 const { getMySQLConnection } = require('../services/mysqlHandler');
 const Ethercalc = require('../services/ethercalc/ethercalcHandler');
 const getEtherpadEntries = require('../services/etherpadHandler');
@@ -17,7 +17,7 @@ function appRoutes(app) {
         app.get("/appDrawLoad.ejs", function (req, res) {
                 if (DRAW_PAD_USE_NEW_DATA_STRUCTURE) {
                         DrawApp.getAllFileNames(Group.group).then((fileNames) => {
-                                res.render(PATH_TO_VIEWS + "/newappDrawLoad.ejs", {
+                                res.render("newappDrawLoad", {
                                         username: req.session.username,
                                         group: Group.group,
                                         color: req.session.usercolor,
@@ -39,7 +39,7 @@ function appRoutes(app) {
                                         }
                                         //let data = JSON.stringify(fileNames);
                                         //data = fileNames.toString();
-                                        res.render(PATH_TO_VIEWS + "/appDrawLoad.ejs", { username: req.session.username, group: Group.group, color: req.session.usercolor, data: fileNames });
+                                        res.render("appDrawLoad", { username: req.session.username, group: Group.group, color: req.session.usercolor, data: fileNames });
                                 });
 
                         }
@@ -59,7 +59,7 @@ function appRoutes(app) {
         app.get("/appDraw.ejs", function (req, res) {
                 if (req.session.username) {
                         if (DRAW_PAD_USE_NEW_DATA_STRUCTURE) {
-                                res.render(PATH_TO_VIEWS + "/newappDraw.ejs", {
+                                res.render("newappDraw", {
                                         username: req.session.username,
                                         group: Group.group,
                                         color: req.session.usercolor,
@@ -83,7 +83,7 @@ function appRoutes(app) {
                                                 }
                                                 //data = fileNames.toString();
                                                 drawApp.initAllObj(fileNames, contents);
-                                                res.render(PATH_TO_VIEWS + "/appDraw.ejs", { username: req.session.username, group: Group.group, color: req.session.usercolor, drawObjData: contents, data: fileNames });
+                                                res.render("appDraw", { username: req.session.username, group: Group.group, color: req.session.usercolor, drawObjData: contents, data: fileNames });
                                         }
 
                                 });
@@ -107,7 +107,7 @@ function appRoutes(app) {
                                 for (var i = 0; i < result.length; i++) {
                                         data.push(result[i].fileName);
                                 }
-                                res.render(PATH_TO_VIEWS + "/appMindmapLoad.ejs", { username: req.session.username, group: Group.group, color: req.session.usercolor, data: data });
+                                res.render("appMindmapLoad", { username: req.session.username, group: Group.group, color: req.session.usercolor, data: data });
                         });
 
 
@@ -120,7 +120,7 @@ function appRoutes(app) {
         app.get("/appMindmap.ejs", function (req, res) {
                 if (req.session.username) {
 
-                        res.render(PATH_TO_VIEWS + "/appMindmap.ejs", { username: req.session.username, group: Group.group, color: req.session.usercolor });
+                        res.render("appMindmap", { username: req.session.username, group: Group.group, color: req.session.usercolor });
                 }
                 else {
                         return res.redirect("/login01.ejs");
@@ -133,7 +133,7 @@ function appRoutes(app) {
 
                         let data = getEtherpadEntries();
 
-                        res.render(PATH_TO_VIEWS + "/appEtherpadLoad.ejs", { username: req.session.username, group: Group.group, color: req.session.usercolor, data: data });
+                        res.render("appEtherpadLoad", { username: req.session.username, group: Group.group, color: req.session.usercolor, data: data });
                 }
                 else {
                         return res.redirect("/login01.ejs");
@@ -146,7 +146,7 @@ function appRoutes(app) {
                         let data = Ethercalc.getEntries();
                         //console.log("EthercalcData: " + data);
 
-                        res.render(PATH_TO_VIEWS + "/appEthercalcLoad.ejs", { username: req.session.username, group: Group.group, color: req.session.usercolor, data: data });
+                        res.render("appEthercalcLoad", { username: req.session.username, group: Group.group, color: req.session.usercolor, data: data });
                 }
                 else {
                         return res.redirect("/login01.ejs");
@@ -156,7 +156,7 @@ function appRoutes(app) {
         app.get("/wekanLoad.ejs", function (req, res) {
                 if (req.session.username) {
 
-                        res.render(PATH_TO_VIEWS + "/wekanLoad.ejs", { username: req.session.username, group: Group.group, color: req.session.usercolor });
+                        res.render("wekanLoad", { username: req.session.username, group: Group.group, color: req.session.usercolor });
                 }
                 else {
                         return res.redirect("/login01.ejs");
@@ -165,7 +165,7 @@ function appRoutes(app) {
 
         app.get("/filebrowserLoad.ejs", function (req, res) {
                 if (req.session.username) {
-                        res.render(PATH_TO_VIEWS + "/filebrowserLoad.ejs", { username: req.session.username, group: Group.group, color: req.session.usercolor });
+                        res.render("filebrowserLoad", { username: req.session.username, group: Group.group, color: req.session.usercolor });
                 }
                 else {
                         return res.redirect("/login01.ejs");

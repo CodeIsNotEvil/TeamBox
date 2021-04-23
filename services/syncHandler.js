@@ -2,7 +2,6 @@ const { PATH_TO_GLOBAL_MODULES } = require("../config/server");
 const { exportMysqlAsync, exportMysql } = require("./mysqlHandler");
 const syncExec = require(PATH_TO_GLOBAL_MODULES + 'sync-exec');
 const Group = require('./Group');
-const { exportWekanDB } = require("./mongoDBHandler");
 const Ethercalc = require("./ethercalc/ethercalcHandler");
 const MongoBackupHandler = require("./mongodb/MongoBackupHandler");
 

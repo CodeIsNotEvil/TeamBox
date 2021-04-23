@@ -15,20 +15,15 @@ class DrawApp {
      */
     static async init() {
         try {
-            await DrawApp.connectToDB();
-            try {
-                DrawApp.document = await DrawApp.getAppDrawDataDocumentFromDB(Group.group);
-                //When document is still null there were no db entry for this group.
-                if (DrawApp.document === null) {
-                    console.log("there were no group document createing one...");
-                    try {
-                        DrawApp.document = await DrawApp.createNewAppDrawDataDocument(Group.group);
-                    } catch (error) {
-                        return error;
-                    }
+            DrawApp.document = await DrawApp.getAppDrawDataDocumentFromDB(Group.group);
+            //When document is still null there were no db entry for this group.
+            if (DrawApp.document === null) {
+                console.log("there were no group document createing one...");
+                try {
+                    DrawApp.document = await DrawApp.createNewAppDrawDataDocument(Group.group);
+                } catch (error) {
+                    return error;
                 }
-            } catch (error) {
-                return error;
             }
         } catch (error) {
             return error;
@@ -75,6 +70,7 @@ class DrawApp {
      * The Code to use this is located at the bottom of this file.
      * @returns 
      */
+    /*
     static async connectToDB() {
         mongoose.connect('mongodb://localhost/DrawPad', {
             useNewUrlParser: true,
@@ -90,17 +86,18 @@ class DrawApp {
             console.error("MongoDB error\n" + error);
         });
     }
-
+    */
 
     /**
      * Disconnects mongoose form the Database
      */
+    /*  
     static async diconnectFromDB() {
         mongoose.disconnect().then(() => {
             console.log("Disconected from DB");
         });
     }
-
+    */
     /**
      * Returns the File Names of the current group as an array.
      * This function will be called if a client loads requests the /appDraw.ejs Page

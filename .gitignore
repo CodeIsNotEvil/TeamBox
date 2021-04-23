@@ -92,6 +92,8 @@ web_modules/
 # dotenv environment variables file
 .env
 .env.test
+# dotenv does not work on the pi so i used a untracked.js in here to prevent pushing secrets.
+config/untracked.js
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
