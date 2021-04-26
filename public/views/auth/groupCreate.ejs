@@ -1,0 +1,40 @@
+<%- include('authHeader'); -%>
+    <form class="auth form">
+        <h2>Create Group</h2>
+        <label for="groupName">Group name</label>
+        <input type="text" name="groupName" required>
+        <div class="groupName error"></div>
+        <button>Create Group</button>
+    </form>
+    <script>
+        const form = document.querySelector('form');
+        const groupNameError = document.querySelector('.groupName.error');
+
+        form.addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            //reset errors
+            groupNameError.textContent = '';
+
+            //get  the values
+            const groupName = form.groupName.value;
+            try {
+                const res = await fetch('/groupCreate', {
+                    method: 'POST',
+                    body: JSON.stringify({ groupName }),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await res.json();
+                console.log(data);
+                if (data.errors) {
+                    groupNameError.textContent = data.errors.name;
+                }
+                if (data.user && data.group) {
+                    location.assign('/');
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        });
+    </script>
+    <%- include('../footer'); -%>

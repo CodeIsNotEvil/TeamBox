@@ -11,16 +11,16 @@ const user = require('../models/MySQLUser');
 const Group = require('../services/Group');
 const fileBrowser = require('../services/fileBrowser/fileBrowser');
 const DrawApp = require('../services/draw-app/DrawApp');
-const { requireAuth, checkUser } = require('../middleware/authMiddleware');
+const { requireAuth, requireGroup, checkUser, checkGroup } = require('../middleware/authMiddleware');
 
 
 //User check on every route
-router.get("*", checkUser);
+router.all("*", checkUser, checkGroup);
 
 /**
 * Default route.
 */
-router.get("/", requireAuth, function (req, res) {
+router.get("/", requireAuth, requireGroup, function (req, res) {
         res.render("newHub");
         /*
                 if (!req.session.username && !Group.mysqlIsImported) {

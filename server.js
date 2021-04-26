@@ -10,6 +10,7 @@ const mongoose = require('mongoose');
 
 //Own modules
 const authRoutes = require('./routes/authRoutes');
+const groupAuthRoutes = require('./routes/groupAuthRoutes');
 const routes = require('./routes/routes');
 
 const app = express();
@@ -46,9 +47,10 @@ app.use(expressSession({
 */
 app.use(express.json());
 
-//Own middleware
+//Routes
 app.use(routes);
 app.use(authRoutes);
+app.use(groupAuthRoutes);
 
 //TeamBox Database connection
 const dbURI = 'mongodb://localhost/TeamBox';

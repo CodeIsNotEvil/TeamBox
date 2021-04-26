@@ -1,10 +1,11 @@
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../config/untracked');
+const Group = require('../models/Group');
 const User = require('../models/User');
 
 const requireAuth = (req, res, next) => {
 
-    const token = req.cookies.jwt;
+    const token = req.cookies.user_jwt;
 
     // check if the json web token exists and is verified
     if (token) {
@@ -13,7 +14,7 @@ const requireAuth = (req, res, next) => {
                 console.log(error.message);
                 res.redirect('/login');
             } else {
-                console.log(decodedToken);
+                //console.log(decodedToken);
                 next();
             }
         });
@@ -22,8 +23,28 @@ const requireAuth = (req, res, next) => {
     }
 }
 
+const requireGroup = (req, res, next) => {
+
+    const token = req.cookies.group_jwt;
+
+    // check if the json web token exists and is verified
+    if (token) {
+        jwt.verify(token, JWT_SECRET, (error, decodedToken) => {
+            if (error) {
+                console.log(error.message);
+                res.redirect('/groupSelect');
+            } else {
+                //console.log(decodedToken);
+                next();
+            }
+        });
+    } else {
+        res.redirect('/groupSelect');
+    }
+}
+
 const checkUser = (req, res, next) => {
-    const token = req.cookies.jwt;
+    const token = req.cookies.user_jwt;
     if (token) {
         jwt.verify(token, JWT_SECRET, async (error, decodedToken) => {
             if (error) {
@@ -31,7 +52,6 @@ const checkUser = (req, res, next) => {
                 res.locals.user = null;
                 next();
             } else {
-                console.log(decodedToken);
                 let user = await User.findById(decodedToken.id);
                 res.locals.user = user;
                 next();
@@ -43,4 +63,25 @@ const checkUser = (req, res, next) => {
     }
 }
 
-module.exports = { requireAuth, checkUser };
+const checkGroup = (req, res, next) => {
+    const token = req.cookies.group_jwt;
+    if (token) {
+        jwt.verify(token, JWT_SECRET, async (error, decodedToken) => {
+            if (error) {
+                console.log(error.message);
+                res.locals.group = null;
+                next();
+            } else {
+
+                let group = await Group.findById(decodedToken.id);
+                res.locals.group = group;
+                next();
+            }
+        });
+    } else {
+        res.locals.group = null;
+        next();
+    }
+}
+
+module.exports = { requireAuth, requireGroup, checkUser, checkGroup };
