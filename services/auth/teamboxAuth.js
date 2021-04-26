@@ -41,11 +41,11 @@ const createToken = id => {
 }
 
 module.exports.signup_get = (req, res) => {
-    res.render('signup');
+    res.render('auth/signup');
 }
 
 module.exports.login_get = (req, res) => {
-    res.render('login');
+    res.render('auth/login');
 }
 
 module.exports.signup_post = async (req, res) => {
