@@ -1,10 +1,25 @@
+/*
+#############
+
+Scroll Container
+
+#############
+*/
+
+.scroll-container {
+    overflow: scroll;
+    height: 80vh;
+    width: auto;
+    overflow-x: hidden;
+}
+
 .mainContainer {
-    margin-left: 10px;
+    margin-left: 1vw;
     display: grid;
-    grid-template-columns: auto 180px;
+    grid-template-columns: auto;
     grid-template-rows: auto;
-    grid-template-areas: "appList userList";
-    width: 100%;
+    grid-template-areas: "appList" "userList";
+    width: 98vw;
 }
 
 /*
@@ -15,7 +30,7 @@ AppList
 #############
 */
 
-.appList, .containerItem {
+.appList, .userList, .containerItem {
     margin: 0 auto;
     margin-top: 0px;
     padding: 10px;
@@ -27,16 +42,15 @@ AppList
 }
 
 .appList {
-    padding-right: 10px;
     grid-area: appList;
-    width: 100%;
+    width: 80vw;
     padding: 30px;
 }
 
 .containerItem {
     padding-top: 20px;
     padding-bottom: 20px;
-    background: #fafafa;
+    background: #f8f8f8;
     text-align: center;
     margin: 10px;
 }
@@ -44,37 +58,78 @@ AppList
 /*
 #############
 
-UserList
+UserList bottom 
 
 #############
 */
 
 .userList {
     grid-area: userList;
-    margin-left: 65px;
+    margin-top: 30px;
+    padding: 30px;
+    width: 80vw;
 }
 
-.userList .entryContainer div {
-    max-width: 120px;
-    border-radius: 36px 5px 5px 36px;
-    font-size: 11px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    text-align: center;
-    margin-top: 5px;
-    margin-bottom: 5px;
+.userList .containerItem div {
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
 /*
 #############
 
-Media Queries 
+Media Queries
+Move the UserList to the right, fix it size to 250px and Enlarge the AppList
 
 #############
 */
 
-@media (min-width: 650px) {
+@media (min-width: 820px) {
     .mainContainer {
+        display: grid;
+        grid-template-columns: auto;
+        grid-template-rows: auto;
+        grid-template-areas: "appList userList";
+    }
+    .userList {
+        height: fit-content;
+        margin-top: 0px;
         margin-left: 10px;
+    }
+    .userList .containerItem {
+        width: 250px;
+    }
+    .appList {
+        width: 50vw;
+        height: fit-content;
+    }
+}
+
+@media (min-width: 1000px) {
+    .appList {
+        width: 60vw;
+    }
+}
+
+@media (min-width: 1200px) {
+    .appList {
+        width: 65vw;
+    }
+}
+
+@media (min-width: 1400px) {
+    .appList {
+        width: 70vw;
+    }
+}
+
+@media (min-width: 1700px) {
+    .userList .containerItem {
+        width: 16vw;
+    }
+    .appList {
+        width: 75vw;
     }
 }

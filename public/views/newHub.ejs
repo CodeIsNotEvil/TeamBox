@@ -1,69 +1,87 @@
 <%- include('newHeader'); -%>
     <link rel="stylesheet" href="../styles/newHub.css">
-    <div class="mainContainer">
-        <div class="appList">
-            <a href="appEtherpadLoad.ejs">
-                <div class="containerItem containerItem1 transformBackground">
-                    <div class="containerItemTitle transform">
-                        Text Editor
+    <div class="scroll-container">
+        <div class="mainContainer">
+            <div class="appList">
+                <a href="appEtherpadLoad.ejs">
+                    <div class="containerItem containerItem1 transformBackground">
+                        <div class="containerItemTitle transform">
+                            Text Editor
+                        </div>
                     </div>
-                </div>
-            </a>
-            <a href="appMindmapLoad.ejs">
-                <div class="containerItem containerItem5 transformBackground">
-                    <div class="containerItemTitle transform">
-                        Brain Storming
+                </a>
+                <a href="appMindmapLoad.ejs">
+                    <div class="containerItem containerItem5 transformBackground">
+                        <div class="containerItemTitle transform">
+                            Brain Storming
+                        </div>
                     </div>
-                </div>
-            </a>
-            <!--File Browser -->
-            <a href="filebrowserLoad.ejs">
-                <div class="containerItem containerItem6 transformBackground">
-                    <div class="containerItemTitle transform">
-                        File Sharing
+                </a>
+                <!--File Browser -->
+                <a href="filebrowserLoad.ejs">
+                    <div class="containerItem containerItem6 transformBackground">
+                        <div class="containerItemTitle transform">
+                            File Sharing
+                        </div>
                     </div>
-                </div>
-            </a>
-            <a href="appEthercalcLoad.ejs">
-                <div class="containerItem containerItem4 transformBackground">
-                    <div class="containerItemTitle transform">
-                        Spreadsheet
+                </a>
+                <a href="appEthercalcLoad.ejs">
+                    <div class="containerItem containerItem4 transformBackground">
+                        <div class="containerItemTitle transform">
+                            Spreadsheet
+                        </div>
                     </div>
-                </div>
-            </a>
-            <a href="appDrawLoad.ejs">
-                <div class="containerItem containerItem3 transformBackground">
-                    <div class="containerItemTitle transform">
-                        Drawing Pad
+                </a>
+                <a href="appDrawLoad.ejs">
+                    <div class="containerItem containerItem3 transformBackground">
+                        <div class="containerItemTitle transform">
+                            Drawing Pad
+                        </div>
                     </div>
-                </div>
-            </a>
-            <!--WEKAN -->
-            <a href="wekanLoad.ejs">
-                <div class="containerItem containerItem2 transformBackground">
-                    <div class="containerItemTitle transform">
-                        Project Management
+                </a>
+                <!--WEKAN -->
+                <a href="wekanLoad.ejs">
+                    <div class="containerItem containerItem2 transformBackground">
+                        <div class="containerItemTitle transform">
+                            Project Management
+                        </div>
                     </div>
-                </div>
-            </a>
-            <div class="clear"></div>
-        </div>
-        <div class="userList">
-            <div class="entryContainer">
-                <% if(user) { %>
-                    <div style="background-color: rgba(242, 250, 168, 0.5);">
-                        <%= user.name %>
-                    </div>
-                    <% } %>
-                        <!-- This Section needs a userslist of a group
-                <div style="background-color: rgba(250, 221, 182, 0.5);">ExampleUser2</div>
-                <div style="background-color: rgba(148, 235, 137, 0.5);">ExampleUser3</div>
-                <div style="background-color: rgba(174, 247, 247, 0.5);">ExampleUser4</div>
-                <div style="background-color: rgba(212, 174, 247, 0.5);">ExampleUser5</div>
-                <div style="background-color: rgba(245, 173, 173, 0.5);">ExampleUser6</div>
-                <div style="background-color: rgba(112, 112, 112, 0.5);">ExampleUser7</div>
-                <div style="background-color: rgba(112, 112, 112, 0.5);">12345678901234567890</div>
+                </a>
+                <div class="clear"></div>
+            </div>
+            <div class="userList">
+                <div class="entryContainer">
+                    <% if(user) { %>
+                        <div class="containerItem">
+                            <div style="background-color: rgba(242, 250, 168, 0.5);">
+                                <%= user.name %>
+                            </div>
+                        </div>
+                        <% } %>
+                            <!-- This Section needs a userslist of a group or insert them via script
+                            <div class="containerItem">
+                                <div style="background-color: rgba(250, 221, 182, 0.5);">ExampleUser2</div>
+                            </div>
+                            <div class="containerItem">
+                                <div style="background-color: rgba(148, 235, 137, 0.5);">ExampleUser3</div>
+                            </div>
+                            <div class="containerItem">
+                                <div style="background-color: rgba(174, 247, 247, 0.5);">ExampleUser4</div>
+                            </div>
+                            <div class="containerItem">
+                                <div style="background-color: rgba(212, 174, 247, 0.5);">ExampleUser5</div>
+                            </div>
+                            <div class="containerItem">
+                                <div style="background-color: rgba(245, 173, 173, 0.5);">ExampleUser6</div>
+                            </div>
+                            <div class="containerItem">
+                                <div style="background-color: rgba(112, 112, 112, 0.5);">ExampleUser7</div>
+                            </div>
+                            --->
+                            <!-- It should look like this for every user
+                <div style="background-color: rgba(250, 221, 182, 0.5);"><%= /*group.users[1].name */%></div>
                 -->
+                </div>
             </div>
         </div>
     </div>
