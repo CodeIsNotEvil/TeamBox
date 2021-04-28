@@ -1,6 +1,6 @@
 const { exportData, synchronizeTime } = require('../services/syncHandler');
 const { saveDataDrawStringToDB, updateUserLanguage, getMindMapContentFromDB, writeMindmap } = require("./mysqlHandler");
-const { PATH_TO_GLOBAL_MODULES, DRAW_PAD_USE_NEW_DATA_STRUCTURE, PATH_TO_SCREENSHOTS, PATH_TO_DRAWINGS } = require("../config/server");
+const { PATH_TO_GLOBAL_MODULES, PATH_TO_SCREENSHOTS, PATH_TO_DRAWINGS } = require("../config/server");
 /*const { JSDOM } = require(PATH_TO_GLOBAL_MODULES + 'jsdom');
 const { window } = new JSDOM("");
 const $ = require("../_jquery/jquery-1.12.3")(window);*/
@@ -353,14 +353,7 @@ function socketHandler(app, io) {
                 * function to handle obj Data and send to Clients
                 */
                 socket.on('sendObj', function (obj, username, fileName) {
-                        if (DRAW_PAD_USE_NEW_DATA_STRUCTURE) {
-                                DrawApp.addObjectToFile(obj, fileName);
-                                //TODO add DrawApp.addObjectToFile(obj, fileName);
-                        } else {
-                                drawApp.addObject(obj);
-                        }
-                        //console.log("object: " + obj);
-                        //console.log("allObj sendObjsfun:  " + obj);
+                        DrawApp.addObjectToFile(obj, fileName);
                         socket.broadcast.emit('receiveObj', obj, username, fileName);
                 }
                 );
@@ -368,99 +361,55 @@ function socketHandler(app, io) {
                 * function to handle clear-command and send to Clients
                 */
                 socket.on('clear', function (fileName) {
-                        if (DRAW_PAD_USE_NEW_DATA_STRUCTURE) {
-                                DrawApp.removeFileFormDocument(fileName);
-                                socket.broadcast.emit('clear', fileName);
-                        } else {
-                                socket.broadcast.emit('clear', fileName);
-                                drawApp.clearDrawing(fileName);
-                        }
-
-                }
-                );
+                        DrawApp.removeFileFormDocument(fileName);
+                        socket.broadcast.emit('clear', fileName);
+                });
                 /*
                 * function to handle save Obj 
                 */
                 socket.on('appDrawingSave', function (image, fileName, callback) {
-                        if (DRAW_PAD_USE_NEW_DATA_STRUCTURE) {
-                                if (DrawApp.checkIfFileExsists(fileName)) {
-                                        if (DrawApp.hasContent(fileName)) {
-                                                try {
-                                                        DrawApp.saveDocumentToTheDatabase();
-                                                } catch (error) {
-                                                        //console.log(error);   
-                                                }
-                                        }
-                                } else {
-                                        DrawApp.createNewFile(fileName);
-                                        console.log("create " + fileName);
+                        if (DrawApp.checkIfFileExsists(fileName)) {
+                                if (DrawApp.hasContent(fileName)) {
                                         try {
                                                 DrawApp.saveDocumentToTheDatabase();
                                         } catch (error) {
-                                                console.log(error);
+                                                //console.log(error);   
                                         }
                                 }
-
-                                let data = image.replace(/^data:image\/\w+;base64,/, '');
-                                var fs = require("fs");
-                                try {
-                                        fs.accessSync(PATH_TO_DRAWINGS, fs.constants.W_OK);
-                                } catch (error) {
-                                        fs.mkdir(PATH_TO_DRAWINGS, error => {
-                                                if (error) {
-                                                        console.error(error);
-                                                }
-                                        });
-                                }
-                                let path = PATH_TO_DRAWINGS + "/draw_" + fileName + ".png";
-                                fs.writeFile(path, data, { encoding: 'base64' }, err => {
-                                        if (err) {
-                                                console.log(err);
-                                                callback({ error: "content could not be saved as Image" });
-                                        } else {
-                                                //console.log("the path were it were saved: ", path);
-                                                callback({ fileName: fileName });
-                                                io.emit('appDrawingSave', fileName);
-                                        }
-                                });
-
                         } else {
-                                //Image and fileName are in the right state after sytsem startup
-                                let string = drawApp.createString(fileName); //get the image string
-                                //ERROR the string is empty after systemstartup
-                                //console.log("appDrawingSave_string\n" + fileName + "\n" + string);
-                                if (string) {
-                                        //console.log("appDrawingSave_string\n" + fileName);
-                                        saveDataDrawStringToDB(string, image, fileName, (image, fileName) => {
-                                                let data = image.replace(/^data:image\/\w+;base64,/, '');
-                                                var fs = require("fs");
-                                                let path = "/var/www/html/app/drawings/draw_" + fileName + ".png";
-                                                fs.writeFile(path, data, { encoding: 'base64' }, function (err) {
-                                                        if (err) {
-                                                                console.log(err);
-                                                                callback({ error: "content could not be saved as Image" });
-                                                        } else {
-                                                                callback({ fileName: fileName });
-                                                                //io.emit('appDrawingSave', fileName);
-                                                        }
-                                                });
-
-                                        }); //save allObj as String in database
+                                DrawApp.createNewFile(fileName);
+                                console.log("create " + fileName);
+                                try {
+                                        DrawApp.saveDocumentToTheDatabase();
+                                } catch (error) {
+                                        console.log(error);
                                 }
                         }
 
+                        let data = image.replace(/^data:image\/\w+;base64,/, '');
+                        var fs = require("fs");
+                        try {
+                                fs.accessSync(PATH_TO_DRAWINGS, fs.constants.W_OK);
+                        } catch (error) {
+                                fs.mkdir(PATH_TO_DRAWINGS, error => {
+                                        if (error) {
+                                                console.error(error);
+                                        }
+                                });
+                        }
+                        let path = PATH_TO_DRAWINGS + "/draw_" + fileName + ".png";
+                        fs.writeFile(path, data, { encoding: 'base64' }, err => {
+                                if (err) {
+                                        console.log(err);
+                                        callback({ error: "content could not be saved as Image" });
+                                } else {
+                                        //console.log("the path were it were saved: ", path);
+                                        callback({ fileName: fileName });
+                                        io.emit('appDrawingSave', fileName);
+                                }
+                        });
                 });
-                //NENA END
-                /* socket.on('appDrawingLoad', function (fileName) {
-                         loadContentFromDB(fileName, (content) => {
-                                 drawApp.allObj = content;
-                         });
-                 });
-                 */
         });
-
-        //NENA BEGIN
-
 }
 
 module.exports = socketHandler;

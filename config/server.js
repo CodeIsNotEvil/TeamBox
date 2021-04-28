@@ -7,5 +7,4 @@ module.exports = {
     PATH_TO_DRAWINGS: '/home/ubuntu/app/public/drawings',
     PATH_TO_MODELS: '/home/ubuntu/app/models',
     MAX_USER_COUNT: 7,
-    DRAW_PAD_USE_NEW_DATA_STRUCTURE: true
 };

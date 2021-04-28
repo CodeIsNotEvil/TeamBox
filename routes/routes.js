@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const router = Router();
-const { MAX_USER_COUNT, DRAW_PAD_USE_NEW_DATA_STRUCTURE } = require('../config/server');
+const { MAX_USER_COUNT } = require('../config/server');
 
 const { writeUserdata, createAndSaveUserSession: createAndSaveUserSession } = require('../services/mysqlHandler');
 const usbCheckFree = require('../services/USBHandler');
@@ -57,9 +57,7 @@ router.post('/login01.ejs', function (req, res) {
                         }
                 }
                 fileBrowser.startfilebrowser();
-                if (DRAW_PAD_USE_NEW_DATA_STRUCTURE) {
-                        DrawApp.init();
-                }
+                DrawApp.init();
                 res.end("loginSuccess");
         }
 });
