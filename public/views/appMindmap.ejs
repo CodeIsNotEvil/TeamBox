@@ -1,4 +1,5 @@
 <%- include('header'); -%>
+
   <body oncontextmenu="return false;">
     <div style="display: none;" id="content" order="-1"></div>
     <div id="sidebar">
@@ -6,12 +7,12 @@
         <div id="menuItemGroup">
           <%= group %>
         </div>
-        <div id="menuItemName" style="font-family: teamBoxFontBold; background-color: <%=color %>;">
+        <div id="menuItemName" style="font-family: teamBoxFontBold; background-color: '<%=color %>';">
           <%= username %>
         </div>
         <div class="clear"></div>
-	<!-- LARA 22.07.2016 -->
-	<!--
+        <!-- LARA 22.07.2016 -->
+        <!--
         <div class="sidebarItem" onClick="showHideItem(2);">
           <div style="float: left; padding: 0px 0px 0px 10px;">Main Menu</div>
           <div id="sidebarItem2" class="transform"></div>
@@ -26,13 +27,13 @@
         </div>
 	-->
         <div id="sidebarItemMenu" style="background-color: rgb(239, 239, 239);">
-          <a href="hub.ejs">
+          <a href="/">
             <div class="itemMenu" onClick="saveData();">Home</div>
           </a>
           <div class="itemMenu" onClick="saveScreenshot();">Download Image</div>
           <div class="itemMenu" onClick="saveData();">Save to USB</div>
         </div>
-	<!-- LARA end -->
+        <!-- LARA end -->
       </div>
       <div class="sidebarContainer">
         <div id="nodeMenu">
@@ -44,7 +45,9 @@
       </div>
 
       <div id="sidebarElementEdit" class="sidebarContainer">
-        <div class="sidebarItem" style=" background-image: url('styles/media/edit.png'); background-repeat: no-repeat; background-position: 5px 50%; background-size: 35px 35px;" onClick="showHideItem(0);">
+        <div class="sidebarItem"
+          style=" background-image: url('styles/media/edit.png'); background-repeat: no-repeat; background-position: 5px 50%; background-size: 35px 35px;"
+          onClick="showHideItem(0);">
           <div id="sidebarItem0Header" style="float: left; padding: 0px 0px 0px 35px;">Edit Node</div>
           <div id="sidebarItem0" class="transform"></div>
           <div class="clear"></div>
@@ -53,10 +56,14 @@
           <div id="nodeAddNode" onClick="createNode('normal');">Add Sub-Node</div>
           <div id="nodeDeleteNode" onClick="closeWarning(); openWarning('node');">Delete Node</div>
           <div id="nodeDeleteSubtree" onClick="closeWarning(); openWarning('subtree');">Delete Node & Subtree</div>
-          <div style="width: 100%; height: 0px; background-color: rgba(255,255,255,1); border-bottom: 1px solid rgba(220,220,220,1);"></div>
+          <div
+            style="width: 100%; height: 0px; background-color: rgba(255,255,255,1); border-bottom: 1px solid rgba(220,220,220,1);">
+          </div>
         </div>
 
-        <div class="sidebarItem" style=" background-image: url('styles/media/design.png'); background-repeat: no-repeat; background-position: 5px 50%; background-size: 35px 35px;" onClick="showHideItem(1);">
+        <div class="sidebarItem"
+          style=" background-image: url('styles/media/design.png'); background-repeat: no-repeat; background-position: 5px 50%; background-size: 35px 35px;"
+          onClick="showHideItem(1);">
           <div style="float: left; padding: 0px 0px 0px 35px;">Design Node</div>
           <div id="sidebarItem1" class="transform"></div>
           <div class="clear"></div>
@@ -125,15 +132,19 @@
     <div id="containerWarningDeleteSubtree" class="containerWarning">
       <div class="containerWarningMessage">Delete this Node<br>and Subtree?</div>
       <div class="containerWarningPreview"></div>
-      <div style="float: left;background-color: rgba(240,240,240,1);" class="containerWarningButton" onClick="deleteSubTree(); closeWarning();">Yes</div>
-      <div style="float: right; background-color: rgba(240,240,240,1);" class="containerWarningButton" onClick="closeWarning();">No</div>
+      <div style="float: left;background-color: rgba(240,240,240,1);" class="containerWarningButton"
+        onClick="deleteSubTree(); closeWarning();">Yes</div>
+      <div style="float: right; background-color: rgba(240,240,240,1);" class="containerWarningButton"
+        onClick="closeWarning();">No</div>
       <div class="clear"></div>
     </div>
     <div id="containerWarningDeleteNode" class="containerWarning">
       <div class="containerWarningMessage">Delete this Node?</div>
       <div class="containerWarningPreview"></div>
-      <div style="float: left;background-color: rgba(240,240,240,1);" class="containerWarningButton" onClick="deleteNode(); closeWarning();">yes</div>
-      <div style="float: right; background-color: rgba(240,240,240,1);" class="containerWarningButton" onClick="closeWarning();">No</div>
+      <div style="float: left;background-color: rgba(240,240,240,1);" class="containerWarningButton"
+        onClick="deleteNode(); closeWarning();">yes</div>
+      <div style="float: right; background-color: rgba(240,240,240,1);" class="containerWarningButton"
+        onClick="closeWarning();">No</div>
       <div class="clear"></div>
     </div>
 
@@ -148,8 +159,9 @@
     <div id="containerWarningImporting" class="containerWarningImporting">
     </div>
 
-  <!-- SCRIPTS HERE-->
-  <script>var username = "<%= username %>";</script>
-  <script src="../scripts/appMindmap.js"></script>
+    <!-- SCRIPTS HERE-->
+    <script>var username = "<%= username %>";</script>
+    <script src="../scripts/appMindmap.js"></script>
   </body>
-</html>
+
+  </html>

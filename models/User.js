@@ -19,6 +19,10 @@ const userSchema = new mongoose.Schema({
         unique: [true, 'Email is already taken'],
         validate: [isEmail, 'Please enter a valid email']
     },
+    color: {
+        type: String,
+        unique: [true, 'Color already assinged'],
+    },
     createdAt: {
         type: Date,
         default: Date.now

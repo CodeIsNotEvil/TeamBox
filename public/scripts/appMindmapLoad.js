@@ -39,7 +39,7 @@ socket.on('appSynchronizeTime', function () {
 //Die vom USB STICK geladenen Dateien:
 //Sofern Dateien existieren werden die
 //Einträge angehängt an das EingabeFeld
-
+data = JSON.parse(data);
 if (data.length > 0) {
   for (var i = 0; i < data.length; i++) {
     $("#dataListData").append(

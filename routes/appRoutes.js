@@ -3,6 +3,7 @@ const { getMySQLConnection } = require('../services/mysqlHandler');
 const Ethercalc = require('../services/ethercalc/ethercalcHandler');
 const getEtherpadEntries = require('../services/etherpadHandler');
 const Group = require('../services/Group');
+const { requireAuth, requireGroup, checkUser, checkGroup } = require('../middleware/authMiddleware');
 
 let DrawApp;
 let drawApp;
@@ -14,15 +15,18 @@ if (DRAW_PAD_USE_NEW_DATA_STRUCTURE) {
 }
 
 function appRoutes(app) {
-        app.get("/appDrawLoad.ejs", function (req, res) {
+        app.get('*', requireAuth, requireGroup, checkUser, checkGroup);
+
+        app.get("/appDrawLoad.ejs", async function (req, res) {
                 if (DRAW_PAD_USE_NEW_DATA_STRUCTURE) {
-                        DrawApp.getAllFileNames(Group.group).then((fileNames) => {
-                                res.render("newappDrawLoad", {
-                                        username: req.session.username,
-                                        group: Group.group,
-                                        color: req.session.usercolor,
-                                        data: fileNames
-                                });
+                        const user = res.locals.user
+                        const group = res.locals.group
+                        const fileNames = await DrawApp.getAllFileNames(group.name)
+
+                        res.render("newappDrawLoad", {
+                                username: user.name,
+                                color: user.color,
+                                data: fileNames
                         });
 
 
@@ -49,127 +53,94 @@ function appRoutes(app) {
 
                         }
                 }
-
-
         });
 
         /**
         * function to render HTML and redirect to appDraw.ejs
         */
         app.get("/appDraw.ejs", function (req, res) {
-                if (req.session.username) {
-                        if (DRAW_PAD_USE_NEW_DATA_STRUCTURE) {
-                                res.render("newappDraw", {
-                                        username: req.session.username,
-                                        group: Group.group,
-                                        color: req.session.usercolor,
-                                        data: DrawApp.document
-                                });
 
-                        } else {
-                                let mysqlconnection = getMySQLConnection();
-                                mysqlconnection.query("SELECT * FROM dataAppDraw", function (err, result) {
-                                        let fileNames = [];
-                                        let contents = [];
-                                        if (err) {
-                                                console.log(err);
-                                        } else {
-                                                for (var i = 0; i < result.length; i++) {
-                                                        fileNames.push(result[i].fileName);
-                                                        contents.push(result[i].content);
-                                                        //content did not get updated on the first reload a secound one is requiered
-                                                        //console.log(contents[i]);
-                                                        //console.log("\n\n" + fileNames[i]+ "\n");
-                                                }
-                                                //data = fileNames.toString();
-                                                drawApp.initAllObj(fileNames, contents);
-                                                res.render("appDraw", { username: req.session.username, group: Group.group, color: req.session.usercolor, drawObjData: contents, data: fileNames });
-                                        }
+                if (DRAW_PAD_USE_NEW_DATA_STRUCTURE) {
+                        const user = res.locals.user;
+                        const group = res.locals.group;
+                        res.render("newappDraw", {
+                                username: user.name,
+                                group: group.name,
+                                color: user.color,
+                                data: DrawApp.document
+                        });
 
-                                });
-                        }
                 } else {
-                        return res.redirect("/login01.ejs");
+                        let mysqlconnection = getMySQLConnection();
+                        mysqlconnection.query("SELECT * FROM dataAppDraw", function (err, result) {
+                                let fileNames = [];
+                                let contents = [];
+                                if (err) {
+                                        console.log(err);
+                                } else {
+                                        for (var i = 0; i < result.length; i++) {
+                                                fileNames.push(result[i].fileName);
+                                                contents.push(result[i].content);
+                                                //content did not get updated on the first reload a secound one is requiered
+                                                //console.log(contents[i]);
+                                                //console.log("\n\n" + fileNames[i]+ "\n");
+                                        }
+                                        //data = fileNames.toString();
+                                        drawApp.initAllObj(fileNames, contents);
+                                        res.render("appDraw", { username: req.session.username, group: Group.group, color: req.session.usercolor, drawObjData: contents, data: fileNames });
+                                }
+
+                        });
                 }
 
         });
 
 
         app.get("/appMindmapLoad.ejs", function (req, res) {
-                if (req.session.username) {
-                        //let data = getMindmapData();
-                        let mysqlconnection = getMySQLConnection();
-                        mysqlconnection.query("SELECT * FROM dataAppMindmap", function (err, result,) {
-                                let data = [];
-                                if (err) {
-                                        console.log(err);
-                                }
-                                for (var i = 0; i < result.length; i++) {
-                                        data.push(result[i].fileName);
-                                }
-                                res.render("appMindmapLoad", { username: req.session.username, group: Group.group, color: req.session.usercolor, data: data });
-                        });
-
-
-                }
-                else {
-                        return res.redirect("/login01.ejs");
-                }
+                //let data = getMindmapData();
+                const user = res.locals.user
+                let mysqlconnection = getMySQLConnection();
+                mysqlconnection.query("SELECT * FROM dataAppMindmap", function (err, result,) {
+                        let data = [];
+                        if (err) {
+                                console.log(err);
+                        }
+                        for (var i = 0; i < result.length; i++) {
+                                data.push(result[i].fileName);
+                        }
+                        res.render("appMindmapLoad", { username: user.name, color: user.color, data: data });
+                });
         });
 
         app.get("/appMindmap.ejs", function (req, res) {
-                if (req.session.username) {
-
-                        res.render("appMindmap", { username: req.session.username, group: Group.group, color: req.session.usercolor });
-                }
-                else {
-                        return res.redirect("/login01.ejs");
-                }
+                const user = res.locals.user;
+                const group = res.locals.group;
+                res.render("appMindmap", { username: user.name, group: group.name, color: user.color });
         });
 
 
         app.get("/appEtherpadLoad.ejs", function (req, res) {
-                if (req.session.username) {
-
-                        let data = getEtherpadEntries();
-
-                        res.render("appEtherpadLoad", { username: req.session.username, group: Group.group, color: req.session.usercolor, data: data });
-                }
-                else {
-                        return res.redirect("/login01.ejs");
-                }
+                let data = getEtherpadEntries();
+                const user = res.locals.user
+                res.render("appEtherpadLoad", { username: user.name, color: user.color, data: data });
         });
 
 
         app.get("/appEthercalcLoad.ejs", function (req, res) {
-                if (req.session.username) {
-                        let data = Ethercalc.getEntries();
-                        //console.log("EthercalcData: " + data);
-
-                        res.render("appEthercalcLoad", { username: req.session.username, group: Group.group, color: req.session.usercolor, data: data });
-                }
-                else {
-                        return res.redirect("/login01.ejs");
-                }
+                let data = Ethercalc.getEntries();
+                const user = res.locals.user
+                res.render("appEthercalcLoad", { username: user.name, data: data });
         });
 
         app.get("/wekanLoad.ejs", function (req, res) {
-                if (req.session.username) {
-
-                        res.render("wekanLoad", { username: req.session.username, group: Group.group, color: req.session.usercolor });
-                }
-                else {
-                        return res.redirect("/login01.ejs");
-                }
+                //const user = res.locals.user
+                //const group = res.locals.group
+                res.render("wekanLoad");
         });
 
         app.get("/filebrowserLoad.ejs", function (req, res) {
-                if (req.session.username) {
-                        res.render("filebrowserLoad", { username: req.session.username, group: Group.group, color: req.session.usercolor });
-                }
-                else {
-                        return res.redirect("/login01.ejs");
-                }
+                const user = res.locals.user
+                res.render("filebrowserLoad", { username: user.name });
         });
 }
 

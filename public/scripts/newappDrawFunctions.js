@@ -28,7 +28,9 @@ var fileName = "/draw/";
 
 let blockDrawing = false;
 let currentFile = null;
-//console.log(data); //Transmitted group document
+
+data = JSON.parse(data);
+console.log(data); //Transmitted group document
 
 /**
  * Returns the file content with the same name of urlFileName(fileName) from the document.
