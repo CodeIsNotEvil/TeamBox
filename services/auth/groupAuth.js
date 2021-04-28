@@ -3,6 +3,10 @@ const jwt = require('jsonwebtoken');
 const Group = require("../../models/Group");
 const OldGroup = require("../../services/Group");
 const { loadGroups } = require("../groupHandler");
+const groupHandler = require("../groupHandler");
+const fileBrowser = require('../fileBrowser/fileBrowser');
+const DrawApp = require('../draw-app/DrawApp');
+const { exportData } = require("../syncHandler");
 
 const handleErrors = error => {
     let err = { name: '' };
@@ -41,39 +45,95 @@ const createToken = (uid, gid) => {
 
 module.exports.group_select_get = (req, res) => {
     loadGroups();
-    res.render('auth/groupSelect', { groupNameList: OldGroup.groups });
+    if (OldGroup.groups.length !== 0) {
+        res.render('auth/groupSelect', { groupNameList: OldGroup.groups });
+    } else {
+        res.redirect('/groupCreate');
+    }
+
 }
 
 module.exports.group_create_get = (req, res) => {
     res.render('auth/groupCreate');
 }
 
-module.exports.group_select_post = (req, res) => {
-    console.log(req.body.groupName);
+module.exports.group_select_post = async (req, res) => {
+    //if (groupHandler.importCheck() == false) { //this import check only works with one group because it iterates over a array and overwrites a boolean  to check 
+    try {
+        OldGroup.group = req.body.groupName; //set old groupName
+        groupHandler.chooseGroup();
+        groupHandler.import();
+        fileBrowser.startfilebrowser();
+        DrawApp.init();
+
+        const group = await Group.findOne({ name: req.body.groupName }); //look for the group in the DB
+        const user = res.locals.user;
+        const token = createToken(user._id, group._id);
+        res.cookie('group_jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
+        res.status(201).json({ user: user._id, group: group._id });
+    } catch (error) {
+        const errors = handleErrors(error);
+        res.status(400).json({ errors });
+    }
+
 }
 
 module.exports.group_create_post = async (req, res) => {
 
-    if (res.locals.user && req.body.groupName) {
-        const { groupName } = req.body;
+    const { groupName } = req.body;
+    if (await Group.exists({ name: groupName })) {
+        res.redirect(307, '/groupSelect');
+    } else {
         const user = res.locals.user;
         try {
-            const users = new Array()
-            users.push(user.name);
+            OldGroup.group = groupName;
+            groupHandler.createGroup();
+            groupHandler.import();
+            fileBrowser.startfilebrowser();
+            DrawApp.init();
+
+            const users = [user.name];
             const group = await Group.create({ 'name': groupName, users });
-            console.log(group);
             const token = createToken(user._id, group._id);
-            console.log(token);
             res.cookie('group_jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
             res.status(201).json({ user: user._id, group: group._id });
         } catch (error) {
             const errors = handleErrors(error);
             res.status(400).json({ errors });
         }
-        //res.send({ 'username': res.locals.user.name, 'groupName': req.body.groupName });
     }
 
+}
 
+module.exports.group_logout_get = async (req, res) => {
+    //Render logout Dialoge
+    res.render('auth/groupLogout');
+}
 
-    //res.render('auth/loadingPage',);
+module.exports.group_logout_post = (req, res) => {
+    try {
+        const groupName = res.locals.group.name;
+        //Only logout group if the current group is that in the cookie
+        if (groupName === OldGroup.group) {
+            // Export current group
+            exportData(); //SyncHandler
+
+            //TODO stop fileBrowser 
+            //fileBrowser.stopfilebrowser();
+
+            //Reset Group Name
+            OldGroup.group = "";
+
+            //TODO redirect all Clients....
+        }
+
+        // Remove the token
+        res.clearCookie('group_jwt');
+
+        // redirecting to the group Selection
+        res.status(200).json({ groupName });;
+    } catch (error) {
+        const errors = handleErrors(error);
+        res.status(400).json({ errors });
+    }
 }

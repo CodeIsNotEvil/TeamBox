@@ -1,20 +1,25 @@
 <%- include('authHeader'); -%>
     <link rel="stylesheet" href="../../styles/newHub.css">
-    <div class="scroll-container">
-        <div class="mainContainer">
-            <div class="appList groupList">
-                <h2 style="text-align: center; padding-bottom: 10px;">Select Group</h2>
-                <% if(groupNameList) { %>
-                    <% for (let index=0; index < groupNameList.length; index++) { %>
-                        <% const element=groupNameList[index]; %>
-                            <div onclick="groupSelected('<%=element%>')" class="containerItem">
-                                <div class="containerItemTitle transform">
-                                    <%=element%>
+    <div class="scroll-container" style="width:100vw;">
+        <div class="loaderflex">
+            <div class="loader"></div>
+        </div>
+        <div class="flex">
+            <div style="width: auto; height:auto; margin-left: 5vw; margin-right: 5vw;">
+                <div class="appList groupList">
+                    <h2 style="text-align: center; padding-bottom: 10px;">Select Group</h2>
+                    <% if(groupNameList) { %>
+                        <% for (let index=0; index < groupNameList.length; index++) { %>
+                            <% const element=groupNameList[index]; %>
+                                <div onclick="groupSelected('<%=element%>')" class="containerItem">
+                                    <div class="containerItemTitle transform">
+                                        <%=element%>
+                                    </div>
                                 </div>
-                            </div>
-                            <% }%>
-                                <% } %>
+                                <% }%>
+                                    <% } %>
 
+                </div>
             </div>
         </div>
     </div>
@@ -22,6 +27,10 @@
         const groupList = document.querySelector('.groupList');
         async function groupSelected(groupName) {
             try {
+                // render loading Cyrcle and disable button
+                const loaderFlex = document.querySelector('.loaderflex');
+                loaderFlex.style.display = "flex";
+                $("[onclick]").removeAttr("onclick"); // Finds all elements with an 'onclick' attribute, and removes that attribute
                 const res = await fetch('/groupSelect', {
                     method: 'POST',
                     body: JSON.stringify({ groupName }),
@@ -30,11 +39,12 @@
                 const data = await res.json();
                 console.log(data);
                 if (data.user && data.group) {
-                    //location.assign('/');
+                    location.assign('/');
                 }
             } catch (error) {
                 console.error(error);
             }
+
         }
     </script>
     <%- include('../footer'); -%>

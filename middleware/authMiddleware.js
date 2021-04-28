@@ -72,8 +72,7 @@ const checkGroup = (req, res, next) => {
                 res.locals.group = null;
                 next();
             } else {
-
-                let group = await Group.findById(decodedToken.id);
+                let group = await Group.findById(decodedToken.gid);
                 res.locals.group = group;
                 next();
             }

@@ -23,13 +23,16 @@
                 <label class="logo"><a href="/" class="logo">TeamBox</a></label>
                 <!---<h1><a href="/" class="logo">TeamBox</a></h1>--->
                 <ul>
-                    <% if(user) { %>
+                    <% if(user && group) { %>
+                        <li><a href="/grouplogout">Group Log out</a></li>
                         <li><a href="/logout">Log out</a></li>
-                        <li><a href="/groupSelect">Select Group</a></li>
-                        <li><a href="/groupCreate" class="btn">Create Group</a></li>
-                        <% } else { %>
-                            <li><a href="/login">Log in</a></li>
-                            <li><a href="/signup" class="btn">Sign up</a></li>
-                            <% } %>
+                        <% } else if(user){ %>
+                            <li><a href="/logout">Log out</a></li>
+                            <li><a href="/groupSelect">Select Group</a></li>
+                            <li><a href="/groupCreate" class="btn">Create Group</a></li>
+                            <% } else { %>
+                                <li><a href="/login">Log in</a></li>
+                                <li><a href="/signup" class="btn">Sign up</a></li>
+                                <% } %>
                 </ul>
             </nav>

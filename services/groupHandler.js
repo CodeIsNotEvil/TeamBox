@@ -8,7 +8,7 @@ const MongoDBs = require('./mongodb/MongoDBs');
 
 class groupHandler {
     static importCheck() {
-        if (Group.mysqlIsImported && MongoBackupHandler.isImported(MongoDBs.Wekan) && MongoBackupHandler.isImported(MongoDBs.DrawPad)) {
+        if (Group.mysqlIsImported && MongoBackupHandler.isImported(MongoDBs.Wekan) && MongoBackupHandler.isImported(MongoDBs.TeamBox)) {
             return true;
         } else {
             return false;
@@ -41,6 +41,9 @@ class groupHandler {
         return true;
     }
 
+    /**
+     * Loads the group names form the folderNames on the USB-Stick.
+     */
     static loadGroups() {
         let shellPrints = runScript("group_show.sh", false, false).split("\n");
         Group.groups.length = 0;
@@ -49,7 +52,7 @@ class groupHandler {
                 console.log("DEBUG: Device was mounted");
 
             } else {
-                if (print !== '' && print !== null) {
+                if (print !== '' && print !== null && print !== '.meta') {
                     Group.groups.push(print);
                 }
             }

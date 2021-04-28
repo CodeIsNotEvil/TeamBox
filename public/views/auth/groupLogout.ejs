@@ -1,0 +1,48 @@
+<%- include('authHeader'); -%>
+    <form class="auth form">
+        <div class="loaderflex">
+            <div class="loader"></div>
+        </div>
+        <h2>Group Logout</h2>
+        <h5>Do you rally want to Logout the <%=group.name%> group?</h5>
+        <p>This will take a few secounds.</p>
+        <div class="flex">
+            <button onclick="logout()">Logout</button>
+            <button onclick="backToHome()">Cancle</button>
+        </div>
+    </form>
+    <script>
+        const groupName = '<%=group.name %>';
+        const form = document.querySelector('form');
+        form.addEventListener('submit', async function (event) {
+            event.preventDefault();
+        });
+
+        function backToHome() {
+            location.assign('/');
+        }
+
+        async function logout() {
+            console.log("started");
+            try {
+                // render loading Cyrcle and disable button
+                const loaderFlex = document.querySelector('.loaderflex');
+                loaderFlex.style.display = "flex";
+                $('form button').addClass('disabled');
+                const res = await fetch('/groupLogout', {
+                    method: 'POST',
+                    body: JSON.stringify({ groupName }),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                console.log("now wait...");
+                const data = await res.json();
+                console.log(data);
+                if (data) {
+                    location.assign('/groupSelect');
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    </script>
+    <%- include('../footer'); -%>

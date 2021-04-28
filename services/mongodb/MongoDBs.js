@@ -1,5 +1,8 @@
 const MongoDBs = {
     Wekan: "wekan",
-    TeamBox: "TeamBox"
+    TeamBox: {
+        name: "TeamBox",
+        exclusivelyExport: ['appdrawdata']
+    }
 }
 module.exports = MongoDBs;

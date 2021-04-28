@@ -22,7 +22,7 @@ class Ethercalc {
     }
 
     /**
-     * Checks if the folder at path exists. If it does not it will call createFolder and clear the LOCAL_DUMP 
+     * Checks if the folder at path exists. If it does not it will call createFolder
      * @param {String} path Path to the folder
      * @returns {boolean}
      */
@@ -30,7 +30,6 @@ class Ethercalc {
         if (fs.existsSync(path)) {
             return true;
         } else {
-            this.clearDump();
             return this.createFolder(path);
         }
     }
@@ -42,7 +41,7 @@ class Ethercalc {
      */
     static createFolder(path) {
         try {
-            fs.mkdirSync(path);
+            fs.mkdirSync(path, { recursive: true, force: true });
             console.log("Created directory: " + path);
             return true;
         } catch (error) {
@@ -77,18 +76,11 @@ class Ethercalc {
      * removes the local dump folder wich is located at LOCAL_DUMP_PATH
      */
     static clearDump() {
-        if (this.checkFolderExist(LOCAL_DUMP_PATH)) {
-            try {
-                fs.rmdirSync(LOCAL_DUMP_PATH, { recursive: true, force: true });
-                //fs.rm(LOCAL_DUMP_PATH);
-            } catch (error) {
-                console.error(error);
-            }
-        } else {
-            console.log("noting to Clear");
+        try {
+            fs.rmdirSync(LOCAL_DUMP_PATH, { recursive: true, force: true });
+        } catch (error) {
+            console.error(error);
         }
-
-
     }
     /**
      * Copys the Dump from the groupDumpPath (USB) to LOCAL_DUMP_PATH
@@ -97,6 +89,7 @@ class Ethercalc {
     static importDump() {
         let groupDumpPath = this.getGroupDumpPath();
         if (this.checkFolderExist(groupDumpPath)) {
+            this.clearDump();
             try {
                 fse.copySync(groupDumpPath, LOCAL_DUMP_PATH, { overwrite: true });
                 return true;

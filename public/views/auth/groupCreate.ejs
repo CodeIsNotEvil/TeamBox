@@ -1,5 +1,8 @@
 <%- include('authHeader'); -%>
     <form class="auth form">
+        <div class="loaderflex">
+            <div class="loader"></div>
+        </div>
         <h2>Create Group</h2>
         <label for="groupName">Group name</label>
         <input type="text" name="groupName" required>
@@ -9,6 +12,8 @@
     <script>
         const form = document.querySelector('form');
         const groupNameError = document.querySelector('.groupName.error');
+        const loaderFlex = document.querySelector('.loaderflex');
+
 
         form.addEventListener('submit', async function (event) {
             event.preventDefault();
@@ -19,6 +24,10 @@
             //get  the values
             const groupName = form.groupName.value;
             try {
+                // render loading Cyrcle and disable button
+                loaderFlex.style.display = "flex";
+                $('form button').addClass('disabled');
+
                 const res = await fetch('/groupCreate', {
                     method: 'POST',
                     body: JSON.stringify({ groupName }),
@@ -27,12 +36,19 @@
                 const data = await res.json();
                 console.log(data);
                 if (data.errors) {
+                    // stop the loading Cyrcle to render and enable the button
+                    loaderFlex.style.display = "none";
+                    $('form button').removeClass('disabled');
+
                     groupNameError.textContent = data.errors.name;
                 }
                 if (data.user && data.group) {
                     location.assign('/');
                 }
             } catch (error) {
+                // stop the loading Cyrcle to render and enable the button
+                loaderFlex.style.display = "none";
+                $('form button').removeClass('disabled');
                 console.error(error);
             }
         });
