@@ -9,7 +9,7 @@ const expressSession = require(PATH_TO_GLOBAL_MODULES + 'express-session');
 const mongoose = require('mongoose');
 
 //Own modules
-const authRoutes = require('./routes/authRoutes');
+const userAuthRoutes = require('./routes/userAuthRoutes');
 const groupAuthRoutes = require('./routes/groupAuthRoutes');
 const routes = require('./routes/routes');
 const appRoutes = require('./routes/appRoutes');
@@ -50,7 +50,7 @@ app.use(express.json());
 
 //Routes
 app.use(routes);
-app.use(authRoutes);
+app.use(userAuthRoutes);
 app.use(groupAuthRoutes);
 app.use(appRoutes);
 
