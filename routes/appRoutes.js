@@ -1,87 +1,66 @@
+const { Router } = require('express');
+const router = Router();
+
 const { getMySQLConnection } = require('../services/mysqlHandler');
 const Ethercalc = require('../services/ethercalc/ethercalcHandler');
 const getEtherpadEntries = require('../services/etherpadHandler');
-const Group = require('../services/Group');
 const { requireAuth, requireGroup, checkUser, checkGroup } = require('../middleware/authMiddleware');
-const DrawApp = require('../services/draw-app/DrawApp');
 
-function appRoutes(app) {
-        app.get('*', requireAuth, requireGroup, checkUser, checkGroup);
+const DrawController = require('../services/drawpad/DrawController');
 
-        app.get("/appDrawLoad.ejs", async function (req, res) {
-                const user = res.locals.user
-                const group = res.locals.group
-                const fileNames = await DrawApp.getAllFileNames(group.name)
+router.get('*', requireAuth, requireGroup, checkUser, checkGroup);
 
-                res.render("newappDrawLoad", {
-                        username: user.name,
-                        color: user.color,
-                        data: fileNames
-                });
+
+router.get("/drawPadLoad", DrawController.drawpad_load_get);
+router.get("/drawPad", DrawController.drawpad_get);
+
+
+router.get("/appMindmapLoad.ejs", function (req, res) {
+        //let data = getMindmapData();
+        const user = res.locals.user
+        let mysqlconnection = getMySQLConnection();
+        mysqlconnection.query("SELECT * FROM dataAppMindmap", function (err, result,) {
+                let data = [];
+                if (err) {
+                        console.error(err);
+                }
+                for (var i = 0; i < result.length; i++) {
+                        data.push(result[i].fileName);
+                }
+                res.render("appMindmapLoad", { username: user.name, color: user.color, data: data });
         });
+});
 
-        /**
-        * function to render HTML and redirect to appDraw.ejs
-        */
-        app.get("/appDraw.ejs", function (req, res) {
-                const user = res.locals.user;
-                const group = res.locals.group;
-                res.render("newappDraw", {
-                        username: user.name,
-                        group: group.name,
-                        color: user.color,
-                        data: DrawApp.document
-                });
-        });
+router.get("/appMindmap.ejs", function (req, res) {
+        const user = res.locals.user;
+        const group = res.locals.group;
+        res.render("appMindmap", { username: user.name, group: group.name, color: user.color });
+});
 
 
-        app.get("/appMindmapLoad.ejs", function (req, res) {
-                //let data = getMindmapData();
-                const user = res.locals.user
-                let mysqlconnection = getMySQLConnection();
-                mysqlconnection.query("SELECT * FROM dataAppMindmap", function (err, result,) {
-                        let data = [];
-                        if (err) {
-                                console.log(err);
-                        }
-                        for (var i = 0; i < result.length; i++) {
-                                data.push(result[i].fileName);
-                        }
-                        res.render("appMindmapLoad", { username: user.name, color: user.color, data: data });
-                });
-        });
-
-        app.get("/appMindmap.ejs", function (req, res) {
-                const user = res.locals.user;
-                const group = res.locals.group;
-                res.render("appMindmap", { username: user.name, group: group.name, color: user.color });
-        });
+router.get("/appEtherpadLoad.ejs", function (req, res) {
+        let data = getEtherpadEntries();
+        const user = res.locals.user
+        res.render("appEtherpadLoad", { username: user.name, color: user.color, data: data });
+});
 
 
-        app.get("/appEtherpadLoad.ejs", function (req, res) {
-                let data = getEtherpadEntries();
-                const user = res.locals.user
-                res.render("appEtherpadLoad", { username: user.name, color: user.color, data: data });
-        });
+router.get("/appEthercalcLoad.ejs", function (req, res) {
+        let data = Ethercalc.getEntries();
+        const user = res.locals.user
+        res.render("appEthercalcLoad", { username: user.name, data: data });
+});
 
+router.get("/wekanLoad.ejs", function (req, res) {
+        //const user = res.locals.user
+        //const group = res.locals.group
+        res.render("wekanLoad");
+});
 
-        app.get("/appEthercalcLoad.ejs", function (req, res) {
-                let data = Ethercalc.getEntries();
-                const user = res.locals.user
-                res.render("appEthercalcLoad", { username: user.name, data: data });
-        });
+router.get("/filebrowserLoad.ejs", function (req, res) {
+        const user = res.locals.user
+        res.render("filebrowserLoad", { username: user.name });
+});
 
-        app.get("/wekanLoad.ejs", function (req, res) {
-                //const user = res.locals.user
-                //const group = res.locals.group
-                res.render("wekanLoad");
-        });
-
-        app.get("/filebrowserLoad.ejs", function (req, res) {
-                const user = res.locals.user
-                res.render("filebrowserLoad", { username: user.name });
-        });
-}
-
-module.exports = appRoutes;
+module.exports = router;
 

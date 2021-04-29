@@ -107,53 +107,6 @@ function updateUserLanguage(user, value) {
     mysqlConnection.query("UPDATE userData SET language = '" + value + "'    WHERE user =  '" + user + "'    ");
 }
 
-function getDrawData(res, req, group, route) {
-
-    mysqlConnection.query("SELECT * FROM dataAppDraw", function (err, result) {
-        let fileNames = [];
-        if (err) {
-            console.log(err);
-        }
-        //console.log("result: " + result);
-        for (var i = 0; i < result.length; i++) {
-            fileNames.push(result[i].fileName);
-            //console.log("filename: " + result[i].fileName);
-        }
-        //console.log("Filenames: " + fileNames);
-        route(res, group, fileNames);
-
-    });
-}
-function getDrawObjectData(res, req, group, route) {
-    mysqlConnection.query("SELECT * FROM dataAppDraw", function (err, result) {
-        let fileNames = [];
-        let contents = [];
-        if (err) {
-            console.log(err);
-        }
-        for (var i = 0; i < result.length; i++) {
-            fileNames.push(result[i].fileName);
-            object.push(result[i].content);
-        }
-        route(res, req, group, fileNames, contents);
-
-    });
-}
-
-function getMindmapData() {
-    let data = [];
-    mysqlConnection.query("SELECT * FROM dataAppMindmap", function (err, result,) {
-        if (err) {
-            console.log(err);
-        }
-        for (var i = 0; i < result.length; i++) {
-            data.push(result[i].fileName);
-        }
-
-    });
-    return data;
-}
-
 function saveDataDrawStringToDB(string, image, fileName, saveAsImageAndEmit) {
     //console.log(string);
     mysqlConnection.query("INSERT IGNORE INTO dataAppDraw (fileName,content) VALUES ('" + fileName + "','" + string + "')", function (err, result, fields) {
@@ -218,24 +171,6 @@ function clearDrawingQuery(fileName) {
 function getMySQLConnection() {
     return mysqlConnection;
 }
-/*
-function loadContentFromDB(filename, saveToAllObject) {
-    mysqlConnection.query("SELECT content FROM dataAppDraw WHERE fileName LIKE '" + filename + "'" , function (err, result) {
-        
-        if (err) {
-            console.log(err);
-        } else {
-            let content = [];
-            for (let index = 0; index < result.length; index++) {
-                content.push(result[index]);
-                
-            }
-            console.log(content);
-            saveToAllObject(content);
-        }
-    });
-}
-*/
 
 module.exports = {
     startUp,

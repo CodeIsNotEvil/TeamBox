@@ -30,7 +30,7 @@ let blockDrawing = false;
 let currentFile = null;
 
 data = JSON.parse(data);
-console.log(data); //Transmitted group document
+//console.log(data); //Transmitted group document
 
 /**
  * Returns the file content with the same name of urlFileName(fileName) from the document.
@@ -423,7 +423,7 @@ function saveFile(fileName) {
 */
 function handleFile(files) {
 	if (!files.length) {
-		//console.log("No image");
+		console.error("No image");
 	}
 	else {
 		var src = window.URL.createObjectURL(files[0]);

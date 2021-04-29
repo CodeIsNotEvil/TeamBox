@@ -8,8 +8,8 @@
 	<script src="p5/p5.js"></script>
 	<script src="p5/p5.dom.js"></script>
 	<script src="_jquery/jquery-1.12.3.js"></script>
-	<script src="http://teambox.local:3000/socket.io/socket.io.js"></script>
-	<script src="scripts/NewDrawObjects.js"></script>
+	<script src="socket.io/socket.io.js"></script>
+	<script src="scripts/drawpad/drawPadObjects.js"></script>
 </head>
 
 <body>
@@ -83,7 +83,7 @@
 	<div id="foreground"></div>
 	<script>var username = "<%= username %>";</script>
 	<script>var data = '<%- JSON.stringify(data) %>';</script>
-	<script src="../scripts/newappDrawFunctions.js"></script>
+	<script src="scripts/drawpad/drawPad.js"></script>
 </body>
 
 </html>

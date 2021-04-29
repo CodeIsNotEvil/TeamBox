@@ -52,7 +52,7 @@ if (data.length > 0) {
 }
 */
 data = JSON.parse(data);
-console.log(data);
+//console.log(data);
 if (data.length > 0) {
   for (var i = 0; i < data.length; i++) {
     $("#dataListData").append(
@@ -63,7 +63,6 @@ if (data.length > 0) {
 
 
 $("#appLoadForm").bind('input', function () {
-  //console.log(data);
   if (jQuery.inArray($("#inputAppLoadFilename").val(), data) != -1) {
     $("#thumbnailContainer").css("background-image", "url(drawings/draw_" + $("#inputAppLoadFilename").val() + ".png)");
     $("#thumbnailContainer").css("background-size", "contain");
@@ -120,7 +119,7 @@ function loginResult(result) {
 
     var url = $("#inputAppLoadFilename").val().replace(/[_\W]+/g, "");
 
-    window.open("appDraw.ejs?file=" + url, "_parent");
+    window.open("/drawPad?file=" + url, "_parent");
   }
   else if (result == "noText") {
     //fehlermeldung: no text

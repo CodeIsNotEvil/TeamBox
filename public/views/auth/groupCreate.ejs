@@ -34,7 +34,6 @@
                     headers: { 'Content-Type': 'application/json' }
                 });
                 const data = await res.json();
-                console.log(data);
                 if (data.errors) {
                     // stop the loading Cyrcle to render and enable the button
                     loaderFlex.style.display = "none";

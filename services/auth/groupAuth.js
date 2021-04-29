@@ -6,12 +6,12 @@ const OldGroup = require("../../services/Group");
 const { loadGroups } = require("../groupHandler");
 const groupHandler = require("../groupHandler");
 const fileBrowser = require('../fileBrowser/fileBrowser');
-const DrawApp = require('../draw-app/DrawApp');
+const DrawPad = require('../drawpad/DrawPad');
 const { exportData } = require("../syncHandler");
 
 const handleErrors = error => {
     let err = { name: '' };
-    console.log(error);
+    //console.log(error);
     // incorrect name
     if (error.message === 'incorrect name') {
         err.name = 'that group is not registerd';
@@ -29,7 +29,7 @@ const handleErrors = error => {
             err[properties.path] = properties.message;
         });
     }
-    console.log(error);
+    //console.log(error);
     return err
 }
 
@@ -65,7 +65,7 @@ module.exports.group_select_post = async (req, res) => {
         groupHandler.chooseGroup();
         groupHandler.import();
         fileBrowser.startfilebrowser();
-        DrawApp.init();
+        DrawPad.init();
 
         const group = await Group.findOne({ name: req.body.groupName }); //look for the group in the DB
         const user = res.locals.user;
@@ -76,7 +76,7 @@ module.exports.group_select_post = async (req, res) => {
                 const errors = handleErrors(error);
                 res.status(400).json({ errors });
             }
-            console.log(doc.color);
+            console.log(`groupAuth.js >>> Assinged ${doc.color} to user ${user.name}`);
             const token = createToken(user._id, group._id);
             res.cookie('group_jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
             res.status(201).json({ user: user._id, group: group._id });
@@ -101,7 +101,7 @@ module.exports.group_create_post = async (req, res) => {
             groupHandler.createGroup();
             groupHandler.import();
             fileBrowser.startfilebrowser();
-            DrawApp.init();
+            DrawPad.init();
 
             const users = [user.name];
             const group = await Group.create({ 'name': groupName, users });

@@ -23,20 +23,18 @@
         }
 
         async function logout() {
-            console.log("started");
             try {
                 // render loading Cyrcle and disable button
                 const loaderFlex = document.querySelector('.loaderflex');
                 loaderFlex.style.display = "flex";
                 $('form button').addClass('disabled');
+
                 const res = await fetch('/groupLogout', {
                     method: 'POST',
                     body: JSON.stringify({ groupName }),
                     headers: { 'Content-Type': 'application/json' }
                 });
-                console.log("now wait...");
                 const data = await res.json();
-                console.log(data);
                 if (data) {
                     location.assign('/groupSelect');
                 }

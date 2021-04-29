@@ -12,6 +12,7 @@ const mongoose = require('mongoose');
 const authRoutes = require('./routes/authRoutes');
 const groupAuthRoutes = require('./routes/groupAuthRoutes');
 const routes = require('./routes/routes');
+const appRoutes = require('./routes/appRoutes');
 
 const app = express();
 const http = require('http').Server(app);
@@ -51,6 +52,7 @@ app.use(express.json());
 app.use(routes);
 app.use(authRoutes);
 app.use(groupAuthRoutes);
+app.use(appRoutes);
 
 //TeamBox Database connection
 const dbURI = 'mongodb://localhost/TeamBox';
@@ -73,7 +75,5 @@ mongoose.connect(dbURI, {
         console.log(error);
 });
 
-
-require('./routes/appRoutes')(app);
-require('./services/socketHandler')(app, io);
+require('./services/socketHandler')(io);
 //require('./services/authentification/ldapLoginHandler')(app);

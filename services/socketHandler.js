@@ -6,14 +6,14 @@ const { window } = new JSDOM("");
 const $ = require("../_jquery/jquery-1.12.3")(window);*/
 const Group = require('./Group');
 const { shutdownPi } = require('./piHeandler');
-const drawApp = require('./drawApp/drawApp');
-const DrawApp = require('./draw-app/DrawApp');
+const DrawPad = require('./drawpad/DrawPad');
 const cheerio = require(PATH_TO_GLOBAL_MODULES + 'cheerio')
 const $ = cheerio.load("<container id='-1'></container>");
 
 //SOCKET IO
-function socketHandler(app, io) {
+function socketHandler(io) {
         io.on('connection', function (socket) {
+                console.log("SocketHandler.js >>> connected to SocketIO");
                 //Shuts down the Pi.
                 //Sends a message to all client that the Pi will shutdown
                 //after the content was exportet to the USB Stick a last time
@@ -153,15 +153,11 @@ function socketHandler(app, io) {
                 //on client-side.
 
                 socket.on('appMindmapInsertFileStructure', function (fileName) {
-                        //let { content, newFile } = getMindMapContentFromDB(fileName);
                         getMindMapContentFromDB(fileName, (content, newFile) => {
-                                //console.log("socketHander.js socketOn 'appMindmapInsertFileStructure' content: " + content);
                                 if ($("data[name=" + fileName + "]").length == 0) {
                                         $("container").append(content);
                                 }
                                 io.to(socket.id).emit('appMindmapInitialUser', $("data[name=" + fileName + "]").html(), newFile);
-                                //io.to(socket.id).emit('appMindmapInitialUser', fileName, newFile);
-                                //io.to(socket.id).emit('appMindmapInitialUser', content, newFile);
                         });
 
 
@@ -318,7 +314,6 @@ function socketHandler(app, io) {
 
                 socket.on('appMindmapSave', function (content, image, fileName) {
                         content = $("data[name=" + fileName + "]").html();
-                        //console.log("content:\n" + content + "\nfileName: " + fileName);
                         writeMindmap(content, fileName);
 
 
@@ -341,7 +336,7 @@ function socketHandler(app, io) {
                                         console.log("EXEC :: IMAGESAVE:\t\tSUCCESS");
                                 }
                                 else {
-                                        console.log("EXEC :: IMAGESAVE:\t\tERROR: \n" + err);
+                                        console.error("EXEC :: IMAGESAVE:\t\tERROR: \n" + err);
                                         errorMessage += "Image: Fehler beim Speichern!";
                                 }
                                 io.emit('appMindmapSave', fileName, errorMessage);
@@ -353,7 +348,8 @@ function socketHandler(app, io) {
                 * function to handle obj Data and send to Clients
                 */
                 socket.on('sendObj', function (obj, username, fileName) {
-                        DrawApp.addObjectToFile(obj, fileName);
+
+                        DrawPad.addObjectToFile(obj, fileName);
                         socket.broadcast.emit('receiveObj', obj, username, fileName);
                 }
                 );
@@ -361,28 +357,28 @@ function socketHandler(app, io) {
                 * function to handle clear-command and send to Clients
                 */
                 socket.on('clear', function (fileName) {
-                        DrawApp.removeFileFormDocument(fileName);
+                        DrawPad.removeFileFormDocument(fileName);
                         socket.broadcast.emit('clear', fileName);
                 });
                 /*
                 * function to handle save Obj 
                 */
                 socket.on('appDrawingSave', function (image, fileName, callback) {
-                        if (DrawApp.checkIfFileExsists(fileName)) {
-                                if (DrawApp.hasContent(fileName)) {
+                        if (DrawPad.checkIfFileExsists(fileName)) {
+                                if (DrawPad.hasContent(fileName)) {
                                         try {
-                                                DrawApp.saveDocumentToTheDatabase();
+                                                DrawPad.saveDocumentToTheDatabase();
                                         } catch (error) {
-                                                //console.log(error);   
+                                                console.error(error);
                                         }
                                 }
                         } else {
-                                DrawApp.createNewFile(fileName);
+                                DrawPad.createNewFile(fileName);
                                 console.log("create " + fileName);
                                 try {
-                                        DrawApp.saveDocumentToTheDatabase();
+                                        DrawPad.saveDocumentToTheDatabase();
                                 } catch (error) {
-                                        console.log(error);
+                                        console.error(error);
                                 }
                         }
 
@@ -400,10 +396,9 @@ function socketHandler(app, io) {
                         let path = PATH_TO_DRAWINGS + "/draw_" + fileName + ".png";
                         fs.writeFile(path, data, { encoding: 'base64' }, err => {
                                 if (err) {
-                                        console.log(err);
+                                        console.error(err);
                                         callback({ error: "content could not be saved as Image" });
                                 } else {
-                                        //console.log("the path were it were saved: ", path);
                                         callback({ fileName: fileName });
                                         io.emit('appDrawingSave', fileName);
                                 }

@@ -5,7 +5,7 @@ const Group = require('../Group.js');
 /**
  * Static class to hold all the requiered information and functions for the Drawing Pad application.
  */
-class DrawApp {
+class DrawPad {
 
     static document;
 
@@ -15,12 +15,12 @@ class DrawApp {
      */
     static async init() {
         try {
-            DrawApp.document = await DrawApp.getAppDrawDataDocumentFromDB(Group.group);
+            DrawPad.document = await DrawPad.getAppDrawDataDocumentFromDB(Group.group);
             //When document is still null there were no db entry for this group.
-            if (DrawApp.document === null) {
+            if (DrawPad.document === null) {
                 console.log("there were no group document createing one...");
                 try {
-                    DrawApp.document = await DrawApp.createNewAppDrawDataDocument(Group.group);
+                    DrawPad.document = await DrawPad.createNewAppDrawDataDocument(Group.group);
                 } catch (error) {
                     return error;
                 }
@@ -105,8 +105,8 @@ class DrawApp {
      */
     static async getAllFileNames() {
         try {
-            //return DrawApp.extractAllFileNames(DrawApp.document);
-            return DrawApp.getAllFileNamesWithContent();
+            //return DrawPad.extractAllFileNames(DrawPad.document);
+            return DrawPad.getAllFileNamesWithContent();
         } catch (error) {
             return error;
         }
@@ -121,11 +121,11 @@ class DrawApp {
     static getAllFileNamesWithContent() {
         let fileNames = [];
         let emptyFilesNames = [];
-        for (let file = 0; file < DrawApp.document.files.length; file++) {
-            if (DrawApp.document.files[file].drawObjects.length > 1) {
-                fileNames.push(DrawApp.document.files[file].filename);
+        for (let file = 0; file < DrawPad.document.files.length; file++) {
+            if (DrawPad.document.files[file].drawObjects.length > 1) {
+                fileNames.push(DrawPad.document.files[file].filename);
             } else {
-                emptyFilesNames.push(DrawApp.document.files[file].filename);
+                emptyFilesNames.push(DrawPad.document.files[file].filename);
             }
         }
         return fileNames;
@@ -150,7 +150,7 @@ class DrawApp {
      */
     static addObjectToFile(obj, filename) {
         try {
-            DrawApp.document.files.forEach(element => {
+            DrawPad.document.files.forEach(element => {
                 if (element.filename === filename) {
                     element.drawObjects.push(obj);
                 }
@@ -168,7 +168,7 @@ class DrawApp {
      * @param {AppDrawFile} file the file wich will get added to the document 
      */
     static addFileToDocument(file) {
-        DrawApp.document.files.push(file);
+        DrawPad.document.files.push(file);
     }
 
 
@@ -176,7 +176,7 @@ class DrawApp {
      * Saves the Docuemnt to the Database
      */
     static async saveDocumentToTheDatabase() {
-        await DrawApp.document.save();
+        await DrawPad.document.save();
     }
 
     /**
@@ -186,16 +186,16 @@ class DrawApp {
     static removeFileFormDocument(filename) {
         //console.log("removal... ", filename);
         let indexToSplice;
-        for (let index = 0; index < DrawApp.document.files.length; index++) {
-            if (DrawApp.document.files[index].filename === filename) {
+        for (let index = 0; index < DrawPad.document.files.length; index++) {
+            if (DrawPad.document.files[index].filename === filename) {
                 indexToSplice = index;
                 break;
             }
         }
         //console.log(indexToSplice);
         if (indexToSplice > -1) {
-            DrawApp.document.files.splice(indexToSplice, 1);
-            DrawApp.document.save().catch(error => {
+            DrawPad.document.files.splice(indexToSplice, 1);
+            DrawPad.document.save().catch(error => {
                 console.error(error);
             });
             //console.log("save was called");
@@ -210,8 +210,8 @@ class DrawApp {
      */
     static checkIfFileExsists(filename) {
         try {
-            for (let file = 0; file < DrawApp.document.files.length; file++) {
-                if (DrawApp.document.files[file].filename === filename) {
+            for (let file = 0; file < DrawPad.document.files.length; file++) {
+                if (DrawPad.document.files[file].filename === filename) {
                     return true;
                 }
             }
@@ -231,7 +231,7 @@ class DrawApp {
         let file = {
             filename: filename,
         }
-        DrawApp.document.files.push(file);
+        DrawPad.document.files.push(file);
     }
 
     /**
@@ -240,9 +240,9 @@ class DrawApp {
      * @returns {Boolean}
      */
     static hasContent(filename) {
-        for (let file = 0; file < DrawApp.document.files.length; file++) {
-            if (DrawApp.document.files[file].filename === filename) {
-                if (DrawApp.document.files[file].drawObjects.length > 0) {
+        for (let file = 0; file < DrawPad.document.files.length; file++) {
+            if (DrawPad.document.files[file].filename === filename) {
+                if (DrawPad.document.files[file].drawObjects.length > 0) {
                     return true;
                 }
             }
@@ -253,8 +253,8 @@ class DrawApp {
 /*
 let init =  async () => {
     try{
-        await DrawApp.connectToDB();
-        await DrawApp.diconnectFromDB();
+        await DrawPad.connectToDB();
+        await DrawPad.diconnectFromDB();
     } catch (error) {
         console.log(error);
     }
@@ -263,4 +263,4 @@ let init =  async () => {
 init();
 */
 
-module.exports = DrawApp;
+module.exports = DrawPad;
