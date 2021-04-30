@@ -1,4 +1,5 @@
 <%- include('header'); -%>
+
   <body>
     <div id="logo01">
       <div style="margin: 0px auto 0px auto; width: 130px;">
@@ -13,16 +14,17 @@
       <div id="loginNoticePlaceholder">
         <div id="loginNotice" class="loginNoticeError"></div>
       </div>
-      <form id="loginForm" method="post"  action="/login01.ejs" autocomplete="off">
-        <input id="inputGroup" name="user[group]" class ="ease" type="text" placeholder="create / select group" maxlength="20" list="dataListGroup">
-          <datalist id="dataListGroup">
-          </datalist>
+      <form id="loginForm" method="post" action="/login01.ejs" autocomplete="off">
+        <input id="inputGroup" name="user[group]" class="ease" type="text" placeholder="create / select group"
+          maxlength="20" list="dataListGroup">
+        <datalist id="dataListGroup">
+        </datalist>
         </input>
-        <input id="inputSubmitUsername" class="ease" type="submit" value="continue"/>
+        <input id="inputSubmitUsername" class="ease" type="submit" value="continue" />
       </form>
     </div>
     <div id="containerWarningShutdown" class="containerWarningShutdown">
-            <div class="containerWarningMessage">PI was shutdown</div>
+      <div class="containerWarningMessage">PI was shutdown</div>
     </div>
     <div id="containerWarningServertime" class="containerWarningServertime">
       <div class="containerWarningMessage">Servertime was set</div>
@@ -30,8 +32,9 @@
     <div id="containerWarningImporting" class="containerWarningImporting">
     </div>
     <script>
-        groups = <%- JSON.stringify(groups) %>;
+      groups = <% - JSON.stringify(groups) %>;
     </script>
-    <script src="../scripts/login01.js"></script>    
+    <script src="../scripts/login01.js"></script>
   </body>
-</html>
+
+  </html>

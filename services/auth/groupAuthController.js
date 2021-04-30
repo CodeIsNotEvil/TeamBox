@@ -10,11 +10,16 @@ const DrawPad = require('../drawpad/DrawPad');
 const { exportData } = require("../syncHandler");
 
 const handleErrors = error => {
-    let err = { name: '' };
+    let err = { name: '', password: '' };
     //console.log(error);
     // incorrect name
     if (error.message === 'incorrect name') {
         err.name = 'that group is not registerd';
+    }
+
+    // incorrect password
+    if (error.message === 'incorrect password') {
+        err.password = 'that password is incorrect';
     }
 
     // duplicate error code
@@ -44,13 +49,20 @@ const createToken = (uid, gid) => {
 }
 
 
-module.exports.group_select_get = (req, res) => {
-    loadGroups();
-    if (OldGroup.groups.length !== 0) {
-        res.render('auth/groupSelect', { groupNameList: OldGroup.groups });
+module.exports.group_select_get = async (req, res) => {
+    if (await Group.exists({ isActive: true })) {
+        res.redirect('/groupJoin');
     } else {
-        res.redirect('/groupCreate');
+        loadGroups();
+        const groupNameList = await getGroupNameList();
+
+        if (await Group.exists({})) {
+            res.render('auth/groupSelect', { groupNameList });
+        } else {
+            res.redirect('/groupCreate');
+        }
     }
+
 
 }
 
@@ -61,26 +73,77 @@ module.exports.group_create_get = (req, res) => {
 module.exports.group_select_post = async (req, res) => {
     //if (groupHandler.importCheck() == false) { //this import check only works with one group because it iterates over a array and overwrites a boolean  to check 
     try {
+
         OldGroup.group = req.body.groupName; //set old groupName
         groupHandler.chooseGroup();
         groupHandler.import();
         fileBrowser.startfilebrowser();
         DrawPad.init();
-
-        const group = await Group.findOne({ name: req.body.groupName }); //look for the group in the DB
         const user = res.locals.user;
+        const users = [user.name];
+        //Mark Group as Active, reset the users array with the current user
+        const group = await Group.findOneAndUpdate({ name: req.body.groupName }, { isActive: true, users });
+        //await Group.findOneAndUpdate({ name: group.name }, { $addToSet: { users: user.name } });
+        res.status(201).json({ user: user._id, group: group._id });
+        //TODO redirect all userAuthenticated Clients to groupJoin to ensure no one trys to join another group
+    } catch (error) {
+        const errors = handleErrors(error);
+        res.status(400).json({ errors });
+    }
 
-        let color = 'rgb(' + (50 + Math.floor(Math.random() * 156)) + ',' + (50 + Math.floor(Math.random() * 156)) + ',' + (50 + Math.floor(Math.random() * 156)) + ')';
-        User.findByIdAndUpdate(user._id, { color: color }, (error, doc) => {
-            if (error) {
-                const errors = handleErrors(error);
-                res.status(400).json({ errors });
-            }
-            console.log(`groupAuth.js >>> Assinged ${doc.color} to user ${user.name}`);
-            const token = createToken(user._id, group._id);
-            res.cookie('group_jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
-            res.status(201).json({ user: user._id, group: group._id });
-        });
+}
+
+module.exports.group_join_get = async (req, res) => {
+    const groupArray = await Group.find({ isActive: true });
+
+    if (groupArray.length == 0) {
+        res.redirect('/groupSelect');
+    } else if (groupArray.length == 1) {
+        group = groupArray[0];
+        res.render('auth/groupJoin', { group });
+    } else {
+        console.error('There are multiple Groups active allowed is onely one');
+    }
+
+}
+
+module.exports.group_join_post = async (req, res) => {
+    const { name, password } = req.body;
+
+    try {
+        const user = res.locals.user;
+        let group = await Group.findOneAndUpdate({ name, isActive: true }, { $addToSet: { users: user.name } });
+        if (group) {
+            let color = 'rgb('
+                + (50 + Math.floor(Math.random() * 156))
+                + ',' + (50 + Math.floor(Math.random() * 156))
+                + ',' + (50 + Math.floor(Math.random() * 156))
+                + ')';
+
+            User.findByIdAndUpdate(user._id, { color: color }, async (error, doc) => {
+                if (error) {
+                    const errors = handleErrors(error);
+                    res.status(400).json({ errors });
+                }
+                console.log(`groupAuth.js >>> Assinged ${doc.color} to user ${user.name}`);
+
+                try {
+                    group = await Group.login(name, password);
+                    const token = createToken(user._id, group._id);
+                    res.cookie('group_jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
+                    res.status(201).json({ user: user._id, group: group._id });
+                } catch (error) {
+                    const errors = handleErrors(error);
+                    res.status(400).json({ errors });
+                }
+            });
+        } else {
+            const errors = {
+                group: 'Active Group is not ' + name
+            };
+            res.status(400).json({ errors });
+        }
+
 
     } catch (error) {
         const errors = handleErrors(error);
@@ -90,9 +153,10 @@ module.exports.group_select_post = async (req, res) => {
 }
 
 module.exports.group_create_post = async (req, res) => {
-
-    const { groupName } = req.body;
-    if (await Group.exists({ name: groupName })) {
+    const { groupName, password } = req.body;
+    if (await Group.exists({ isActive: true })) {
+        res.redirect(307, '/groupJoin');
+    } else if (await Group.exists({ name: groupName })) {
         res.redirect(307, '/groupSelect');
     } else {
         const user = res.locals.user;
@@ -104,28 +168,52 @@ module.exports.group_create_post = async (req, res) => {
             DrawPad.init();
 
             const users = [user.name];
-            const group = await Group.create({ 'name': groupName, users });
+            const group = await Group.create(
+                {
+                    'name': groupName,
+                    password,
+                    users,
+                    isActive: true
+                }
+            );
             const token = createToken(user._id, group._id);
             res.cookie('group_jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
-            res.status(201).json({ user: user._id, group: group._id });
+            res.status(201).json(
+                {
+                    user: user._id,
+                    group: group._id
+                }
+            );
         } catch (error) {
             const errors = handleErrors(error);
-            res.status(400).json({ errors });
+            try {
+                res.status(400).json({ errors });
+            } catch (error) {
+                console.error(error);
+            }
+
         }
     }
 
 }
 
 module.exports.group_logout_get = async (req, res) => {
-    //Render logout Dialoge
     res.render('auth/groupLogout');
 }
 
-module.exports.group_logout_post = (req, res) => {
-    try {
-        const groupName = res.locals.group.name;
-        //Only logout group if the current group is that in the cookie
-        if (groupName === OldGroup.group) {
+module.exports.group_logout_post = async (req, res) => {
+    const group = res.locals.group;
+    const user = res.locals.user
+    let error = await removeUserFromGroup(group, user);
+    if (error) {
+        console.error(error)
+        res.status(400).json({ error });
+    }
+    res.clearCookie('group_jwt');
+    if (await hasActiveGroupLoggedInUsers()) {
+        res.status(200).json({ group })
+    } else {
+        if (group.name === OldGroup.group) {
             // Export current group
             exportData(); //SyncHandler
 
@@ -135,16 +223,51 @@ module.exports.group_logout_post = (req, res) => {
             //Reset Group Name
             OldGroup.group = "";
 
-            //TODO redirect all Clients....
+            //TODO redirect all Clients.... to the Select Page
         }
+        await Group.findOneAndUpdate({ name: group.name }, { isActive: false })
+        console.log("groupAuthController >>> group_logout_post set isActive to false");
+        res.status(200).json({ group: null });
 
-        // Remove the token
-        res.clearCookie('group_jwt');
+    }
+}
 
-        // redirecting to the group Selection
-        res.status(200).json({ groupName });;
+const removeUserFromGroup = async (group, user) => {
+    try {
+        await Group.findOneAndUpdate({ name: group.name }, { $pull: { users: user.name } });
     } catch (error) {
         const errors = handleErrors(error);
-        res.status(400).json({ errors });
+        return error;
     }
+
+}
+
+const hasActiveGroupLoggedInUsers = async () => {
+    try {
+        let group = await Group.findOne({ isActive: true });
+        return hasUsersArrayElements(group);
+    } catch (error) {
+        console.error(error);
+    }
+    return false;
+}
+
+const hasUsersArrayElements = group => {
+    if (group.users.length > 0) {
+        return true;
+    } else {
+        return false;
+    }
+
+}
+
+const getGroupNameList = async () => {
+    const groupList = await Group.find({});
+    const groupNameList = [];
+    for (const Group in groupList) {
+        if (Object.hasOwnProperty.call(groupList, Group)) {
+            groupNameList.push(groupList[Group].name);
+        }
+    }
+    return groupNameList;
 }

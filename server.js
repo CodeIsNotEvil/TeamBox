@@ -13,6 +13,7 @@ const userAuthRoutes = require('./routes/userAuthRoutes');
 const groupAuthRoutes = require('./routes/groupAuthRoutes');
 const routes = require('./routes/routes');
 const appRoutes = require('./routes/appRoutes');
+const authInit = require('./services/auth/init');
 
 const app = express();
 const http = require('http').Server(app);
@@ -61,6 +62,7 @@ mongoose.connect(dbURI, {
         useUnifiedTopology: true,
         useFindAndModify: false
 }).then(result => {
+        authInit.init();
         http.listen(PORT, function () {
                 console.log(
                         "\n===================" +

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { isEmail } = require('validator');
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -20,8 +20,7 @@ const userSchema = new mongoose.Schema({
         validate: [isEmail, 'Please enter a valid email']
     },
     color: {
-        type: String,
-        unique: [true, 'Color already assinged'],
+        type: String
     },
     createdAt: {
         type: Date,

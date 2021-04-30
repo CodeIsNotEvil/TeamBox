@@ -25,6 +25,7 @@
     </div>
     <script>
         const groupList = document.querySelector('.groupList');
+        document.querySelector('.groupSelectNavItem').remove();
         async function groupSelected(groupName) {
             try {
                 // render loading Cyrcle and disable button
@@ -38,7 +39,7 @@
                 });
                 const data = await res.json();
                 if (data.user && data.group) {
-                    location.assign('/');
+                    location.assign('/groupJoin');
                 }
             } catch (error) {
                 console.error(error);

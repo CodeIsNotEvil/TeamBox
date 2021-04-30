@@ -3,44 +3,46 @@
         <div class="loaderflex">
             <div class="loader"></div>
         </div>
-        <h2>Create Group</h2>
-        <label for="groupName">Group name</label>
-        <input type="text" name="groupName" required>
-        <div class="groupName error"></div>
+        <h2>Join Group</h2>
+        <div style="display:flex; justify-content: center; align-items: center;">
+            <h3 class="groupName">
+                <%=group.name%>
+            </h3>
+        </div>
         <label for="password">Password</label>
         <input type="password" name="password" required>
         <div class="password error"></div>
-        <button>Create Group</button>
+        <button>Join Group</button>
     </form>
     <script>
+        let group = '<%-JSON.stringify(group)%>';
+        group = JSON.parse(group);
+        console.log(group);
+
+        document.querySelector('.grouplogoutNavItem').remove();
+
+
         const form = document.querySelector('form');
-        const groupNameError = document.querySelector('.groupName.error');
         const passwordError = document.querySelector('.password.error');
-
         const loaderFlex = document.querySelector('.loaderflex');
-
-        document.querySelector('.groupCreateNavItem').remove();
-        document.querySelector('.groupSelectNavItem a').classList.add('btn');
 
 
         form.addEventListener('submit', async function (event) {
             event.preventDefault();
 
             //reset errors
-            groupNameError.textContent = '';
             passwordError.textContent = '';
 
             //get  the values
-            const groupName = form.groupName.value;
             const password = form.password.value;
             try {
                 // render loading Cyrcle and disable button
                 loaderFlex.style.display = "flex";
                 $('form button').addClass('disabled');
-
-                const res = await fetch('/groupCreate', {
+                //console.log(group.name);
+                const res = await fetch('/groupJoin', {
                     method: 'POST',
-                    body: JSON.stringify({ groupName, password }),
+                    body: JSON.stringify({ name: group.name, password }),
                     headers: { 'Content-Type': 'application/json' }
                 });
                 const data = await res.json();
@@ -49,8 +51,11 @@
                     loaderFlex.style.display = "none";
                     $('form button').removeClass('disabled');
 
-                    groupNameError.textContent = data.errors.name;
                     passwordError.textContent = data.errors.password;
+                    console.error(data.errors);
+                    if (data.errors.group) {
+                        location.assign('/groupJoin');
+                    }
                 }
                 if (data.user && data.group) {
                     location.assign('/');
@@ -59,7 +64,6 @@
                 // stop the loading Cyrcle to render and enable the button
                 loaderFlex.style.display = "none";
                 $('form button').removeClass('disabled');
-                console.error(error);
             }
         });
     </script>

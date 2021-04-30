@@ -23,23 +23,33 @@ const requireAuth = (req, res, next) => {
     }
 }
 
-const requireGroup = (req, res, next) => {
+const requireGroup = async (req, res, next) => {
 
     const token = req.cookies.group_jwt;
 
     // check if the json web token exists and is verified
     if (token) {
-        jwt.verify(token, JWT_SECRET, (error, decodedToken) => {
+        jwt.verify(token, JWT_SECRET, async (error, decodedToken) => {
             if (error) {
                 console.log(error.message);
-                res.redirect('/groupSelect');
+                res.redirect('/groupJoin');
             } else {
-                //console.log(decodedToken);
-                next();
+                // check if the token matches the one of the current group
+                const group = await Group.findById(decodedToken.gid);
+                if (group.isActive) {
+                    next();
+                } else {
+                    res.redirect('/groupJoin');
+                }
             }
         });
     } else {
-        res.redirect('/groupSelect');
+        if (await Group.exists({ isActive: true })) {
+            res.redirect('/groupJoin');
+        } else {
+            res.redirect('/groupSelect');
+        }
+
     }
 }
 
@@ -80,6 +90,14 @@ const checkGroup = (req, res, next) => {
     } else {
         res.locals.group = null;
         next();
+    }
+}
+
+const isThereAActiveGroup = async () => {
+    if (await Group.exists({ isActive: true })) {
+        return true;
+    } else {
+        return false;
     }
 }
 

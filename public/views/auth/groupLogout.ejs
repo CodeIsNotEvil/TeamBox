@@ -4,8 +4,15 @@
             <div class="loader"></div>
         </div>
         <h2>Group Logout</h2>
-        <h5>Do you rally want to Logout the <%=group.name%> group?</h5>
-        <p>This will take a few secounds.</p>
+        <p>Do you rally want to Logout from</p>
+        <br>
+        <div class="flex">
+            <h3>
+                <%=group.name%>
+            </h3>
+        </div>
+        <br>
+        <p>If you are the last one logged in it will unload your group</p>
         <div class="flex">
             <button onclick="logout()">Logout</button>
             <button onclick="backToHome()">Cancle</button>
@@ -17,6 +24,8 @@
         form.addEventListener('submit', async function (event) {
             event.preventDefault();
         });
+
+        document.querySelector('.grouplogoutNavItem').remove();
 
         function backToHome() {
             location.assign('/');
@@ -34,9 +43,9 @@
                     body: JSON.stringify({ groupName }),
                     headers: { 'Content-Type': 'application/json' }
                 });
-                const data = await res.json();
-                if (data) {
-                    location.assign('/groupSelect');
+                const group = await res.json();
+                if (group) {
+                    location.assign('/groupJoin');
                 }
             } catch (error) {
                 console.error(error);

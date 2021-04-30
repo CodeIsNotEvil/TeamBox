@@ -5,7 +5,7 @@ const { JWT_SECRET } = require('../../config/untracked');
 //handle errors
 const handleErrors = error => {
     let err = { email: '', name: '', password: '' };
-
+    //console.log(error);
     // incorrect name
     if (error.message === 'incorrect name') {
         err.name = 'that user is not registered';
@@ -78,9 +78,22 @@ module.exports.login_post = async (req, res) => {
 
 module.exports.logout_get = async (req, res) => {
 
-    // Remove the token
-    res.cookie('user_jwt', '', { maxAge: 1 });
+    if (hasGroupToken(req)) {
+        //redirect to the group
+        res.redirect('/groupLogout');
+    } else {
+        res.cookie('user_jwt', '', { maxAge: 1 });
+        // redirecting to the login page
+        res.redirect('/login');
+    }
+}
 
-    // redirecting to the login page
-    res.redirect('/login');
+const hasGroupToken = (req) => {
+    const token = req.cookies.group_jwt;
+    // check if the json web token exists and is verified
+    if (token) {
+        const decodedToken = jwt.verify(token, JWT_SECRET);
+        return true;
+    }
+    return false;
 }

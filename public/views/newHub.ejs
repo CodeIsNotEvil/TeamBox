@@ -51,17 +51,19 @@
             </div>
             <div class="userList">
                 <div class="entryContainer">
-                    <% if(user) { %>
-                        <div class="containerItem">
-                            <div style="background-color: rgba(242, 250, 168, 0.5);">
-                                <%= user.name %>
-                            </div>
-                        </div>
-                        <% } %>
-                            <!-- This Section needs a userslist of a group or insert them via script
-                            <div class="containerItem">
-                                <div style="background-color: rgba(250, 221, 182, 0.5);">ExampleUser2</div>
-                            </div>
+                    <% if(group) { %>
+                        <% for(let i=0; i < group.users.length; i++) { %>
+                            <% if(user.name !=group.users[i]) { %>
+                                <div class="containerItem">
+                                    <div style="background-color: rgba(250, 221, 182, 0.5);">
+                                        <%=group.users[i]%>
+                                    </div>
+                                </div>
+                                <% } %>
+                                    <% } %>
+                                        <% } %>
+
+                                            <!-- This Section needs a userslist of a group or insert them via script
                             <div class="containerItem">
                                 <div style="background-color: rgba(148, 235, 137, 0.5);">ExampleUser3</div>
                             </div>
@@ -78,11 +80,15 @@
                                 <div style="background-color: rgba(112, 112, 112, 0.5);">ExampleUser7</div>
                             </div>
                             --->
-                            <!-- It should look like this for every user
+                                            <!-- It should look like this for every user
                 <div style="background-color: rgba(250, 221, 182, 0.5);"><%= /*group.users[1].name */%></div>
                 -->
                 </div>
             </div>
         </div>
     </div>
+    <script>
+        let user = '<%-JSON.stringify(user)%>';
+    </script>
+    <script src="../scripts/hub/hub.js"></script>
     <%- include('footer'); -%>
