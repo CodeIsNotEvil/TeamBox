@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const User = require('./User');
 
 const groupSchema = new mongoose.Schema({
     name: {
@@ -13,7 +14,9 @@ const groupSchema = new mongoose.Schema({
         required: [true, 'Please enter a password'],
         minlength: [8, 'Minimum password length is 8 characters']
     },
-    users: [String],
+    users: {
+        type: [User.schema]
+    },
     isActive: {
         type: Boolean,
     },
@@ -33,11 +36,11 @@ groupSchema.pre('save', async function (next) {
 });
 
 groupSchema.statics.login = async function (name, password) {
-    const user = await this.findOne({ name });
-    if (user) {
-        const auth = await bcrypt.compare(password, user.password);
+    const group = await this.findOne({ name });
+    if (group) {
+        const auth = await bcrypt.compare(password, group.password);
         if (auth) {
-            return user;
+            return group;
         }
         throw Error('incorrect password');
     }

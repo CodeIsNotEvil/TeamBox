@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please enter a name'],
         unique: [true, 'Name is already taken'],
+        sparse: true,
         maxlength: [15, 'Maximum name length is 15 characters']
     },
     password: {
@@ -17,6 +18,7 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String,
         unique: [true, 'Email is already taken'],
+        sparse: true,
         validate: [isEmail, 'Please enter a valid email']
     },
     color: {

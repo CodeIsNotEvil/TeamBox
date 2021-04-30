@@ -79,14 +79,13 @@ module.exports.group_select_post = async (req, res) => {
         groupHandler.import();
         fileBrowser.startfilebrowser();
         DrawPad.init();
-        const user = res.locals.user;
-        const users = [user.name];
-        //Mark Group as Active, reset the users array with the current user
-        const group = await Group.findOneAndUpdate({ name: req.body.groupName }, { isActive: true, users });
-        //await Group.findOneAndUpdate({ name: group.name }, { $addToSet: { users: user.name } });
+        let user = res.locals.user;
+        //Mark Group as Active, reset the users array
+        const group = await Group.findOneAndUpdate({ name: req.body.groupName }, { isActive: true, users: [] });
         res.status(201).json({ user: user._id, group: group._id });
         //TODO redirect all userAuthenticated Clients to groupJoin to ensure no one trys to join another group
     } catch (error) {
+        console.log(error);
         const errors = handleErrors(error);
         res.status(400).json({ errors });
     }
@@ -111,15 +110,16 @@ module.exports.group_join_post = async (req, res) => {
     const { name, password } = req.body;
 
     try {
-        const user = res.locals.user;
-        let group = await Group.findOneAndUpdate({ name, isActive: true }, { $addToSet: { users: user.name } });
+        let color = 'rgba('
+            + (50 + Math.floor(Math.random() * 156))
+            + ',' + (50 + Math.floor(Math.random() * 156))
+            + ',' + (50 + Math.floor(Math.random() * 156))
+            + ',' + 0.5
+            + ')';
+        let user = res.locals.user;
+        user.color = color;
+        let group = await Group.findOneAndUpdate({ name, isActive: true }, { $addToSet: { users: user } });
         if (group) {
-            let color = 'rgb('
-                + (50 + Math.floor(Math.random() * 156))
-                + ',' + (50 + Math.floor(Math.random() * 156))
-                + ',' + (50 + Math.floor(Math.random() * 156))
-                + ')';
-
             User.findByIdAndUpdate(user._id, { color: color }, async (error, doc) => {
                 if (error) {
                     const errors = handleErrors(error);
@@ -167,7 +167,7 @@ module.exports.group_create_post = async (req, res) => {
             fileBrowser.startfilebrowser();
             DrawPad.init();
 
-            const users = [user.name];
+            const users = [];
             const group = await Group.create(
                 {
                     'name': groupName,
@@ -176,8 +176,8 @@ module.exports.group_create_post = async (req, res) => {
                     isActive: true
                 }
             );
-            const token = createToken(user._id, group._id);
-            res.cookie('group_jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
+            //const token = createToken(user._id, group._id);
+            //res.cookie('group_jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
             res.status(201).json(
                 {
                     user: user._id,
@@ -234,7 +234,7 @@ module.exports.group_logout_post = async (req, res) => {
 
 const removeUserFromGroup = async (group, user) => {
     try {
-        await Group.findOneAndUpdate({ name: group.name }, { $pull: { users: user.name } });
+        await Group.findOneAndUpdate({ name: group.name }, { $pull: { users: user } });
     } catch (error) {
         const errors = handleErrors(error);
         return error;
