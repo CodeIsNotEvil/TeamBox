@@ -1,3 +1,5 @@
+*.notUsed
+/certs
 /public/drawings
 /public/screenshots
 /node_modules

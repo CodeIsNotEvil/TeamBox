@@ -8,6 +8,7 @@ const groupHandler = require("../groupHandler");
 const fileBrowser = require('../fileBrowser/fileBrowser');
 const DrawPad = require('../drawpad/DrawPad');
 const { exportData } = require("../syncHandler");
+const { registerWekanUsers } = require("../wekan/registrationController");
 
 const handleErrors = error => {
     let err = { name: '', password: '' };
@@ -79,6 +80,7 @@ module.exports.group_select_post = async (req, res) => {
         groupHandler.import();
         fileBrowser.startfilebrowser();
         DrawPad.init();
+
         let user = res.locals.user;
         //Mark Group as Active, reset the users array
         const group = await Group.findOneAndUpdate({ name: req.body.groupName }, { isActive: true, users: [] });
@@ -130,6 +132,7 @@ module.exports.group_join_post = async (req, res) => {
                 try {
                     group = await Group.login(name, password);
                     const token = createToken(user._id, group._id);
+                    registerWekanUsers(user); //this is async but will definetly finished by the time a user entered his creds to wekan!
                     res.cookie('group_jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
                     res.status(201).json({ user: user._id, group: group._id });
                 } catch (error) {
