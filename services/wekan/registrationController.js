@@ -1,16 +1,33 @@
+const { JWT_SECRET } = require("../../config/untracked");
+const jwt = require('jsonwebtoken');
 const { registerNewUser, initApiKey } = require("./apiCalls");
 
 
 
-// looks like [{username: user ,password: password},{username,password}]
-let UsersCreds = [{ username: "user", password: "password" }]; //Populate with UserCreds of SingedUp and loggedIn users
-module.exports.UsersCreds = UsersCreds;
-module.exports.registerWekanUsers = async (user) => {
+
+module.exports.registerWekanUsers = async (user, token) => {
     await initApiKey();
-    UsersCreds.forEach(async element => {
-        if (element.username == user.name) {
-            await registerNewUser(element.username, user.email, element.password);
+    if (token) {
+        let password = getUsersCreds(token);
+        await registerNewUser(user.name, user.email, password);
+    }
+}
+
+getUsersCreds = (token) => {
+    let decoded = decodeJWT(token);
+    let password = decoded.id;
+    //console.debug("getUsersCreds password >>> ", password);
+    return password
+}
+
+decodeJWT = (token) => {
+    return jwt.verify(token, JWT_SECRET, (error, decodedToken) => {
+        if (error) {
+            console.error(error.message);
+            return null;
+        } else {
+            //console.debug("decodeJWT >>> ", decodedToken);
+            return decodedToken;
         }
     });
-
 }

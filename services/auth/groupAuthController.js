@@ -132,7 +132,9 @@ module.exports.group_join_post = async (req, res) => {
                 try {
                     group = await Group.login(name, password);
                     const token = createToken(user._id, group._id);
-                    registerWekanUsers(user); //this is async but will definetly finished by the time a user entered his creds to wekan!
+                    const tempToken = req.cookies.temp_jwt;
+                    await registerWekanUsers(user, tempToken); //this is async but will definetly finished by the time a user entered his creds to wekan!
+                    res.clearCookie('temp_jwt');
                     res.cookie('group_jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
                     res.status(201).json({ user: user._id, group: group._id });
                 } catch (error) {
