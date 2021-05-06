@@ -23,6 +23,10 @@ const groupSchema = new mongoose.Schema({
     isImported: {
         type: Boolean,
     },
+    usbPath: {
+        type: String,
+        required: [true, 'Group Path is missing'],
+    },
     createdAt: {
         type: Date,
         default: Date.now

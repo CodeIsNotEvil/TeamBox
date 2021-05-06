@@ -9,6 +9,7 @@ const fileBrowser = require('../fileBrowser/fileBrowser');
 const DrawPad = require('../drawpad/DrawPad');
 const { exportData } = require("../syncHandler");
 const { registerWekanUsers } = require("../wekan/registrationController");
+const { USB_PRE_PATH } = require("../../config/server");
 
 const handleErrors = error => {
     let err = { name: '', password: '' };
@@ -78,7 +79,7 @@ module.exports.group_select_post = async (req, res) => {
         OldGroup.group = req.body.groupName; //set old groupName
         groupHandler.chooseGroup();
         groupHandler.import();
-        fileBrowser.startfilebrowser();
+        fileBrowser.startFileBrowser();
         DrawPad.init();
 
         let user = res.locals.user;
@@ -169,16 +170,18 @@ module.exports.group_create_post = async (req, res) => {
             OldGroup.group = groupName;
             groupHandler.createGroup();
             groupHandler.import();
-            fileBrowser.startfilebrowser();
+            fileBrowser.startFileBrowser();
             DrawPad.init();
 
             const users = [];
+            const path = `${USB_PRE_PATH}/${groupName}`;
             const group = await Group.create(
                 {
                     'name': groupName,
                     password,
                     users,
-                    isActive: true
+                    isActive: true,
+                    usbPath: path
                 }
             );
             //const token = createToken(user._id, group._id);

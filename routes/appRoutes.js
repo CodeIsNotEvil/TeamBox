@@ -41,8 +41,23 @@ router.get("/appMindmap.ejs", function (req, res) {
 router.get("/appEtherpadLoad.ejs", function (req, res) {
         let data = getEtherpadEntries();
         const user = res.locals.user
-        res.render("appEtherpadLoad", { username: user.name, color: user.color, data: data });
+        let color = removeAlphaValueFromColor(user.color);
+        res.render("appEtherpadLoad", { username: user.name, color: color, data: data });
 });
+
+removeAlphaValueFromColor = (rgbaColor) => {
+        //rgbaColor: rgba(79,119,57,0.5)
+
+        //[0-9]{1,3},[0-9]{1,3},[0-9]{1,3}/g match Example: 79,119,57
+        let rgbValues = rgbaColor.match(/[0-9]{1,3},[0-9]{1,3},[0-9]{1,3}/g);
+        //rgbValues: ['79,119,57']
+
+        let rgbColor = `rgb(${rgbValues[0]})`;
+        //rgbColor: rgb(79,119,57)
+
+        return rgbColor;
+
+}
 
 
 router.get("/appEthercalcLoad.ejs", function (req, res) {

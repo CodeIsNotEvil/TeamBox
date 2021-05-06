@@ -1,11 +1,10 @@
-const { PATH_TO_GLOBAL_MODULES } = require("../../config/server");
+const { PATH_TO_GLOBAL_MODULES, USB_PRE_PATH } = require("../../config/server");
 const runScript = require("../runScripts");
 const fs = require('fs');
 const fse = require(PATH_TO_GLOBAL_MODULES + 'fs-extra');
 const Group = require("../Group");
 
 const LOCAL_DUMP_PATH = "/home/ubuntu/dump/";
-const USB_PRE_PATH = "/media/USB-TeamBox/TeamBox/";
 const USB_POST_PATH = "/.meta/ethercalcDump/";
 
 class Ethercalc {
@@ -18,7 +17,8 @@ class Ethercalc {
      * @returns {String} The path to the USB dump folder 
      */
     static getGroupDumpPath() {
-        return USB_PRE_PATH + Group.group + USB_POST_PATH;
+        return `${USB_PRE_PATH}/${Group.group}${USB_POST_PATH}`;
+        //return USB_PRE_PATH + Group.group + USB_POST_PATH;
     }
 
     /**

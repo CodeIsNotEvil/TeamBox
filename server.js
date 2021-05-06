@@ -17,9 +17,8 @@ const authInit = require('./services/auth/init');
 
 const app = express();
 const http = require('http').Server(app);
-const io = require(PATH_TO_GLOBAL_MODULES + 'socket.io')(http, {
-        allowEIO3: true // false by default
-});
+
+const socketHandler = require('./services/socketHandler'); //old socket Handler
 
 
 app.set("view engine", "ejs");
@@ -55,6 +54,7 @@ app.use(userAuthRoutes);
 app.use(groupAuthRoutes);
 app.use(appRoutes);
 
+
 //TeamBox Database connection
 const dbURI = 'mongodb://localhost/TeamBox';
 mongoose.connect(dbURI, {
@@ -70,6 +70,7 @@ mongoose.connect(dbURI, {
                         "\nPort: " + PORT +
                         "\n==================="
                 );
+                socketHandler.socketRoutes(http);
                 mysqlHandler.startUp();
                 syncHandler.exportAsync();
         });
@@ -77,5 +78,5 @@ mongoose.connect(dbURI, {
         console.log(error);
 });
 
-require('./services/socketHandler')(io);
+//require('./services/socketHandler')(io);
 //require('./services/authentification/ldapLoginHandler')(app);

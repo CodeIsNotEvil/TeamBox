@@ -1,19 +1,24 @@
 const { exportData, synchronizeTime } = require('../services/syncHandler');
-const { saveDataDrawStringToDB, updateUserLanguage, getMindMapContentFromDB, writeMindmap } = require("./mysqlHandler");
-const { PATH_TO_GLOBAL_MODULES, PATH_TO_SCREENSHOTS, PATH_TO_DRAWINGS } = require("../config/server");
-/*const { JSDOM } = require(PATH_TO_GLOBAL_MODULES + 'jsdom');
-const { window } = new JSDOM("");
-const $ = require("../_jquery/jquery-1.12.3")(window);*/
+const { updateUserLanguage, getMindMapContentFromDB, writeMindmap } = require("./mysqlHandler");
+const { PATH_TO_SCREENSHOTS, PATH_TO_DRAWINGS } = require("../config/server");
 const Group = require('./Group');
 const { shutdownPi } = require('./piHeandler');
 const DrawPad = require('./drawpad/DrawPad');
-const cheerio = require(PATH_TO_GLOBAL_MODULES + 'cheerio')
+const cheerio = require('cheerio');
+const { saveMindMap } = require('./sockets/mindMapController');
 const $ = cheerio.load("<container id='-1'></container>");
 
-//SOCKET IO
-function socketHandler(io) {
-        io.on('connection', function (socket) {
-                console.log("SocketHandler.js >>> connected to SocketIO");
+
+initSocketIO = (http) => {
+        return io = require('socket.io')(http, {
+                allowEIO3: true // false by default
+        });
+}
+
+module.exports.socketRoutes = (http) => {
+        const io = initSocketIO(http);
+        io.on('connection', socket => {
+                console.log("SocketHandler.js >>> SocketIO activity");
                 //Shuts down the Pi.
                 //Sends a message to all client that the Pi will shutdown
                 //after the content was exportet to the USB Stick a last time
@@ -312,35 +317,10 @@ function socketHandler(io) {
                 //Saves the whole mindmap. Only the open file is being saved.
                 //Parallel files are not saved.
 
-                socket.on('appMindmapSave', function (content, image, fileName) {
+                socket.on('appMindmapSave', async function (content, image, fileName) {
                         content = $("data[name=" + fileName + "]").html();
-                        writeMindmap(content, fileName);
-
-
-                        var data = image.replace(/^data:image\/\w+;base64,/, '');
-                        var fs = require("fs");
-
-                        var path = PATH_TO_SCREENSHOTS + "/mindmap_" + fileName + ".png";
-                        try {
-                                fs.accessSync(PATH_TO_SCREENSHOTS, fs.constants.W_OK);
-                        } catch (error) {
-                                fs.mkdir(PATH_TO_SCREENSHOTS, error => {
-                                        if (error) {
-                                                console.error(error);
-                                        }
-                                });
-                        }
-                        fs.writeFile(path, data, { encoding: 'base64' }, function (err) {
-                                let errorMessage;
-                                if (err == "" || err == null) {
-                                        console.log("EXEC :: IMAGESAVE:\t\tSUCCESS");
-                                }
-                                else {
-                                        console.error("EXEC :: IMAGESAVE:\t\tERROR: \n" + err);
-                                        errorMessage += "Image: Fehler beim Speichern!";
-                                }
-                                io.emit('appMindmapSave', fileName, errorMessage);
-                        });
+                        let errorMessage = await saveMindMap(content, image, fileName);
+                        io.emit('appMindmapSave', fileName, errorMessage);
                 });
 
                 //NENA BEGIN
@@ -406,6 +386,4 @@ function socketHandler(io) {
                 });
         });
 }
-
-module.exports = socketHandler;
 
