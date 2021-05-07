@@ -1,11 +1,12 @@
 const { exportData, synchronizeTime } = require('../services/syncHandler');
-const { updateUserLanguage, getMindMapContentFromDB, writeMindmap } = require("./mysqlHandler");
+const { updateUserLanguage, getMindMapContentFromDB, writeMindmap, saveDataDrawStringToDB } = require("./mysqlHandler");
 const { PATH_TO_SCREENSHOTS, PATH_TO_DRAWINGS } = require("../config/server");
 const Group = require('./Group');
 const { shutdownPi } = require('./piHeandler');
 const DrawPad = require('./drawpad/DrawPad');
 const cheerio = require('cheerio');
 const { saveMindMap } = require('./sockets/mindMapController');
+const { saveDrawing } = require('./sockets/drawPadController');
 const $ = cheerio.load("<container id='-1'></container>");
 
 
@@ -252,21 +253,20 @@ module.exports.socketRoutes = (http) => {
                 //the amount of changed nodes is very large.
 
                 socket.on('appMindmapUpdateAlterColor', function (node, color, fileName) {
-                        nodesChangeColor(node, color, fileName)
+                        nodesChangeColor(node, color, fileName);
 
                         io.emit('appMindmapUpdateAlterColor', node, color, fileName);
+                        let children = $(node + ' > node');
+                        for (let i = 0; i < children.length; i++) {
+                                nodesChangeColor(children[i].id, color, fileName);
+                                io.emit('appMindmapUpdateAlterColor', node, color, fileName);
+                        }
                 });
 
 
                 function nodesChangeColor(node, color, fileName) {
                         node = $("data[name=" + fileName + "]").find("node[id='" + node + "']");
-                        let childstring = node + ' > node';
-                        //let children = $(childstring);
                         $(node).attr("color", color);
-                        /*
-                        for (let i = 0; i < children.length; i++) {
-                                nodesChangeColor(children[i].id, color);
-                        }*/
                 }
 
                 //if this function is called, the id of the object which
@@ -344,45 +344,8 @@ module.exports.socketRoutes = (http) => {
                 * function to handle save Obj 
                 */
                 socket.on('appDrawingSave', function (image, fileName, callback) {
-                        if (DrawPad.checkIfFileExsists(fileName)) {
-                                if (DrawPad.hasContent(fileName)) {
-                                        try {
-                                                DrawPad.saveDocumentToTheDatabase();
-                                        } catch (error) {
-                                                console.error(error);
-                                        }
-                                }
-                        } else {
-                                DrawPad.createNewFile(fileName);
-                                console.log("create " + fileName);
-                                try {
-                                        DrawPad.saveDocumentToTheDatabase();
-                                } catch (error) {
-                                        console.error(error);
-                                }
-                        }
-
-                        let data = image.replace(/^data:image\/\w+;base64,/, '');
-                        var fs = require("fs");
-                        try {
-                                fs.accessSync(PATH_TO_DRAWINGS, fs.constants.W_OK);
-                        } catch (error) {
-                                fs.mkdir(PATH_TO_DRAWINGS, error => {
-                                        if (error) {
-                                                console.error(error);
-                                        }
-                                });
-                        }
-                        let path = PATH_TO_DRAWINGS + "/draw_" + fileName + ".png";
-                        fs.writeFile(path, data, { encoding: 'base64' }, err => {
-                                if (err) {
-                                        console.error(err);
-                                        callback({ error: "content could not be saved as Image" });
-                                } else {
-                                        callback({ fileName: fileName });
-                                        io.emit('appDrawingSave', fileName);
-                                }
-                        });
+                        saveDrawing(image, fileName, callback);
+                        io.emit('appDrawingSave', fileName);
                 });
         });
 }
