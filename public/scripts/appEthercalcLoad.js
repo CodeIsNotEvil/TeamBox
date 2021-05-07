@@ -88,9 +88,10 @@ function loginResult(result) {
     $("#loadingIcon").show();
     $("#loadingIconNoLoad").hide();
 
-    var url = $("#inputAppLoadFilename").val().replace(/[_\W]+/g, "");
-
-    window.open("http://teambox.local:8000/" + url, "_parent");
+    var fileName = $("#inputAppLoadFilename").val().replace(/[_\W]+/g, "");
+    console.log(fileName);
+    //window.open("http://teambox.local:8000/" + url, "_parent");
+    window.location.href = "/ethercalc?fileName=" + fileName;
   }
   else if (result == "noText") {
     //fehlermeldung: no text

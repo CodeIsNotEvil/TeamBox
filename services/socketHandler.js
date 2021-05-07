@@ -7,6 +7,7 @@ const DrawPad = require('./drawpad/DrawPad');
 const cheerio = require('cheerio');
 const { saveMindMap } = require('./sockets/mindMapController');
 const { saveDrawing } = require('./sockets/drawPadController');
+const { exportXlsxFileToUSB } = require('./sockets/ethercalcController');
 const $ = cheerio.load("<container id='-1'></container>");
 
 
@@ -347,6 +348,12 @@ module.exports.socketRoutes = (http) => {
                         saveDrawing(image, fileName, callback);
                         io.emit('appDrawingSave', fileName);
                 });
+
+                socket.on('EthercalcExportXlsxFileToUSB', async function (fileName) {
+                        console.debug(`EthercalcExportXlsxFileToUSB recieved ${fileName}`);
+                        await exportXlsxFileToUSB(fileName);
+                });
+
         });
 }
 

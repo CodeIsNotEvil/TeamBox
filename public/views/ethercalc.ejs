@@ -1,0 +1,34 @@
+<%- include('navbar'); -%>
+  <link rel="stylesheet" href="../styles/filebrowserNavbar.css">
+  </div>
+  <iframe id="ethercalcFrame" src="/appEthercalcLoad.ejs" class="second-row"></iframe>
+  </div>
+  <script>
+
+
+
+    $(document).ready(function () {
+      //sets the filebrowser navbar element to active
+      $("#ethercalc").addClass("active");
+
+      let socket = io();
+      let fileName = null;
+
+      let parameters = new URLSearchParams(window.location.search);
+      fileName = parameters.get("fileName");
+      $("#ethercalcFrame").attr("src", "http://teambox.local:8000/" + fileName, "_parent");
+
+      let hubLink = document.getElementById("hub")
+      hubLink.onclick = function () {
+        if (fileName) {
+          console.log(fileName);
+          socket.emit('EthercalcExportXlsxFileToUSB', fileName);
+        }
+      }
+    });
+
+  </script>
+  <!--<script src="../scripts/ethercalc.js"></script>-->
+  </body>
+
+  </html>

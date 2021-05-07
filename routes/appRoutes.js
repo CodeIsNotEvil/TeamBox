@@ -66,6 +66,10 @@ router.get("/appEthercalcLoad.ejs", function (req, res) {
         res.render("appEthercalcLoad", { username: user.name, data: data });
 });
 
+router.get("/ethercalc", function (req, res) {
+        res.render("ethercalc");
+});
+
 router.get("/wekanLoad.ejs", function (req, res) {
         //const user = res.locals.user
         //const group = res.locals.group

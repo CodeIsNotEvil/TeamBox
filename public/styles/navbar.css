@@ -20,6 +20,11 @@ body, html {
   padding: 0
 }
 
+a, a:hover, a:focus, a:active {
+  text-decoration: none;
+  color: inherit;
+}
+
 .row-container {
   display: flex;
   width: 100%;
@@ -69,8 +74,8 @@ nav ul li a {
 }
 
 a.active, a:hover {
-  background: #1b9bff;
-  transition: .5s;
+  /* background: hsl(206, 100%, 55%);
+  transition: .5s;*/
 }
 
 .checkbtn {
@@ -124,9 +129,9 @@ a.active, a:hover {
   nav ul li a {
     font-size: 20px;
   }
-  a:hover, a.active {
+  nav ul li a:hover, nav ul li a.active {
     background: none;
-    color: #0082e6;
+    color: hsl(206, 100%, 45%);
   }
   #check:checked~ul {
     left: 0;
