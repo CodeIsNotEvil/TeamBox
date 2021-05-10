@@ -59,6 +59,10 @@ removeAlphaValueFromColor = (rgbaColor) => {
 
 }
 
+router.get("/etherpad", function (req, res) {
+        res.render("etherpad");
+});
+
 
 router.get("/appEthercalcLoad.ejs", function (req, res) {
         let data = Ethercalc.getEntries();

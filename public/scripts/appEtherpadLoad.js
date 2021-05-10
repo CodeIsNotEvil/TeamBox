@@ -88,12 +88,10 @@ function loginResult(result) {
     $("#loadingIcon").show();
     $("#loadingIconNoLoad").hide();
 
-    var url = $("#inputAppLoadFilename").val().replace(/[_\W]+/g, "");
+    var fileName = $("#inputAppLoadFilename").val().replace(/[_\W]+/g, "");
 
-    // LARA 09.08.2016
-    //window.open("http://192.168.42.1:9001/p/" + url, "_parent");
-    window.open("http://teambox.local:9001/p/" + url + "?userName=" + escUsername + "&userColor=" + color, "_parent");
-    // LARA end
+    window.location.href = "/etherpad?fileName=" + fileName + "&userName=" + escUsername + "&userColor=" + color;
+
   }
   else if (result == "noText") {
     //fehlermeldung: no text

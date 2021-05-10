@@ -1,0 +1,25 @@
+<%- include('navbar'); -%>
+  <link rel="stylesheet" href="../styles/filebrowserNavbar.css">
+  </div>
+  <iframe id="etherpadFrame" class="second-row"></iframe>
+  </div>
+  <script>
+    $(document).ready(function () {
+      //sets the filebrowser navbar element to active
+      $("#etherpad").addClass("active");
+
+      let socket = io();
+      let fileName = null;
+
+      let parameters = new URLSearchParams(window.location.search);
+      fileName = parameters.get("fileName");
+      userName = parameters.get("userName");
+      color = parameters.get("userColor");
+      $("#etherpadFrame").attr("src", "http://teambox.local:9001/p/" + fileName + "?userName=" + userName + "&userColor=" + color);
+
+    });
+
+  </script>
+  </body>
+
+  </html>
