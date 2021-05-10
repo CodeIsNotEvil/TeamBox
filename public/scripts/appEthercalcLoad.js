@@ -89,7 +89,7 @@ function loginResult(result) {
     $("#loadingIconNoLoad").hide();
 
     var fileName = $("#inputAppLoadFilename").val().replace(/[_\W]+/g, "");
-    console.log(fileName);
+    //console.debug(fileName);
     //window.open("http://teambox.local:8000/" + url, "_parent");
     window.location.href = "/ethercalc?fileName=" + fileName;
   }

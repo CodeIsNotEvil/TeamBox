@@ -350,7 +350,7 @@ module.exports.socketRoutes = (http) => {
                 });
 
                 socket.on('EthercalcExportXlsxFileToUSB', async function (fileName) {
-                        console.debug(`EthercalcExportXlsxFileToUSB recieved ${fileName}`);
+                        //console.debug(`EthercalcExportXlsxFileToUSB recieved ${fileName}`);
                         await exportXlsxFileToUSB(fileName);
                 });
 
