@@ -110,7 +110,7 @@ $("#appLoadForm").submit(function (e) {
 //entsprechendes div angehängt
 
 function loginResult(result) {
-  console.log(result);
+  //console.debug(result);
   if (result == "loginSuccess") {
     //weiterleiten
     $("#containerCalculatorStart").hide();

@@ -66,39 +66,6 @@ class DrawPad {
     }
 
     /**
-     * connects to the DrawPad database, this will not work in the current testsetup wich prevents tests on running on the productionDB.
-     * The Code to use this is located at the bottom of this file.
-     * @returns 
-     */
-    /*
-    static async connectToDB() {
-        mongoose.connect('mongodb://localhost/DrawPad', {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-            useFindAndModify: false
-        });
-        //Connect to mongodb if it does not exsist it will be created
-
-        //console.log("Starting DB connection...");
-        return mongoose.connection.once('open', () => {
-            console.log("Connected to the Server");
-        }).on('error', function (error) {
-            console.error("MongoDB error\n" + error);
-        });
-    }
-    */
-
-    /**
-     * Disconnects mongoose form the Database
-     */
-    /*  
-    static async diconnectFromDB() {
-        mongoose.disconnect().then(() => {
-            console.log("Disconected from DB");
-        });
-    }
-    */
-    /**
      * Returns the File Names of the current group as an array.
      * This function will be called if a client loads requests the /appDraw.ejs Page
      * @returns {Array} Filenames of the current group
@@ -250,17 +217,5 @@ class DrawPad {
         return false;
     }
 }
-/*
-let init =  async () => {
-    try{
-        await DrawPad.connectToDB();
-        await DrawPad.diconnectFromDB();
-    } catch (error) {
-        console.log(error);
-    }
-    
-}
-init();
-*/
 
 module.exports = DrawPad;

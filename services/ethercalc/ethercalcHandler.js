@@ -40,6 +40,9 @@ class Ethercalc {
      * @returns {boolean}
      */
     static createFolder(path) {
+        if (path == "/media/USB-TeamBox/TeamBox//.meta/ethercalcDump/") {
+            return false;
+        }
         try {
             fs.mkdirSync(path, { recursive: true, force: true });
             console.log("Created directory: " + path);

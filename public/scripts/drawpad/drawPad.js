@@ -225,6 +225,7 @@ function setup() {
 			clearCanvas();
 			$("#foreground").html("");
 			$("#foreground").css({ 'display': 'none' });
+			window.location.href = "/drawPadLoad";
 		}
 	);
 
@@ -398,24 +399,25 @@ function saveWindow(fileName) {
 function saveFile(fileName) {
 	var draw_canvas = document.getElementById('visible');
 	var image = draw_canvas.toDataURL("image/png");
-	socket.emit("appDrawingSave", image, fileName, function (message) {
-		if (message.error) {
-			console.log(message.error);
-			$("#sidebarItemSaveNotice").css({ 'left': '40%', 'top': '40%', 'padding': '20px' });
-			$("#sidebarItemSaveNotice").html(message.error);
-			$("#sidebarItemSaveNotice").show().delay(2000).fadeOut();
-		} else if (message.fileName) {
-			console.log("saved " + message.fileName + " successfully");
-			$("#sidebarItemSaveNotice").css({ 'left': '40%', 'top': '40%', 'padding': '20px' });
-			$("#sidebarItemSaveNotice").html("saved " + message.fileName + " successfully");
-			$("#sidebarItemSaveNotice").show().delay(2000).fadeOut();
-		} else {
-			console.log(message);
-			$("#sidebarItemSaveNotice").css({ 'left': '40%', 'top': '40%', 'padding': '20px' });
-			$("#sidebarItemSaveNotice").html("Someting went wrong appDrawFunction.js");
-			$("#sidebarItemSaveNotice").show().delay(2000).fadeOut();
-		}
-	});
+	if (fileName != null) {
+		socket.emit("appDrawingSave", image, fileName, function (message) {
+			if (message.error) {
+				console.log(message.error);
+				showItemSaveNotice(message.error);
+			} else if (message.fileName) {
+				showItemSaveNotice("saved " + message.fileName + " successfully");
+			} else {
+				console.error(message);
+				showItemSaveNotice("Someting went wrong");
+			}
+		});
+	}
+}
+
+function showItemSaveNotice(message) {
+	$("#sidebarItemSaveNotice").css({ 'left': '40%', 'top': '40%', 'padding': '20px' });
+	$("#sidebarItemSaveNotice").html(message);
+	$("#sidebarItemSaveNotice").show().delay(2000).fadeOut();
 }
 
 /* 
@@ -514,6 +516,7 @@ function declareJqueryOnClickEvents() {
 	$('#clear').on("click", function () {
 		clearCanvas();
 		socket.emit('clear', fileName);
+		window.location.href = "/drawPadLoad";
 	});
 	$('#back').on("click", function () {
 		saveFile(fileName);

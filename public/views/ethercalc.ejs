@@ -18,7 +18,7 @@
       let hubLink = document.getElementById("hub")
       hubLink.onclick = function () {
         if (fileName) {
-          console.log(fileName);
+          //console.debug(fileName);
           socket.emit('EthercalcExportXlsxFileToUSB', fileName);
         }
       }

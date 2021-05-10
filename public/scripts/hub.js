@@ -30,8 +30,8 @@ initializePage();
 
 socket.on('appUpdateUsers', function (users, user, file) {
         let usersConnected = users;
-        console.log("file: " + file + " user: " + user);
-        console.log(usersConnected);
+        //console.log("file: " + file + " user: " + user);
+        //console.log(usersConnected);
         $("#containerInfoRight").html("Online are: ");
         $("#hubInfoMemberOnline").html("");
 
