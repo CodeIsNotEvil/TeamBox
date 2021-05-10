@@ -11,10 +11,9 @@ module.exports.exportXlsxFileToUSB = async (fileName) => {
 
 
 fetchXlsxFormEthercalc = async (fileName) => {
-    return await fetch(`http://teambox.local:8000/_/${fileName}/xlsx`)
-        .then(response => response.text()) //TODO does not fetch in the right format, try a dataStream or an encodeing 
-        .then(result => { return result })
-        .catch(error => console.log('error', error));
+    const response = await fetch(`http://teambox.local:8000/_/${fileName}/xlsx`, { method: 'GET', redirect: 'follow' });
+    const buffer = await response.buffer();
+    return buffer;
 }
 
 writeXlsxDataToUSB = async (fileName, xlsxData) => {
@@ -28,12 +27,9 @@ writeXlsxDataToUSB = async (fileName, xlsxData) => {
 }
 
 writeXlsXData = async (pathWithFileName, xlsxData) => {
-    return await fs.writeFile(pathWithFileName, xlsxData, function (err) {
-        if (err == "" || err == null) {
-            console.log(`writeXlsXData >>> successfully wrote xlsxData to ${pathWithFileName}`);
-        } else {
-            console.error("writeXlsXData >>>", err);
-            return err
-        }
-    });
+    let wstream = fs.createWriteStream(pathWithFileName);
+    let error = await wstream.write(xlsxData);
+    console.log(error);
+    console.debug(`writeXlsXData >>> successfully wrote xlsxData to ${pathWithFileName}`);
+    return await wstream.end();
 }
