@@ -1,0 +1,13 @@
+<%- include('newHeader'); -%>
+    <link rel="stylesheet" href="../styles/newHub.css">
+    <div class="scroll-container">
+        <div class="mainContainer">
+            <%- include('videoList'); -%>
+                <%- include('userList'); -%>
+        </div>
+    </div>
+    <script>
+        let user = '<%-JSON.stringify(user)%>';
+    </script>
+    <script src="../scripts/hub/hub.js"></script>
+    <%- include('footer'); -%>

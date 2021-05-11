@@ -1,0 +1,123 @@
+<div class="videoList">
+    <div class="flex" style="flex-flow: column;">
+
+        <div id="etherpadVideoContainer" class="videoContainer containerItem">
+            <button onclick="showVideo('etherpadVideoContainer')">Text Editor</button>
+            <video width="90%" controls>
+                <source src="../styles/videos/etherpad.mp4" type="video/mp4">
+                <track label="English" kind="subtitles" srclang="en" src="../styles/videos/subtitles/en_etherpad.vtt"
+                    default>
+                <track label="Deutsch" kind="subtitles" srclang="de" src="../styles/videos/subtitles/de_etherpad.vtt">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <div id="mindmapVideoContainer" class="videoContainer containerItem">
+            <button onclick="showVideo('mindmapVideoContainer')">Brainstorming</button>
+            <video width="90%" controls>
+                <source src="../styles/videos/mindmap.mp4" type="video/mp4">
+                <track label="English" kind="subtitles" srclang="en" src="../styles/videos/subtitles/en_mindmap.vtt"
+                    default>
+                <track label="Deutsch" kind="subtitles" srclang="de" src="../styles/videos/subtitles/de_mindmap.vtt">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <div id="filebrowserVideoContainer" class="videoContainer containerItem">
+            <button onclick="showVideo('filebrowserVideoContainer')">Fileshareing (VIDEO FOR THE PREVIOUS
+                SYSTEM)</button>
+            <video width="90%" controls>
+                <source src="../styles/videos/filesharing.mp4" type="video/mp4">
+                <track label="English" kind="subtitles" srclang="en" src="../styles/videos/subtitles/en_filesharing.vtt"
+                    default>
+                <track label="Deutsch" kind="subtitles" srclang="de"
+                    src="../styles/videos/subtitles/de_filesharing.vtt">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <div id="ethercalcVideoContainer" class="videoContainer containerItem">
+            <button onclick="showVideo('ethercalcVideoContainer')">Speedsheet (VIDEO IS DEPRECATED)</button>
+            <video width="90%" controls>
+                <source src="../styles/videos/ethercalc.mp4" type="video/mp4">
+                <track label="English" kind="subtitles" srclang="en" src="../styles/videos/subtitles/en_ethercalc.vtt"
+                    default>
+                <track label="Deutsch" kind="subtitles" srclang="de" src="../styles/videos/subtitles/de_ethercalc.vtt">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <div id="drawPadVideoContainer" class="videoContainer containerItem">
+            <button onclick="showVideo('drawPadVideoContainer')">Drawing Pad</button>
+            <video width="90%" controls>
+                <source src="../styles/videos/drawing.mp4" type="video/mp4">
+                <track label="English" kind="subtitles" srclang="en" src="../styles/videos/subtitles/en_drawing.vtt"
+                    default>
+                <track label="Deutsch" kind="subtitles" srclang="de" src="../styles/videos/subtitles/de_drawing.vtt">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <div id="wekanVideoContainer" class="videoContainer containerItem">
+            <button onclick="showVideo('wekanVideoContainer')">Project Management (VIDEO FOR THE PREVIOUS
+                SYSTEM)</button>
+            <video width="90%" controls>
+                <source src="../styles/videos/projectmgnt.mp4" type="video/mp4">
+                <track label="English" kind="subtitles" srclang="en"
+                    src="../styles/videos/subtitles/en_projectmgnt.vtts" default>
+                <track label="Deutsch" kind="subtitles" srclang="de"
+                    src="../styles/videos/subtitles/de_projectmgnt.vtt">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .videoContainer {
+        margin-right: 3rem;
+        margin-left: 3rem;
+        display: flex;
+        flex-flow: column;
+        align-items: center;
+        min-width: 100%;
+        max-width: 720px;
+
+        /*max-width: 720px;*/
+    }
+
+    .videoContainer button {
+        width: 100%;
+        font-family: teamBoxFontRegular;
+        font-weight: normal;
+        font-size: 17px;
+        text-transform: none;
+        margin: 0;
+        background-color: inherit;
+    }
+
+    .videoContainer:hover {
+        background-color: hsl(0, 0%, 95%);
+    }
+
+    .videoContainer video {
+        display: none;
+    }
+
+    .videoContainer.active video {
+        margin-top: 1rem;
+        display: flex;
+    }
+</style>
+
+<script>
+    function showVideo(id) {
+        let element = document.getElementById(id);
+        if (element.classList.contains("active")) {
+            element.classList.remove("active");
+        } else {
+            element.classList.add("active")
+        }
+    }
+</script>

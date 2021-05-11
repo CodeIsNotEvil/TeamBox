@@ -49,22 +49,7 @@
                 </a>
                 <div class="clear"></div>
             </div>
-            <div class="userList">
-                <div class="entryContainer">
-                    <% if(group) { %>
-                        <% for(let i=0; i < group.users.length; i++) { %>
-                            <% if(user.name !=group.users[i].name) { %>
-                                <div class="containerItem">
-                                    <!-- Beleve it or not this is valid ejs code --->
-                                    <div style='background-color: <%=group.users[i].color%>;'>
-                                        <%=group.users[i].name%>
-                                    </div>
-                                </div>
-                                <% } %>
-                                    <% } %>
-                                        <% } %>
-                </div>
-            </div>
+            <%- include('userList'); -%>
         </div>
     </div>
     <script>

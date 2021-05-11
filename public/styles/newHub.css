@@ -30,7 +30,7 @@ AppList
 #############
 */
 
-.appList, .userList, .containerItem {
+.appList, .userList, .containerItem, .videoList {
     margin: 0 auto;
     margin-top: 0px;
     padding: 10px;
@@ -41,7 +41,7 @@ AppList
     list-style: none;
 }
 
-.appList {
+.appList, .videoList {
     grid-area: appList;
     width: 80vw;
     padding: 30px;
@@ -101,26 +101,26 @@ Move the UserList to the right, fix it size to 250px and Enlarge the AppList
     .userList .containerItem {
         width: 250px;
     }
-    .appList {
+    .appList, .videoList {
         width: 50vw;
         height: fit-content;
     }
 }
 
 @media (min-width: 1000px) {
-    .appList {
+    .appList, .videoList {
         width: 60vw;
     }
 }
 
 @media (min-width: 1200px) {
-    .appList {
+    .appList, .videoList {
         width: 65vw;
     }
 }
 
 @media (min-width: 1400px) {
-    .appList {
+    .appList, .videoList {
         width: 70vw;
     }
 }
@@ -129,7 +129,7 @@ Move the UserList to the right, fix it size to 250px and Enlarge the AppList
     .userList .containerItem {
         width: 16vw;
     }
-    .appList {
+    .appList, .videoList {
         width: 75vw;
     }
 }
