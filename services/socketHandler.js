@@ -8,6 +8,7 @@ const cheerio = require('cheerio');
 const { saveMindMap } = require('./sockets/mindMapController');
 const { saveDrawing } = require('./sockets/drawPadController');
 const { exportXlsxFileToUSB } = require('./sockets/ethercalcController');
+const { requestGroupLogout, groupLogoutAccepted, rejectGroupLogout } = require('./sockets/groupController');
 const $ = cheerio.load("<container id='-1'></container>");
 
 
@@ -352,6 +353,17 @@ module.exports.socketRoutes = (http) => {
                 socket.on('EthercalcExportXlsxFileToUSB', async function (fileName) {
                         //console.debug(`EthercalcExportXlsxFileToUSB recieved ${fileName}`);
                         await exportXlsxFileToUSB(fileName);
+                });
+
+                socket.on('RequestGroupLogout', async function () {
+                        await requestGroupLogout(socket);
+                });
+
+                socket.on('GroupLogoutAccepted', async function () {
+                        await groupLogoutAccepted(socket)
+                });
+                socket.on('RejectedGroupLogout', function () {
+                        rejectGroupLogout(socket);
                 });
 
         });

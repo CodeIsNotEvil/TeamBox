@@ -1,56 +1,57 @@
 <%- include('header'); -%>
 
   <body>
-    <div id="container01">
-      <a href="/">
-        <div id="logo01">
-          <div style="margin: 0px auto 0px auto; width: 130px;">
-            <div style="float: left; padding: 0px 2px 0px 0px; color: rgba(150,150,150,1);">TeamB</div>
-            <div id="loadingIconNoLoad"></div>
-            <div id="loadingIcon"></div>
-            <div style="float: left; padding: 0px 0px 0px 2px; color: rgba(150,150,150,1);">x</div>
-            <div class="clear"></div>
+    <%- include('auth/groupLogoutPopup'); -%>
+      <div id="container01">
+        <a href="/">
+          <div id="logo01">
+            <div style="margin: 0px auto 0px auto; width: 130px;">
+              <div style="float: left; padding: 0px 2px 0px 0px; color: rgba(150,150,150,1);">TeamB</div>
+              <div id="loadingIconNoLoad"></div>
+              <div id="loadingIcon"></div>
+              <div style="float: left; padding: 0px 0px 0px 2px; color: rgba(150,150,150,1);">x</div>
+              <div class="clear"></div>
+            </div>
           </div>
-        </div>
-      </a>
-      <div id="containerAppLoad">
-        <a href="/">Home</a><br><br>
-        <div class="containerItemLarge containerItem5 transformBackground">
-          <div class="containerItemTitle transform">
-            Brain Storming
+        </a>
+        <div id="containerAppLoad">
+          <a href="/">Home</a><br><br>
+          <div class="containerItemLarge containerItem5 transformBackground">
+            <div class="containerItemTitle transform">
+              Brain Storming
+            </div>
           </div>
-        </div>
 
-        <div id="thumbnailContainer">
+          <div id="thumbnailContainer">
+          </div>
+          <div id="loginNoticePlaceholder">
+            <div id="loginNotice" class="loginNoticeError"></div>
+          </div>
+          <form id="appLoadForm" method="post" action="" autocomplete="off">
+            <input id="inputAppLoadFilename" name="mindmap[name]" class="ease" type="text"
+              placeholder="Dateinamen wählen" list="dataListData" autocomplete="off">
+            <datalist id="dataListData">
+            </datalist>
+            </input>
+            <input id="inputAppLoadSubmit" class="ease" type="submit" value="weiter" />
+          </form>
         </div>
-        <div id="loginNoticePlaceholder">
-          <div id="loginNotice" class="loginNoticeError"></div>
-        </div>
-        <form id="appLoadForm" method="post" action="" autocomplete="off">
-          <input id="inputAppLoadFilename" name="mindmap[name]" class="ease" type="text" placeholder="Dateinamen wählen"
-            list="dataListData" autocomplete="off">
-          <datalist id="dataListData">
-          </datalist>
-          </input>
-          <input id="inputAppLoadSubmit" class="ease" type="submit" value="weiter" />
-        </form>
       </div>
-    </div>
-    <div id="containerWarningShutdown" class="containerWarningShutdown">
-      <div class="containerWarningMessage">PI was shutdown</div>
-    </div>
-    <div id="containerWarningServertime" class="containerWarningServertime">
-      <div class="containerWarningMessage">Servertime was set</div>
-    </div>
-    <div id="containerWarningExporting" class="containerWarningExporting">
-    </div>
-    <div id="containerWarningImporting" class="containerWarningImporting">
-    </div>
-    <script>
-      var username = "<%= username %>";
-      var data = '<%- JSON.stringify(data) %>';
-    </script>
-    <script src="../scripts/appMindmapLoad.js"></script>
+      <div id="containerWarningShutdown" class="containerWarningShutdown">
+        <div class="containerWarningMessage">PI was shutdown</div>
+      </div>
+      <div id="containerWarningServertime" class="containerWarningServertime">
+        <div class="containerWarningMessage">Servertime was set</div>
+      </div>
+      <div id="containerWarningExporting" class="containerWarningExporting">
+      </div>
+      <div id="containerWarningImporting" class="containerWarningImporting">
+      </div>
+      <script>
+        var username = "<%= username %>";
+        var data = '<%- JSON.stringify(data) %>';
+      </script>
+      <script src="../scripts/appMindmapLoad.js"></script>
   </body>
 
   </html>

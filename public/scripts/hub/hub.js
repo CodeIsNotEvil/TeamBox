@@ -1,4 +1,4 @@
-let socket = io();
+//let socket = io();
 
 user = JSON.parse(user);
 

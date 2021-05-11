@@ -1,4 +1,4 @@
-var socket = io();
+//let socket = io();
 
 var language = "";
 

@@ -225,16 +225,12 @@ module.exports.group_logout_post = async (req, res) => {
             // Export current group
             exportData(); //SyncHandler
 
-            //TODO stop fileBrowser 
-            //fileBrowser.stopfilebrowser();
-
             //Reset Group Name
             OldGroup.group = "";
 
-            //TODO redirect all Clients.... to the Select Page
         }
         await Group.findOneAndUpdate({ name: group.name }, { isActive: false })
-        console.log("groupAuthController >>> group_logout_post set isActive to false");
+        //console.debug("groupAuthController >>> group_logout_post set isActive to false");
         res.status(200).json({ group: null });
 
     }

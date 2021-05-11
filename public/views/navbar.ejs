@@ -13,20 +13,21 @@
 </head>
 
 <body>
-  <div class="row-container">
-    <div class="first-row">
-      <nav>
-        <input type="checkbox" id="check">
-        <label for="check" class="checkbtn">
-          <span class="hamburger"></span>
-        </label>
-        <label class="logo"><a id="hub" href="/">TeamBox</a></label>
-        <ul>
-          <li><a href="/appEtherpadLoad.ejs" id="etherpad">Text Editor</a></li>
-          <li><a href="/appMindmapLoad.ejs" id="mindmap">Brain Storming</a></li>
-          <li><a href="/filebrowserLoad.ejs" id="filebrowser">File Shareing</a></li>
-          <li><a href="/appEthercalcLoad.ejs" id="ethercalc">Spreadsheet</a></li>
-          <li><a href="/drawPadLoad" id="drawpad">Drawing Pad</a></li>
-          <li><a href="/wekanLoad.ejs" id="wekan">Project Management</a></li>
-        </ul>
-      </nav>
+  <%- include('auth/groupLogoutPopup'); -%>
+    <div class="row-container">
+      <div class="first-row">
+        <nav>
+          <input type="checkbox" id="check">
+          <label for="check" class="checkbtn">
+            <span class="hamburger"></span>
+          </label>
+          <label class="logo"><a id="hub" href="/">TeamBox</a></label>
+          <ul>
+            <li><a href="/appEtherpadLoad.ejs" id="etherpad">Text Editor</a></li>
+            <li><a href="/appMindmapLoad.ejs" id="mindmap">Brain Storming</a></li>
+            <li><a href="/filebrowserLoad.ejs" id="filebrowser">File Shareing</a></li>
+            <li><a href="/appEthercalcLoad.ejs" id="ethercalc">Spreadsheet</a></li>
+            <li><a href="/drawPadLoad" id="drawpad">Drawing Pad</a></li>
+            <li><a href="/wekanLoad.ejs" id="wekan">Project Management</a></li>
+          </ul>
+        </nav>

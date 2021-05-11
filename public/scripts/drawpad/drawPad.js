@@ -1,5 +1,5 @@
 //create socket
-var socket = io();
+//let socket = io();
 var usersConnected = new Array();
 //create slider
 var slider;

@@ -9,7 +9,7 @@ let content;
 
 //Initializiation of some variables.
 
-var socket = io();
+//let socket = io();
 var usersConnected = new Array();
 var cv = document.getElementById('canvas');
 var ctx = document.getElementById('canvas').getContext("2d");
