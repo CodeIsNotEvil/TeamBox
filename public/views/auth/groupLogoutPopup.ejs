@@ -1,127 +1,55 @@
+<link rel="stylesheet" href="../../styles/popups.css">
 <div id="groupLogoutPopupContainer">
     <div id="groupLogoutPopup">
-        Someone requested to logout the current group, if you are want to keep on working in the current group deny
-        this request.
     </div>
     <div class="flex">
         <button onclick="acceptGroupLogout()" class="TeamBox-button">allow</button>
         <button onclick="denyGroupLogout()" class="TeamBox-button" style="margin-left: 1rem;">deny</button>
     </div>
 </div>
-<div id="simplePopupContainer">
-    <div id="simplePopup">
-        NO MESSAGE DEFINED!!!!!
-    </div>
-    <div class="flex">
-        <button onclick="okFunction()" class="TeamBox-button">OK</button>
-    </div>
-</div>
-<div id="overlay"></div>
-<style>
-    .flex {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+<%- include('../simplePopup'); -%>
+    <script>
+        let socket = io();
 
-    .TeamBox-button {
-        margin-top: 30px;
-        border-radius: 36px;
-        background: #FEE996;
-        border: 0;
-        text-transform: uppercase;
+        socket.on('RequestGroupLogout', function () {
+            let message = "Someone requested to logout the current group, if you are want to keep on working in the current group deny this request"
+            showPopUp("groupLogoutPopup", message);
+        });
 
-        font-size: 0.8em;
-        display: block;
-        padding: 10px 16px;
-        letter-spacing: 2px;
-    }
+        socket.on("GroupLogout", function (reason) {
+            hidePopUp("groupLogoutPopup");
+            showPopUp("simplePopup", reason);
+        });
 
-    #groupLogoutPopupContainer,
-    #simplePopupContainer {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) scale(0);
-        transition: 200ms ease-in-out;
-        background-color: white;
-        border-radius: 20px;
-        padding: 1rem;
-        z-index: 10000;
-    }
+        socket.on("RejectedGroupLogoutFIN", function (reason) {
+            hidePopUp("groupLogoutPopup");
+        });
 
-    #groupLogoutPopupContainer.active,
-    #simplePopupContainer.active {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) scale(1);
-        background-color: white;
-        border-radius: 20px;
-        padding: 1rem;
-        z-index: 10000;
-    }
+        function showPopUp(id, message) {
+            $('#' + id).text(message);
+            document.getElementById(id + "Container").classList.add("active");
+            document.getElementById("overlay").classList.add("active");
+        }
 
-    #overlay {
-        position: fixed;
-        opacity: 0;
-        transition: 200ms ease-in-out;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.5);
-        pointer-events: none;
-    }
+        function hidePopUp(id) {
+            document.getElementById(id + "Container").classList.remove("active");
+            document.getElementById("overlay").classList.remove("active");
+        }
 
-    #overlay.active {
-        position: fixed;
-        opacity: 1;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.5);
-        pointer-events: all;
-    }
-</style>
+        function okFunction() {
+            hidePopUp("simplePopup");
+            window.location.href = "/";
+        }
 
-<script>
-    let socket = io();
+        function acceptGroupLogout() {
+            socket.emit("GroupLogoutAccepted");
+            console.debug("acceptGroupLogout");
+            hidePopUp("groupLogoutPopup");
+        }
 
-    socket.on('RequestGroupLogout', function () {
-        showPopUp();
-    });
-    socket.on("GroupLogout", function (reason) {
-        console.log(reason);
-        console.log("TODO Show pop up with redirect");;
-        window.location.href = "/";
-    });
-    socket.on("RejectedGroupLogoutFIN", function (reason) {
-        console.log(reason);
-        console.log("TODO Show pop up with ok");
-    })
-
-    function showPopUp() {
-        document.getElementById("groupLogoutPopupContainer").classList.add("active");
-        document.getElementById("overlay").classList.add("active");
-        console.debug("show PopUp");
-    }
-
-    function hidePopUp() {
-        document.getElementById("groupLogoutPopupContainer").classList.remove("active");
-        document.getElementById("overlay").classList.remove("active");
-    }
-
-    function acceptGroupLogout() {
-        socket.emit("GroupLogoutAccepted");
-        console.debug("acceptGroupLogout");
-        hidePopUp();
-    }
-
-    function denyGroupLogout() {
-        socket.emit("RejectedGroupLogout");
-        console.debug("denyedGroupLogout");
-        hidePopUp();
-    }
-</script>
+        function denyGroupLogout() {
+            socket.emit("RejectedGroupLogout");
+            console.debug("denyedGroupLogout");
+            hidePopUp("groupLogoutPopup");
+        }
+    </script>

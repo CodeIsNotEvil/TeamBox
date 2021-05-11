@@ -1,99 +1,113 @@
 <%- include('authHeader'); -%>
-    <form class="auth form">
-        <div class="loaderflex">
-            <div class="loader"></div>
-        </div>
-        <h2>Join Group</h2>
-        <div style="display:flex; justify-content: center; align-items: center;">
-            <h3 class="groupName">
-                <%=group.name%>
-            </h3>
-        </div>
-        <label for="password">Password</label>
-        <input type="password" name="password" required>
-        <div class="password error"></div>
-        <div class="flex">
-            <button onclick="joinGroup()">Join Group</button>
-            <button onclick="requestLogout()" style="margin-left: 1rem;">Request Logout</button>
-        </div>
-    </form>
-    <script>
-        let socket = io();
-        let group = '<%-JSON.stringify(group)%>';
-        group = JSON.parse(group);
-        //console.debug(group);
+    <link rel="stylesheet" href="../../styles/popups.css">
+    <%- include('../simplePopup'); -%>
+        <form class="auth form">
+            <div class="loaderflex">
+                <div class="loader"></div>
+            </div>
+            <h2>Join Group</h2>
+            <div style="display:flex; justify-content: center; align-items: center;">
+                <h3 class="groupName">
+                    <%=group.name%>
+                </h3>
+            </div>
+            <label for="password">Password</label>
+            <input type="password" name="password" required>
+            <div class="password error"></div>
+            <div class="flex">
+                <button onclick="joinGroup()">Join Group</button>
+                <button onclick="requestLogout()" style="margin-left: 1rem;">Request Logout</button>
+            </div>
+        </form>
+        <script>
+            let socket = io();
+            let group = '<%-JSON.stringify(group)%>';
+            group = JSON.parse(group);
+            //console.debug(group);
 
-        document.querySelector('.grouplogoutNavItem').remove();
+            document.querySelector('.grouplogoutNavItem').remove();
 
 
-        const form = document.querySelector('form');
-        const passwordError = document.querySelector('.password.error');
-        const loaderFlex = document.querySelector('.loaderflex');
+            const form = document.querySelector('form');
+            const passwordError = document.querySelector('.password.error');
+            const loaderFlex = document.querySelector('.loaderflex');
 
-        async function joinGroup() {
-            //reset errors
-            passwordError.textContent = '';
+            async function joinGroup() {
+                //reset errors
+                passwordError.textContent = '';
 
-            //get  the values
-            const password = form.password.value;
-            try {
-                displayLoadingState();
-                //console.log(group.name);
-                const res = await fetch('/groupJoin', {
-                    method: 'POST',
-                    body: JSON.stringify({ name: group.name, password }),
-                    headers: { 'Content-Type': 'application/json' }
-                });
-                const data = await res.json();
-                if (data.errors) {
-                    hideLoadingState();
+                //get  the values
+                const password = form.password.value;
+                try {
+                    displayLoadingState();
+                    //console.log(group.name);
+                    const res = await fetch('/groupJoin', {
+                        method: 'POST',
+                        body: JSON.stringify({ name: group.name, password }),
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    const data = await res.json();
+                    if (data.errors) {
+                        hideLoadingState();
 
-                    passwordError.textContent = data.errors.password;
-                    console.error(data.errors);
-                    if (data.errors.group) {
-                        location.assign('/groupJoin');
+                        passwordError.textContent = data.errors.password;
+                        console.error(data.errors);
+                        if (data.errors.group) {
+                            location.assign('/groupJoin');
+                        }
                     }
+                    if (data.user && data.group) {
+                        location.assign('/');
+                    }
+                } catch (error) {
+                    hideLoadingState();
                 }
-                if (data.user && data.group) {
-                    location.assign('/');
-                }
-            } catch (error) {
-                hideLoadingState();
             }
-        }
-        function requestLogout() {
-            displayLoadingState();
-            socket.emit("RequestGroupLogout");
-            socket.on("RejectedGroupLogoutFIN", function (reason) {
-                console.log(reason);
-                hideLoadingState();
-                console.log("TODO Show pop up with ok")
-            });
-            socket.on("GroupLogout", function (reason) {
-                console.log(reason);
-                hideLoadingState();
-                console.log("TODO Show pop up with redirect")
+            function requestLogout() {
+                displayLoadingState();
+                socket.emit("RequestGroupLogout");
+                socket.on("RejectedGroupLogoutFIN", function (reason) {
+                    hideLoadingState();
+                    showPopUp("simplePopup", reason);
+                });
+                socket.on("GroupLogout", function (reason) {
+                    hideLoadingState();
+                    showPopUp("simplePopup", reason);
+                });
+                console.log("RequestGroupLogout");
+            }
+
+            function showPopUp(id, message) {
+                $('#' + id).text(message);
+                document.getElementById(id + "Container").classList.add("active");
+                document.getElementById("overlay").classList.add("active");
+            }
+
+            function hidePopUp(id) {
+                document.getElementById(id + "Container").classList.remove("active");
+                document.getElementById("overlay").classList.remove("active");
+            }
+
+            function okFunction() {
+                hidePopUp("simplePopup");
                 window.location.href = "/";
+            }
 
+            function displayLoadingState() {
+                // render loading Cyrcle and disable button, input
+                loaderFlex.style.display = "flex";
+                $('form button').addClass('disabled');
+                $('form input').addClass('disabled');
+            }
+            function hideLoadingState() {
+                // disable loading Cyrcle and enable button, input
+                loaderFlex.style.display = "none";
+                $('form button').removeClass('disabled');
+                $('form input').removeClass('disabled');
+            }
+
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
             });
-            console.log("RequestGroupLogout");
-        }
-
-        function displayLoadingState() {
-            // render loading Cyrcle and disable button, input
-            loaderFlex.style.display = "flex";
-            $('form button').addClass('disabled');
-            $('form input').addClass('disabled');
-        }
-        function hideLoadingState() {
-            // disable loading Cyrcle and enable button, input
-            loaderFlex.style.display = "none";
-            $('form button').removeClass('disabled');
-            $('form input').removeClass('disabled');
-        }
-
-        form.addEventListener('submit', function (event) {
-            event.preventDefault();
-        });
-    </script>
-    <%- include('../footer'); -%>
+        </script>
+        <%- include('../footer'); -%>

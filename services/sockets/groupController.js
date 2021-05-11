@@ -34,7 +34,7 @@ module.exports.rejectGroupLogout = (socket) => {
     clearTimeout(timer);
     let reason = `A group member has rejected the request`
     socket.broadcast.emit("RejectedGroupLogoutFIN", reason);
-    let amountOfTime = 1000 //* 60 * 10; //10 minutes
+    let amountOfTime = 1000 * 60 * 10; //10 minutes
     autoRejectLogoutRequest(amountOfTime);
 }
 const callGroupLogout = async () => {
