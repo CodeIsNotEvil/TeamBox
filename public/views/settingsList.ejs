@@ -1,0 +1,206 @@
+<div class="videoList">
+    <div class="flex" style="flex-flow: column;">
+
+        <div id="userSettingsContainer" class="flexContainerItem containerItem">
+            <button onclick="showContent('userSettingsContainer')" class="dropDownBtn">User Settings</button>
+            <div class="grid">
+
+                <div id="langContainer" class="gridItem notImplementedYet">
+                    <div>Language selection</div>
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="checkBoxEnglish">
+                        <label for="checkBoxEnglish">English</label>
+                    </div>
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="checkBoxGerman">
+                        <label for="checkBoxGerman">German</label>
+                    </div>
+                </div>
+
+                <div id="passwordContainer" class="gridItem notImplementedYet">
+                    <form>
+                        <input type="password" placeholder="enter old password">
+                        <input type="password" placeholder="enter new password">
+                        <input type="password" placeholder="repeat new password">
+                        <button type="button">Change Password</button>
+                    </form>
+                </div>
+
+                <div id="styleContainer" class="gridItem notImplementedYet">
+                    <div>Themes</div>
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="checkBoxLight">
+                        <label for="checkBoxLight">Light mode</label>
+                    </div>
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="checkBoxDark">
+                        <label for="checkBoxDark">Dark mode</label>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id="groupSettingsContainer" class="flexContainerItem containerItem">
+            <button onclick="showContent('groupSettingsContainer')" class="dropDownBtn">Group Settings</button>
+            <div class="grid">
+
+                <div id="deleteGroupDataContainer" class="gridItem notImplementedYet">
+                    <form>
+                        <input type="password" placeholder="enter group password">
+                        <button>Delete group data</button>
+                    </form>
+                </div>
+
+                <div id="removeUserFromGroupContainer" class="gridItem notImplementedYet">
+                    <form>
+                        <input type="text" placeholder="username">
+                        <input type="password" placeholder="enter group password">
+                        <button>Remove User</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="piSettingsContainer" class="flexContainerItem containerItem">
+            <button onclick="showContent('piSettingsContainer')" class="dropDownBtn">Pi Settings</button>
+            <div class="grid">
+
+                <div id="shutdownPiContainer" class="gridItem notImplementedYet">
+                    <form>
+                        <input type="password" placeholder="enter admin password">
+                        <button>Shutdown Raspberry Pi</button>
+                    </form>
+                </div>
+
+                <div id="clearAllDataContainer" class="gridItem notImplementedYet">
+                    <form>
+                        <input type="password" placeholder="enter admin password">
+                        <button>Clear all Data</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .grid {
+        height: 100%;
+        width: 100%;
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
+    .gridItem {
+        background-color: white;
+        flex-flow: column;
+        justify-content: center;
+    }
+
+    .checkbox-container label,
+    .checkbox-container input[type="checkbox"] {
+        cursor: pointer;
+    }
+
+
+
+    .flexContainerItem {
+        margin-right: 3rem;
+        margin-left: 3rem;
+        display: flex;
+        flex-flow: column;
+        align-items: center;
+        min-width: 100%;
+        max-width: 720px;
+    }
+
+    .flexContainerItem .dropDownBtn {
+        width: 100%;
+        font-family: teamBoxFontRegular;
+        font-weight: normal;
+        font-size: 17px;
+        text-transform: none;
+        margin: 0;
+        background-color: inherit;
+    }
+
+    .flexContainerItem:hover {
+        background-color: hsl(0, 0%, 95%);
+    }
+
+    .flexContainerItem .gridItem {
+        display: none;
+    }
+
+    .flexContainerItem.active .gridItem {
+        padding: 1rem;
+        margin-top: 1rem;
+        display: flex;
+        flex-flow: row;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: auto;
+        padding: auto;
+        border: none;
+        box-shadow: none;
+        width: 100%;
+        min-width: 180px;
+    }
+
+    form input {
+        margin: 0.2rem;
+    }
+
+    form button {
+        max-width: fit-content;
+    }
+
+    .notImplementedYet {
+        background-image: repeating-linear-gradient(hsla(0, 0%, 0%, 0.1), hsla(0, 0%, 100%, 0.1) 10px);
+        pointer-events: none;
+    }
+</style>
+
+<script>
+
+    $(document).ready(function () {
+        let postSelector = " .checkbox-container input:checkbox"
+        preventMultipleChecks('#langContainer' + postSelector);
+        preventMultipleChecks('#styleContainer' + postSelector);
+    });
+
+    function preventMultipleChecks(selector) {
+        $(selector).click(function (e) {
+            $(selector).not(this).prop('checked', false);
+            preventManualUncheck($(this), e);
+
+        });
+    }
+
+    function preventManualUncheck(checkbox, e) {
+        if (!checkbox.is(":checked")) {
+            e.preventDefault();
+        }
+    }
+
+    function showContent(id) {
+        let element = document.getElementById(id);
+        if (element.classList.contains("active")) {
+            element.classList.remove("active");
+        } else {
+            element.classList.add("active")
+        }
+    }
+</script>
