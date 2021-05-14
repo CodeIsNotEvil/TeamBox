@@ -9,6 +9,8 @@
         <div class="groupName error"></div>
         <label for="password">Password</label>
         <input type="password" name="password" required>
+        <label for="confirmPassword">Confirm password</label>
+        <input type="password" name="confirmPassword" id="confirmPassword" required>
         <div class="password error"></div>
         <button>Create Group</button>
     </form>
@@ -33,34 +35,41 @@
             //get  the values
             const groupName = form.groupName.value;
             const password = form.password.value;
-            try {
-                // render loading Cyrcle and disable button
-                loaderFlex.style.display = "flex";
-                $('form button').addClass('disabled');
+            const confirmPassword = document.querySelector('#confirmPassword').value;
 
-                const res = await fetch('/groupCreate', {
-                    method: 'POST',
-                    body: JSON.stringify({ groupName, password }),
-                    headers: { 'Content-Type': 'application/json' }
-                });
-                const data = await res.json();
-                if (data.errors) {
+            if (password === confirmPassword) {
+                try {
+                    // render loading Cyrcle and disable button
+                    loaderFlex.style.display = "flex";
+                    $('form button').addClass('disabled');
+
+                    const res = await fetch('/groupCreate', {
+                        method: 'POST',
+                        body: JSON.stringify({ groupName, password }),
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    const data = await res.json();
+                    if (data.errors) {
+                        // stop the loading Cyrcle to render and enable the button
+                        loaderFlex.style.display = "none";
+                        $('form button').removeClass('disabled');
+
+                        groupNameError.textContent = data.errors.name;
+                        passwordError.textContent = data.errors.password;
+                    }
+                    if (data.user && data.group) {
+                        location.assign('/');
+                    }
+                } catch (error) {
                     // stop the loading Cyrcle to render and enable the button
                     loaderFlex.style.display = "none";
                     $('form button').removeClass('disabled');
-
-                    groupNameError.textContent = data.errors.name;
-                    passwordError.textContent = data.errors.password;
+                    console.error(error);
                 }
-                if (data.user && data.group) {
-                    location.assign('/');
-                }
-            } catch (error) {
-                // stop the loading Cyrcle to render and enable the button
-                loaderFlex.style.display = "none";
-                $('form button').removeClass('disabled');
-                console.error(error);
+            } else {
+                passwordError.textContent = 'passwords do not match';
             }
+
         });
     </script>
     <%- include('../footer'); -%>
