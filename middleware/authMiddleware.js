@@ -36,7 +36,10 @@ const requireGroup = async (req, res, next) => {
             } else {
                 // check if the token matches the one of the current group
                 const group = await Group.findById(decodedToken.gid);
-                if (group.isActive) {
+                if (!group) {
+                    res.clearCookie("group_jwt");
+                    res.redirect('/');
+                } else if (group.isActive) {
                     next();
                 } else {
                     res.redirect('/groupJoin');

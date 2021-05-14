@@ -1,8 +1,6 @@
-const { exportData, synchronizeTime } = require('../services/syncHandler');
-const { updateUserLanguage, getMindMapContentFromDB, writeMindmap, saveDataDrawStringToDB } = require("./mysqlHandler");
-const { PATH_TO_SCREENSHOTS, PATH_TO_DRAWINGS } = require("../config/server");
+const { synchronizeTime } = require('../services/syncHandler');
+const { updateUserLanguage, getMindMapContentFromDB } = require("./mysqlHandler");
 const Group = require('./Group');
-const { shutdownPi } = require('./piHeandler');
 const DrawPad = require('./drawpad/DrawPad');
 const cheerio = require('cheerio');
 const { saveMindMap } = require('./sockets/mindMapController');
@@ -21,18 +19,15 @@ initSocketIO = (http) => {
 module.exports.socketRoutes = (http) => {
         const io = initSocketIO(http);
         io.on('connection', socket => {
-                console.log("SocketHandler.js >>> SocketIO activity");
+                //console.debug("SocketHandler.js >>> SocketIO activity");
+
                 //Shuts down the Pi.
                 //Sends a message to all client that the Pi will shutdown
                 //after the content was exportet to the USB Stick a last time
-                //Here should be an error message as well if the export fails
 
-                socket.on("shutdownPi", function () {
-                        io.sockets.emit('appExportMysqlStart');
-                        exportData();
-                        io.sockets.emit('appExportMysqlEnd');
-                        io.sockets.emit('shutdownPi');
-                        shutdownPi();
+                socket.on("shutdownPi", function (message) {
+                        io.sockets.emit('shutdownPi', message);
+                        http.close();
                 });
 
                 // LARA 13.07.2016 // 02.08.2016

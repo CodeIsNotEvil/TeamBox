@@ -19,10 +19,10 @@
 
                 <div id="passwordContainer" class="gridItem notImplementedYet">
                     <form>
-                        <input type="password" placeholder="enter old password">
-                        <input type="password" placeholder="enter new password">
-                        <input type="password" placeholder="repeat new password">
-                        <button type="button">Change Password</button>
+                        <input name="password" type="password" placeholder="enter old password" required>
+                        <input name="password" type="password" placeholder="enter new password" required>
+                        <input name="password" type="password" placeholder="repeat new password" required>
+                        <button>Change Password</button>
                     </form>
                 </div>
 
@@ -48,15 +48,15 @@
 
                 <div id="deleteGroupDataContainer" class="gridItem notImplementedYet">
                     <form>
-                        <input type="password" placeholder="enter group password">
+                        <input name="password" type="password" placeholder="enter group password" required>
                         <button>Delete group data</button>
                     </form>
                 </div>
 
                 <div id="removeUserFromGroupContainer" class="gridItem notImplementedYet">
                     <form>
-                        <input type="text" placeholder="username">
-                        <input type="password" placeholder="enter group password">
+                        <input name="name" type="text" placeholder="username" required>
+                        <input name="password" type="password" placeholder="enter group password" required>
                         <button>Remove User</button>
                     </form>
                 </div>
@@ -68,16 +68,25 @@
             <button onclick="showContent('piSettingsContainer')" class="dropDownBtn">Pi Settings</button>
             <div class="grid">
 
-                <div id="shutdownPiContainer" class="gridItem notImplementedYet">
+                <div id="shutdownPiContainer" class="gridItem">
                     <form>
-                        <input type="password" placeholder="enter admin password">
+                        <input name="password" type="password" placeholder="enter admin password" required>
+                        <div class="password error"></div>
                         <button>Shutdown Raspberry Pi</button>
+                    </form>
+                </div>
+
+                <div id="rebootPiContainer" class="gridItem">
+                    <form>
+                        <input name="password" type="password" placeholder="enter admin password" required>
+                        <div class="password error"></div>
+                        <button>Reboot Raspberry Pi</button>
                     </form>
                 </div>
 
                 <div id="clearAllDataContainer" class="gridItem notImplementedYet">
                     <form>
-                        <input type="password" placeholder="enter admin password">
+                        <input name="password" type="password" placeholder="enter admin password" required>
                         <button>Clear all Data</button>
                     </form>
                 </div>
@@ -167,7 +176,10 @@
         max-width: fit-content;
     }
 
-    .notImplementedYet {
+    .notImplementedYet,
+    .notImplementedYet form,
+    .notImplementedYet input,
+    .notImplementedYet button {
         background-image: repeating-linear-gradient(hsla(0, 0%, 0%, 0.1), hsla(0, 0%, 100%, 0.1) 10px);
         pointer-events: none;
     }
@@ -203,4 +215,33 @@
             element.classList.add("active")
         }
     }
+
+    const formShutdownPi = document.querySelector("#shutdownPiContainer form");
+    formShutdownPi.addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        //reset errors
+        const passwordError = document.querySelector(".password.error");
+        passwordError.textContent = '';
+
+        //get  the values
+        const password = formShutdownPi.password.value;
+        try {
+            const res = await fetch('/settings/shutdownpi', {
+                method: 'POST',
+                body: JSON.stringify({ password }),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const data = await res.json();
+            if (data.errors) {
+                passwordError.textContent = data.errors.password;
+            } else if (data.message) {
+                let message = data.message;
+                socket.emit("shutdownPi", message);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    });
+
 </script>

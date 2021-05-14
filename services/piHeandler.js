@@ -4,8 +4,8 @@ const syncExec = require(PATH_TO_GLOBAL_MODULES + 'sync-exec');
 /**
  * Shut the RaspberryPi Down.
  */
-function shutdownPi() {
-        let isError = syncExec(PATH_TO_BASH_SCRIPTS + "group_delete.sh && sudo shutdown now").stderr;
+const shutdownPi = () => {
+        let isError = syncExec(PATH_TO_BASH_SCRIPTS + "group_delete.sh && sudo shutdown").stderr;
 
         if (isError == "" && isError != null) {
                 console.log("EXEC :: SHUTDOWNPI:\t\tSUCCESS");
@@ -15,6 +15,18 @@ function shutdownPi() {
         }
 }
 
+const rebootPi = () => {
+        let isError = syncExec("sudo reboot").stderr;
+
+        if (isError == "" && isError != null) {
+                console.log("EXEC :: REBOOTPI:\t\tSUCCESS");
+        }
+        else {
+                console.log("EXEC :: REBOOTPI:\t\tERROR: \n" + isError);
+        }
+}
+
 module.exports = {
-        shutdownPi
+        shutdownPi,
+        rebootPi
 }

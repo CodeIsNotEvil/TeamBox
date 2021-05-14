@@ -1,3 +1,28 @@
 </body>
 
 </html>
+
+<script>
+    if (socket) {
+        socket.on('shutdownPi', function (message) {
+            console.log("Pi will shutdown");
+            showPopUp('simplePopup', message);
+        })
+    }
+
+    function showPopUp(id, message) {
+        $('#' + id).text(message);
+        document.getElementById(id + "Container").classList.add("active");
+        document.getElementById("overlay").classList.add("active");
+    }
+
+    function hidePopUp(id) {
+        document.getElementById(id + "Container").classList.remove("active");
+        document.getElementById("overlay").classList.remove("active");
+    }
+
+    function okFunction() {
+        hidePopUp("simplePopup");
+    }
+
+</script>

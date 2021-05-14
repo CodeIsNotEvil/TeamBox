@@ -123,26 +123,24 @@ module.exports.group_join_post = async (req, res) => {
         user.color = color;
         let group = await Group.findOneAndUpdate({ name, isActive: true }, { $addToSet: { users: user } });
         if (group) {
-            User.findByIdAndUpdate(user._id, { color: color }, async (error, doc) => {
-                if (error) {
-                    const errors = handleErrors(error);
-                    res.status(400).json({ errors });
+            try {
+                //TODO check grouppassword before adding the user and his color to the group
+                group = await Group.login(name, password);
+                updateUserColor(user, color);
+                const token = createToken(user._id, group._id);
+                const tempToken = req.cookies.temp_jwt;
+                await registerWekanUsers(user, tempToken); //this is async but will definetly finished by the time a user entered his creds to wekan!
+                res.clearCookie('temp_jwt');
+                res.cookie('group_jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
+                res.status(201).json({ user: user._id, group: group._id });
+            } catch (error) {
+                const errors = handleErrors(error);
+                if (errors) {
+                    await Group.findOneAndUpdate({ name, isActive: true }, { $pull: { users: user } });
                 }
-                console.log(`groupAuth.js >>> Assinged ${doc.color} to user ${user.name}`);
+                res.status(400).json({ errors });
+            }
 
-                try {
-                    group = await Group.login(name, password);
-                    const token = createToken(user._id, group._id);
-                    const tempToken = req.cookies.temp_jwt;
-                    await registerWekanUsers(user, tempToken); //this is async but will definetly finished by the time a user entered his creds to wekan!
-                    res.clearCookie('temp_jwt');
-                    res.cookie('group_jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
-                    res.status(201).json({ user: user._id, group: group._id });
-                } catch (error) {
-                    const errors = handleErrors(error);
-                    res.status(400).json({ errors });
-                }
-            });
         } else {
             const errors = {
                 group: 'Active Group is not ' + name
@@ -156,6 +154,16 @@ module.exports.group_join_post = async (req, res) => {
         res.status(400).json({ errors });
     }
 
+}
+
+const updateUserColor = (user, color) => {
+    User.findByIdAndUpdate(user._id, { color: color }, async (error, doc) => {
+        if (error) {
+            const errors = handleErrors(error);
+            res.status(400).json({ errors });
+        }
+        console.log(`groupAuth.js >>> Assinged ${doc.color} to user ${user.name}`);
+    });
 }
 
 module.exports.group_create_post = async (req, res) => {

@@ -32,6 +32,8 @@ const handleErrors = error => {
     return err
 }
 
+module.exports = { handleErrors };
+
 const maxAge = 8 * 60 * 60; //secounds wich equals 8h
 const createToken = id => {
     return jwt.sign({ id }, JWT_SECRET, {
