@@ -7,6 +7,11 @@
         socket.on('shutdownPi', function (message) {
             showPopUp('simplePopup', message);
         });
+
+        socket.on('clearAllData', function (message) {
+            showPopUp('simplePopup', message);
+            //Redirect to a clear cookies page.
+        })
     }
 
     function showPopUp(id, message) {

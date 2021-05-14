@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const { handleErrors } = require("../services/auth/userAuthController");
-const { shutdownPi, rebootPi } = require("./piHeandler");
+const { shutdownPi, rebootPi, clearAllData } = require("./piHeandler");
 const { exportData } = require("./syncHandler");
 module.exports.hub_get = (req, res) => {
     res.render("newHub");
@@ -34,6 +34,19 @@ module.exports.settings_rebootpi_post = async (req, res) => {
         res.status(400).json({ errors });
     } else {
         let message = exportDataAndRebootPi();
+        res.status(200).json({ message });
+    }
+}
+
+module.exports.settings_clearalldata_post = async (req, res) => {
+    const { password } = req.body;
+    let error = await checkAdminPassword(password);
+    if (error) {
+        const errors = handleErrors(error);
+        res.status(400).json({ errors });
+    } else {
+        clearAllData();
+        let message = "Cleared all data";
         res.status(200).json({ message });
     }
 }
@@ -77,10 +90,3 @@ const getAdminUser = async () => {
         return error;
     }
 }
-
-
-
-module.exports.settings_clearalldata_post = () => {
-    console.log("settings_clearalldata_post");
-}
-

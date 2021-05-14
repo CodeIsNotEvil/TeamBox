@@ -26,7 +26,19 @@ const rebootPi = () => {
         }
 }
 
+const clearAllData = () => {
+        let isError = syncExec('mongo TeamBox --eval "db.dropDatabase()" && sudo rm -rf /media/USB-TeamBox/TeamBox/').stderr;
+
+        if (isError == "" && isError != null) {
+                console.log("EXEC :: CLEAR_ALL_DATA:\t\tSUCCESS");
+        }
+        else {
+                console.log("EXEC :: CLEAR_ALL_DATA:\t\tERROR: \n" + isError);
+        }
+}
+
 module.exports = {
         shutdownPi,
-        rebootPi
+        rebootPi,
+        clearAllData
 }

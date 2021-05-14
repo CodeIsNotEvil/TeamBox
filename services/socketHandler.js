@@ -30,6 +30,24 @@ module.exports.socketRoutes = (http) => {
                         http.close();
                         process.exit(1);
                 });
+                socket.on("clearAllData", function (message) {
+                        io.sockets.emit('clearAllData', message);
+                        http.close();
+                        var spawn = require('child_process').spawn;
+                        (function main() {
+                                if (process.env.process_restarting) {
+                                        delete process.env.process_restarting;
+                                        // Give old process one second to shut down before continuing ...
+                                        setTimeout(main, 1000);
+                                        return;
+                                }
+                                // Restart process ...
+                                spawn(process.argv[0], process.argv.slice(1), {
+                                        env: { process_restarting: 1 },
+                                        stdio: 'ignore'
+                                }).unref();
+                        })();
+                });
                 // LARA 13.07.2016 // 02.08.2016
                 // Synchronize Pi's time by receiving client's timestap
 

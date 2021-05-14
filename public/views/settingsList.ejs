@@ -84,9 +84,10 @@
                     </form>
                 </div>
 
-                <div id="clearAllDataContainer" class="gridItem notImplementedYet">
+                <div id="clearAllDataContainer" class="gridItem">
                     <form>
                         <input name="password" type="password" placeholder="enter admin password" required>
+                        <div class="password error"></div>
                         <button>Clear all Data</button>
                     </form>
                 </div>
@@ -217,7 +218,8 @@
     }
 
     const formShutdownPi = document.querySelector("#shutdownPiContainer form");
-    const fromRebootPi = document.querySelector("#rebootPiContainer form");
+    const formRebootPi = document.querySelector("#rebootPiContainer form");
+    const formClearAllData = document.querySelector("#clearAllDataContainer form");
 
     formShutdownPi.addEventListener('submit', async function (event) {
         event.preventDefault();
@@ -246,7 +248,7 @@
         }
     });
 
-    fromRebootPi.addEventListener('submit', async function (event) {
+    formRebootPi.addEventListener('submit', async function (event) {
         event.preventDefault();
 
         //reset errors
@@ -254,7 +256,7 @@
         passwordError.textContent = '';
 
         //get  the values
-        const password = fromRebootPi.password.value;
+        const password = formRebootPi.password.value;
         try {
             const res = await fetch('/settings/rebootpi', {
                 method: 'POST',
@@ -267,6 +269,33 @@
             } else if (data.message) {
                 let message = data.message;
                 socket.emit("shutdownORRebootPi", message);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    });
+
+    formClearAllData.addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        //reset errors
+        const passwordError = document.querySelector("#clearAllDataContainer form .password.error");
+        passwordError.textContent = '';
+
+        //get  the values
+        const password = formClearAllData.password.value;
+        try {
+            const res = await fetch('/settings/clearalldata', {
+                method: 'POST',
+                body: JSON.stringify({ password }),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const data = await res.json();
+            if (data.errors) {
+                passwordError.textContent = data.errors.password;
+            } else if (data.message) {
+                let message = data.message;
+                socket.emit("clearAllData", message);
             }
         } catch (error) {
             console.error(error);
