@@ -25,11 +25,11 @@ module.exports.socketRoutes = (http) => {
                 //Sends a message to all client that the Pi will shutdown
                 //after the content was exportet to the USB Stick a last time
 
-                socket.on("shutdownPi", function (message) {
+                socket.on("shutdownORRebootPi", function (message) {
                         io.sockets.emit('shutdownPi', message);
                         http.close();
+                        process.exit(1);
                 });
-
                 // LARA 13.07.2016 // 02.08.2016
                 // Synchronize Pi's time by receiving client's timestap
 

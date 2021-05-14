@@ -16,28 +16,25 @@ module.exports.settings_get = (req, res) => {
 
 module.exports.settings_shutdownpi_post = async (req, res) => {
     const { password } = req.body;
-
-    try {
-        User.findOne({}, (error, admin) => { //get the first registered user who is by design the admin
-            if (error) {
-                const errors = handleErrors(error);
-                res.status(400).json({ errors });
-            } else {
-                User.login(admin.name, password).then(() => {
-                    let message = exportDataAndShutdownPi();
-                    res.status(200).json({ message });
-
-                }).catch((error) => {
-                    if (error) {
-                        const errors = handleErrors(error);
-                        res.status(400).json({ errors });
-                    }
-                });
-            }
-        });
-    } catch (error) {
+    let error = await checkAdminPassword(password);
+    if (error) {
         const errors = handleErrors(error);
         res.status(400).json({ errors });
+    } else {
+        let message = exportDataAndShutdownPi();
+        res.status(200).json({ message });
+    }
+}
+
+module.exports.settings_rebootpi_post = async (req, res) => {
+    const { password } = req.body;
+    let error = await checkAdminPassword(password);
+    if (error) {
+        const errors = handleErrors(error);
+        res.status(400).json({ errors });
+    } else {
+        let message = exportDataAndRebootPi();
+        res.status(200).json({ message });
     }
 }
 
@@ -49,6 +46,38 @@ const exportDataAndShutdownPi = () => {
         return "Error while Exporting Pi will not be shutdown";
     }
 }
+
+const exportDataAndRebootPi = () => {
+    if (exportData()) {
+        rebootPi();
+        return "Pi will reboot in a minute";
+    } else {
+        return "Error while Exporting Pi will not be shutdown";
+    }
+}
+
+const checkAdminPassword = async (password) => {
+    try {
+        let admin = await getAdminUser();
+        if (admin.name) {
+            await User.login(admin.name, password);
+        } else {
+            let error = admin;
+            return error;
+        }
+    } catch (error) {
+        return error
+    }
+}
+const getAdminUser = async () => {
+    try {
+        let admin = await User.findOne({}).exec();
+        return admin;
+    } catch (error) {
+        return error;
+    }
+}
+
 
 
 module.exports.settings_clearalldata_post = () => {

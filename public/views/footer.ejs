@@ -5,9 +5,8 @@
 <script>
     if (socket) {
         socket.on('shutdownPi', function (message) {
-            console.log("Pi will shutdown");
             showPopUp('simplePopup', message);
-        })
+        });
     }
 
     function showPopUp(id, message) {

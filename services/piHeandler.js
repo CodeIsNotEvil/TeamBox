@@ -16,7 +16,7 @@ const shutdownPi = () => {
 }
 
 const rebootPi = () => {
-        let isError = syncExec("sudo reboot").stderr;
+        let isError = syncExec(PATH_TO_BASH_SCRIPTS + "group_delete.sh && sudo shutdown -r").stderr;
 
         if (isError == "" && isError != null) {
                 console.log("EXEC :: REBOOTPI:\t\tSUCCESS");
