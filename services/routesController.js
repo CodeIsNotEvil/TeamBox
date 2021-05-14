@@ -41,7 +41,7 @@ module.exports.settings_rebootpi_post = async (req, res) => {
 const exportDataAndShutdownPi = () => {
     if (exportData()) {
         shutdownPi();
-        return "Pi will shutdown in a minute";
+        return "Pi will be fully shutdown in about 2 minutes";
     } else {
         return "Error while Exporting Pi will not be shutdown";
     }
@@ -50,9 +50,9 @@ const exportDataAndShutdownPi = () => {
 const exportDataAndRebootPi = () => {
     if (exportData()) {
         rebootPi();
-        return "Pi will reboot in a minute";
+        return "Pi will be rebooted in about 2-3 minutes";
     } else {
-        return "Error while Exporting Pi will not be shutdown";
+        return "Error while Exporting, the Pi will not reboot";
     }
 }
 
