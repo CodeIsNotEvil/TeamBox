@@ -65,7 +65,7 @@ function drawObject(element) {
 					drawObject(element.objArray[i]);
 				}
 			} catch (error) {
-				console.log(error);
+				console.error(error);
 			}
 			break;
 		case 'circle':
@@ -141,7 +141,7 @@ function drawObject(element) {
 			try {
 				throw new Error("Shape " + element.type + " not Found the shape will be skipped");
 			} catch (error) {
-				console.log(error);
+				console.error(error);
 			}
 			break;
 	}
@@ -402,7 +402,7 @@ function saveFile(fileName) {
 	if (fileName != null) {
 		socket.emit("appDrawingSave", image, fileName, function (message) {
 			if (message.error) {
-				console.log(message.error);
+				console.error(message.error);
 				showItemSaveNotice(message.error);
 			} else if (message.fileName) {
 				showItemSaveNotice("saved " + message.fileName + " successfully");

@@ -33,12 +33,11 @@ saveDrawingToDB = (fileName) => {
 }
 writeImageDataCallback = (pathWithFileName, imageData, fileName, callback) => {
     fs.writeFile(pathWithFileName, imageData, { encoding: 'base64' }, err => {
-        console.debug(pathWithFileName, fileName);
+        //console.debug(pathWithFileName, fileName);
         if (err) {
             console.error(err);
             callback({ error: "content could not be saved as Image" });
         } else {
-
             callback({ fileName: fileName });
         }
     });
@@ -55,7 +54,7 @@ writeImageToUSB = (fileName, imageData, callback) => {
         let pathToUSBFiles = `${group.usbPath}/files/drawings`
         let pathWithFileName = `${pathToUSBFiles}/${fileName}.png`;
         if (requireFolder(pathToUSBFiles)) {
-            console.debug("writeImageToUSBFolder >>> ", pathWithFileName);
+            //console.debug("writeImageToUSBFolder >>> ", pathWithFileName);
             writeImageDataCallback(pathWithFileName, imageData, fileName, callback);
         }
     });

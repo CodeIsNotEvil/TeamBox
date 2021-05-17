@@ -131,7 +131,7 @@ module.exports.socketRoutes = (http) => {
                 //in the object and sends back the response.
 
                 socket.on('appChangeLanguage', function (user, value) {
-                        updateUserLanguage(user, value);
+                        //updateUserLanguage(user, value);
                         for (var i = 0; i < Group.clients.length; i++) {
                                 if (Group.clients[i].username == user) {
                                         Group.clients[i].userlanguage = value;

@@ -5,7 +5,7 @@ const { JWT_SECRET } = require('../../config/untracked');
 //handle errors
 const handleErrors = error => {
     let err = { email: '', name: '', password: '' };
-    //console.log(error);
+    //console.error(error);
     // incorrect name
     if (error.message === 'incorrect name') {
         err.name = 'that user is not registered';
@@ -28,7 +28,7 @@ const handleErrors = error => {
             err[properties.path] = properties.message;
         });
     }
-    //console.log(error);
+    //console.error(error);
     return err
 }
 

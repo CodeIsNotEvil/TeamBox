@@ -48,7 +48,7 @@ class Ethercalc {
             console.log("Created directory: " + path);
             return true;
         } catch (error) {
-            console.log(error);
+            console.error(error);
             return false;
         }
 
@@ -71,7 +71,7 @@ class Ethercalc {
             }
             return list;
         } catch (error) {
-            console.log(error);
+            console.error(error);
             return runScript("server_get_ethercalc.sh", true, false).split("\n");
         }
     }

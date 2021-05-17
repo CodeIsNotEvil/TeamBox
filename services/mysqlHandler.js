@@ -80,51 +80,6 @@ function startUp() {
     mysqlConnection.query("DROP TABLE IF EXISTS `dataAppDraw`");
 }
 
-/**
- * Creates the user with his name color and ip in the MySQL Database.
- * @param {String} username The name of the current user
- * @param {String} color The color of the current user
- * @param {String} ip The IP-Adrress of the current user
- */
-function writeUserdata(username, color, ip) {
-    mysqlConnection.query("INSERT IGNORE INTO userData (user,color,language) VALUES ('" + username + "','" + color + "','ENG')");
-    mysqlConnection.query("UPDATE userData SET ip = '" + ip + "'    WHERE user =  '" + username + "'    ");
-}
-/**
- * Gets the username from userData and passes it to the saveUser function
- * @param {String} username The name of the user
- * @param {function} saveUser callback function with the way to save the user
- */
-function createAndSaveUserSession(username, saveUser) {
-    mysqlConnection.query("SELECT * FROM userData WHERE user = '" + username + "' ", saveUser);
-}
-/**
- * 
- * @param {String} user The name of the user
- * @param {String} value The Language Selector ENG or GER
- */
-function updateUserLanguage(user, value) {
-    mysqlConnection.query("UPDATE userData SET language = '" + value + "'    WHERE user =  '" + user + "'    ");
-}
-
-function saveDataDrawStringToDB(string, image, fileName, saveAsImageAndEmit) {
-    //console.log(string);
-    mysqlConnection.query("INSERT IGNORE INTO dataAppDraw (fileName,content) VALUES ('" + fileName + "','" + string + "')", function (err, result, fields) {
-        if (err) {
-            console.error(err);
-        } else {
-            mysqlConnection.query("UPDATE dataAppDraw SET content = '" + string + "'    WHERE fileName =  '" + fileName + "'    ", function (err, result, fields) {
-                if (err) {
-                    console.error(err);
-                } else {
-                    saveAsImageAndEmit(image, fileName);
-                }
-            });
-        }
-    });
-
-}
-
 function getMindMapContentFromDB(fileName, emitContent) {
     mysqlConnection.query("SELECT * FROM dataAppMindmap WHERE fileName = '" + fileName + "' ", function (err, result, fields) {
         if (err) {
@@ -156,17 +111,6 @@ function writeMindmap(content, fileName) {
         }
     });
 }
-/**
- * Clears the drawing in the dataAppDraw MySQL database.
- * @param {String} fileName 
- */
-function clearDrawingQuery(fileName) {
-    mysqlConnection.query("UPDATE dataAppDraw SET content = '' WHERE fileName =  '" + fileName + "'    ", function (err, rows, fields) {
-        if (err) {
-            console.error(err);
-        }
-    });
-}
 
 function getMySQLConnection() {
     return mysqlConnection;
@@ -179,10 +123,5 @@ module.exports = {
     exportMysqlAsync,
     writeMindmap,
     getMindMapContentFromDB,
-    saveDataDrawStringToDB,
-    updateUserLanguage,
-    createAndSaveUserSession,
-    writeUserdata,
-    clearDrawingQuery,
     getMySQLConnection
 };

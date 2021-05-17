@@ -27,8 +27,8 @@ socket.on('appExportMysqlEnd', function () {
 
 function updateUserList(users, user, file) {
     let usersConnected = users;
-    console.log("file: " + file + " user: " + user);
-    console.log(usersConnected);
+    console.log("updateUserList >>> file: " + file + " user: " + user);
+    console.log("updateUserList >>> users: ", usersConnected);
 
     for (var i = 0; i < usersConnected.length; i++) {
         if (usersConnected[i].mindMapValue002 == file) {

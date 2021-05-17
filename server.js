@@ -75,7 +75,7 @@ mongoose.connect(dbURI, {
                 syncHandler.exportAsync();
         });
 }).catch(error => {
-        console.log(error);
+        console.error(error);
 });
 
 //require('./services/socketHandler')(io);

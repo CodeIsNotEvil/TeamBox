@@ -11,7 +11,7 @@ describe('DrawPad Test', function () {
             let doc = await DrawPad.createNewAppDrawDataDocument(groupName);
             assert(doc.group === groupName);
         } catch (error) {
-            console.log(error);
+            console.error(error);
             assert(false);
         }
 
@@ -26,7 +26,7 @@ describe('DrawPad Test', function () {
             let doc = await DrawPad.getAppDrawDataDocumentFromDB(groupName);
             assert(doc.group.toString() === groupName);
         } catch (error) {
-            console.log(error);
+            console.error(error);
             assert(false);
         }
 
@@ -41,7 +41,7 @@ describe('DrawPad Test', function () {
             await DrawPad.init();
             assert(DrawPad.document.group === groupName);
         } catch (error) {
-            console.log(error);
+            console.error(error);
             assert(false);
         }
 
@@ -57,7 +57,7 @@ describe('DrawPad Test', function () {
             await DrawPad.init();
             assert(DrawPad.document.group === groupName);
         } catch (error) {
-            console.log(error);
+            console.error(error);
             assert(false);
         }
 

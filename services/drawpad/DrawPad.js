@@ -183,7 +183,7 @@ class DrawPad {
                 }
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
             return false;
         }
 

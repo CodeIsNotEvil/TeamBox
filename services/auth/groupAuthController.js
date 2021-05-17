@@ -13,7 +13,7 @@ const { USB_PRE_PATH } = require("../../config/server");
 
 const handleErrors = error => {
     let err = { name: '', password: '' };
-    //console.log(error);
+    //console.error(error);
     // incorrect name
     if (error.message === 'incorrect name') {
         err.name = 'that group is not registerd';
@@ -88,7 +88,7 @@ module.exports.group_select_post = async (req, res) => {
         res.status(201).json({ user: user._id, group: group._id });
         //TODO redirect all userAuthenticated Clients to groupJoin to ensure no one trys to join another group
     } catch (error) {
-        console.log(error);
+        console.error(error);
         const errors = handleErrors(error);
         res.status(400).json({ errors });
     }

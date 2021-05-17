@@ -11,6 +11,6 @@ const resetIsActivePropertyOfAllGroups = async () => {
             await Group.findByIdAndUpdate(group._id, { isActive: false, users: [] });
         });
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 }
