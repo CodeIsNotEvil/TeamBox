@@ -6,13 +6,14 @@ const user = require('../models/MySQLUser');
 
 const runScript = require('./runScripts');
 
-
-let mysqlConnection = mysql.createConnection({
+let mysqlConnectionData = {
     host: 'localhost',
     user: 'TeamBox',
     database: 'TeamBox',
     password: 'yourPassword'
-});
+}
+
+let mysqlConnection = mysql.createConnection(mysqlConnectionData);
 
 /**
  * Imports dataAppDraw, dataAppMindmap and userData MySQL databases.
@@ -123,5 +124,6 @@ module.exports = {
     exportMysqlAsync,
     writeMindmap,
     getMindMapContentFromDB,
-    getMySQLConnection
+    getMySQLConnection,
+    mysqlConnectionData
 };
