@@ -48,7 +48,7 @@ if [ -z "$ethercalc" ]
 then
 	# first change directory (to save dump in ubuntu's home)
 	cd /home/ubuntu
-	sudo -H -u ubuntu bash -c ethercalc &
+	sudo -H -u root bash -c ethercalc &
 	printf "\nStarted ethercalc"
 else
 	printf "\nEthercalc is already running"

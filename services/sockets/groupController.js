@@ -39,7 +39,7 @@ module.exports.rejectGroupLogout = (socket) => {
 }
 const callGroupLogout = async () => {
     //Export Data
-    exportData(); //SyncHandler
+    await exportData(); //SyncHandler
     //Reset Group Name
     OldGroup.group = "";
 

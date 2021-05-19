@@ -235,7 +235,7 @@ module.exports.group_logout_post = async (req, res) => {
     } else {
         if (group.name === OldGroup.group) {
             // Export current group
-            exportData(); //SyncHandler
+            await exportData(); //SyncHandler
 
             //Reset Group Name
             OldGroup.group = "";
