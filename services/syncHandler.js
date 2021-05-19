@@ -2,6 +2,7 @@ const { PATH_TO_GLOBAL_MODULES } = require("../config/server");
 const { exportMysqlAsync, exportMysql } = require("./mysqlHandler");
 const syncExec = require(PATH_TO_GLOBAL_MODULES + 'sync-exec');
 const Group = require('./Group');
+const newGroup = require('../models/Group');
 const Ethercalc = require("./ethercalc/ethercalcHandler");
 const MongoBackupHandler = require("./mongodb/MongoBackupHandler");
 
@@ -10,8 +11,10 @@ const MongoBackupHandler = require("./mongodb/MongoBackupHandler");
  * This will be used before system shutdown to export the latest Data.
  * @returns {boolean} wether the export were successfull or not.
  */
-function exportData() {
-        if (!exportMysql()) {
+async function exportData() {
+        let usbPath = (await newGroup.findOne({ isActive: true })).usbPath;
+        console.log(usbPath);
+        if (!exportMysql(usbPath)) {
                 console.error("MySQL DBs could not be exported.");
                 return false;
         }
@@ -29,10 +32,11 @@ function exportData() {
  * Exports the MySQL Databases asyncron.
  */
 function exportAsync() {
-        setInterval(function () {
+        setInterval(async function () {
                 console.log("Asynchron Database exports:");
                 if (Group.mysqlIsImported == true) {
-                        exportMysqlAsync();
+                        let usbPath = (await newGroup.findOne({ isActive: true })).usbPath;
+                        exportMysqlAsync(usbPath);
                 } else {
                         console.log("MysqlDB was not exported, there were never imported one for this group");
                 }

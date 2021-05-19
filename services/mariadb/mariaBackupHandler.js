@@ -22,8 +22,9 @@ const executeMySQLDump = (dbName, path) => {
     return error;
 }
 
-const exportMySQLDB = async (dbName) => {
-    let path = await getExportPath(dbName);
+const exportMySQLDB = (dbName, usbPath) => {
+    let path = `${usbPath}/.meta/sql/${dbName}Backup`;
+    console.log(path)
     if (requireFolder(path)) {
         let error = executeMySQLDump(dbName, path);
         return error;
@@ -80,9 +81,9 @@ const importAllMySQLDBs = async () => {
     }
 }
 
-const exportAllMySQLDBs = async () => {
+const exportAllMySQLDBs = (usbPath) => {
     for (let dbName in MariaDBs) {
-        let error = await exportMySQLDB(MariaDBs[dbName]);
+        let error = exportMySQLDB(MariaDBs[dbName], usbPath);
         if (error) {
             return error;
         }

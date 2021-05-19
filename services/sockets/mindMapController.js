@@ -2,6 +2,7 @@ const fs = require("fs");
 const { writeMindmap } = require("../mysqlHandler");
 const { PATH_TO_SCREENSHOTS } = require("../../config/server");
 const Group = require("../../models/Group");
+const { requireFolder } = require("../../utils/fsUtils");
 
 module.exports.saveMindMap = async (content, image, fileName) => {
     writeMindmap(content, fileName); //To DataBase
@@ -12,6 +13,7 @@ module.exports.saveMindMap = async (content, image, fileName) => {
 writeImageToUSBFolder = async (fileName, imageData) => {
     const group = await Group.findOne({ isActive: true });
     let pathToUSBFiles = `${group.usbPath}/files/mindmaps`
+    requireFolder(pathToUSBFiles);
     let pathWithFileName = `${pathToUSBFiles}/${fileName}.png`;
     console.debug("writeImageToUSBFolder >>> ", pathWithFileName);
     if (pathExsists(pathToUSBFiles)) {

@@ -3,7 +3,7 @@ const mysql = require(PATH_TO_GLOBAL_MODULES + 'mysql');
 const asyncExec = require('child_process').exec;
 const Group = require('./Group');
 const user = require('../models/MySQLUser');
-const { importAllMySQLDBs } = require("./mariadb/mariaBackupHandler");
+const { importAllMySQLDBs, exportAllMySQLDBs } = require("./mariadb/mariaBackupHandler");
 const runScript = require('./runScripts');
 const connectionData = require('./mariadb/connectionData');
 
@@ -23,51 +23,50 @@ const importMysql = async () => {
         console.error(error);
         return false;
     } else {
-        mysqlConnection.query("CREATE TABLE IF NOT EXISTS dataAppMindmap (id int NOT NULL AUTO_INCREMENT, fileName VARCHAR(50), content TEXT, PRIMARY KEY(id,fileName) )");
-        mysqlConnection.query("ALTER TABLE dataAppMindmap ADD UNIQUE (fileName)");
-        mysqlConnection.query("CREATE TABLE IF NOT EXISTS userData (id int NOT NULL AUTO_INCREMENT, user VARCHAR(20), color VARCHAR(25), language VARCHAR(10), ip VARCHAR(20), PRIMARY KEY(id,user) )");
-        mysqlConnection.query("ALTER TABLE userData ADD UNIQUE (user)");
-
+        createOrFixTables();
         console.log("# imported all mysql DBs                      #");
-        console.log("-----------------------------------------------");
+        console.log("-----------------------------------------------\n\n");
         return true;
     }
 
+}
+
+const createOrFixTables = () => {
+    mysqlConnection.query("CREATE TABLE IF NOT EXISTS dataAppMindmap (id int NOT NULL AUTO_INCREMENT, fileName VARCHAR(50), content TEXT, PRIMARY KEY(id,fileName) )");
+    mysqlConnection.query("ALTER TABLE dataAppMindmap ADD UNIQUE (fileName)");
+    mysqlConnection.query("CREATE TABLE IF NOT EXISTS userData (id int NOT NULL AUTO_INCREMENT, user VARCHAR(20), color VARCHAR(25), language VARCHAR(10), ip VARCHAR(20), PRIMARY KEY(id,user) )");
+    mysqlConnection.query("ALTER TABLE userData ADD UNIQUE (user)");
 }
 /**
  * Exports the MySQL Databases with the help of the mysql_export.sh script.
  * @returns {boolean} wether the export was succsessfull or not.
  */
-function exportMysql() {
-    //io.sockets.emit('appExportMysqlStart');
-
-    var isError = runScript("mysql_export.sh", true, true);
-
-    if (isError == "" && isError != null) {
-        console.log("EXEC :: EXPORTMYSQL:\t\tSUCCESS");
-        //io.sockets.emit('appExportMysqlEnd');
-        Group.mysqlIsImported = false;
-        return true;
-    } else {
-        console.log("EXEC :: EXPORTMYSQL:\t\tERROR: \n" + isError);
-        //io.sockets.emit('appExportMysqlEnd');
+function exportMysql(usbPath) {
+    let error = exportAllMySQLDBs(usbPath);
+    if (error) {
+        console.error("exportMysql >>> error while exporting");
+        console.error(error + "\n");
         return false;
+    } else {
+        Group.mysqlIsImported = false;
+        console.log("exportMysql >>> successfully Exported MySQLDBs\n");
+        return true;
     }
 }
 /**
  * Exports the MySQL Databases with the help of the mysql_export.sh script.
  * @returns {boolean} wether then export was successfull.
  */
-function exportMysqlAsync() {
-    asyncExec("sudo bash " + PATH_TO_BASH_SCRIPTS + "mysql_export.sh", (err, stdout, stderr) => {
-        if (err == null) {
-            console.log("MySQL Databases were exported Successfully.")
-            return true;
-        } else {
-            console.error(error);
-            return false;
-        }
-    });
+async function exportMysqlAsync(usbPath) {
+    let error = exportAllMySQLDBs(usbPath);
+    if (error) {
+        console.error("exportMysql >>> error while exporting");
+        console.error(error + "\n");
+        return false;
+    } else {
+        console.log("exportMysql >>> successfully Exported MySQLDBs\n");
+        return true;
+    }
 }
 /**
  * Drops the dataAppMindmap and userData Tables from the MySQL Databases. 

@@ -1,5 +1,5 @@
 const MariaDBs = {
     Etherpad: "etherpadLite",
-    TeamBox: "Teambox"
+    TeamBox: "TeamBox"
 }
 module.exports = MariaDBs;

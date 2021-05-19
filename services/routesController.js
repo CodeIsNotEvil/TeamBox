@@ -21,7 +21,7 @@ module.exports.settings_shutdownpi_post = async (req, res) => {
         const errors = handleErrors(error);
         res.status(400).json({ errors });
     } else {
-        let message = exportDataAndShutdownPi();
+        let message = await exportDataAndShutdownPi();
         res.status(200).json({ message });
     }
 }
@@ -33,7 +33,7 @@ module.exports.settings_rebootpi_post = async (req, res) => {
         const errors = handleErrors(error);
         res.status(400).json({ errors });
     } else {
-        let message = exportDataAndRebootPi();
+        let message = await exportDataAndRebootPi();
         res.status(200).json({ message });
     }
 }
@@ -51,8 +51,8 @@ module.exports.settings_clearalldata_post = async (req, res) => {
     }
 }
 
-const exportDataAndShutdownPi = () => {
-    if (exportData()) {
+const exportDataAndShutdownPi = async () => {
+    if (await exportData()) {
         shutdownPi();
         return "Pi will be fully shutdown in about 2 minutes";
     } else {
@@ -60,8 +60,8 @@ const exportDataAndShutdownPi = () => {
     }
 }
 
-const exportDataAndRebootPi = () => {
-    if (exportData()) {
+const exportDataAndRebootPi = async () => {
+    if (await exportData()) {
         rebootPi();
         return "Pi will be rebooted in about 2-3 minutes";
     } else {
