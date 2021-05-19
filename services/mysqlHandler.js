@@ -3,37 +3,34 @@ const mysql = require(PATH_TO_GLOBAL_MODULES + 'mysql');
 const asyncExec = require('child_process').exec;
 const Group = require('./Group');
 const user = require('../models/MySQLUser');
-
+const { importAllMySQLDBs } = require("./mariadb/mariaBackupHandler");
 const runScript = require('./runScripts');
+const connectionData = require('./mariadb/connectionData');
 
-let mysqlConnectionData = {
-    host: 'localhost',
-    user: 'TeamBox',
-    database: 'TeamBox',
-    password: 'yourPassword'
-}
-
-let mysqlConnection = mysql.createConnection(mysqlConnectionData);
+let mysqlConnection = mysql.createConnection(connectionData);
 
 /**
  * Imports dataAppDraw, dataAppMindmap and userData MySQL databases.
  * @returns {boolean} true if the import was successfull
  */
-function importMysql() {
-
-    let isError = runScript("mysql_import.sh", true, true);
-    if (isError == "" && isError != null) {
+const importMysql = async () => {
+    console.log("-----------------------------------------------");
+    console.log("# started to import all mysql DBs             #");
+    let error = await importAllMySQLDBs();
+    if (error) {
+        console.log("# error occured while importing all mysql DBs #");
+        console.log("-----------------------------------------------");
+        console.error(error);
+        return false;
+    } else {
         mysqlConnection.query("CREATE TABLE IF NOT EXISTS dataAppMindmap (id int NOT NULL AUTO_INCREMENT, fileName VARCHAR(50), content TEXT, PRIMARY KEY(id,fileName) )");
         mysqlConnection.query("ALTER TABLE dataAppMindmap ADD UNIQUE (fileName)");
         mysqlConnection.query("CREATE TABLE IF NOT EXISTS userData (id int NOT NULL AUTO_INCREMENT, user VARCHAR(20), color VARCHAR(25), language VARCHAR(10), ip VARCHAR(20), PRIMARY KEY(id,user) )");
         mysqlConnection.query("ALTER TABLE userData ADD UNIQUE (user)");
 
-        console.log("EXEC :: IMPORTMYSQL:\t\tSUCCESS");
+        console.log("# imported all mysql DBs                      #");
+        console.log("-----------------------------------------------");
         return true;
-    }
-    else {
-        console.error("EXEC :: IMPORTMYSQL:\t\tERROR: \n" + isError);
-        return false;
     }
 
 }
@@ -124,6 +121,5 @@ module.exports = {
     exportMysqlAsync,
     writeMindmap,
     getMindMapContentFromDB,
-    getMySQLConnection,
-    mysqlConnectionData
+    getMySQLConnection
 };

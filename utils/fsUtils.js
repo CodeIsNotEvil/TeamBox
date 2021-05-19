@@ -9,22 +9,19 @@ folderExsists = (path) => {
     }
 }
 
+const requireFolder = (path) => {
+    if (folderExsists(path)) {
+        return true;
+    } else {
+        try {
+            fs.mkdirSync(path, { recursive: true });
+            return true;
+        } catch (error) {
+            console.error(error);
+            return false;
+        }
 
-requireFolder = (path) => {
-    if (folderExsists(path) == false) {
-        fs.mkdir(path, error => {
-            if (error) {
-                if (error.errno === -2) { //errno of -2 means that there was no Folder 
-                    let parentFolder = removeLastDirectoryPartOf(path.toString());
-                    requireFolder(parentFolder);
-                } else {
-                    console.error(error);
-                    return false;
-                }
-            }
-        });
     }
-    return true;
 }
 
 const removeLastDirectoryPartOf = (path) => {

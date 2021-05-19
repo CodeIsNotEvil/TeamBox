@@ -78,13 +78,15 @@ module.exports.group_select_post = async (req, res) => {
 
         OldGroup.group = req.body.groupName; //set old groupName
         groupHandler.chooseGroup();
-        groupHandler.import();
-        fileBrowser.startFileBrowser();
-        DrawPad.init();
+
 
         let user = res.locals.user;
         //Mark Group as Active, reset the users array
         const group = await Group.findOneAndUpdate({ name: req.body.groupName }, { isActive: true, users: [] });
+
+        await groupHandler.import();
+        fileBrowser.startFileBrowser();
+        DrawPad.init();
         res.status(201).json({ user: user._id, group: group._id });
         //TODO redirect all userAuthenticated Clients to groupJoin to ensure no one trys to join another group
     } catch (error) {
@@ -177,9 +179,7 @@ module.exports.group_create_post = async (req, res) => {
         try {
             OldGroup.group = groupName;
             groupHandler.createGroup();
-            groupHandler.import();
-            fileBrowser.startFileBrowser();
-            DrawPad.init();
+
 
             const users = [];
             const path = `${USB_PRE_PATH}/${groupName}`;
@@ -192,6 +192,10 @@ module.exports.group_create_post = async (req, res) => {
                     usbPath: path
                 }
             );
+
+            await groupHandler.import();
+            fileBrowser.startFileBrowser();
+            DrawPad.init();
             //const token = createToken(user._id, group._id);
             //res.cookie('group_jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
             res.status(201).json(

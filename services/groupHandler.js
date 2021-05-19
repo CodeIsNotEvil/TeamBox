@@ -1,6 +1,5 @@
 const runScript = require('./runScripts');
 const { importMysql } = require('./mysqlHandler');
-const { importWekanDB } = require('./mongoDBHandler');
 const Group = require('./Group');
 const Ethercalc = require('./ethercalc/ethercalcHandler');
 const MongoBackupHandler = require('./mongodb/MongoBackupHandler');
@@ -15,10 +14,9 @@ class groupHandler {
         }
     }
 
-    static import() {
-        Group.mysqlIsImported = importMysql(); //checks if the group has a DB in the mysql_import.sh
+    static async import() {
+        Group.mysqlIsImported = await importMysql();
         Group.ethercalcIsImported = Ethercalc.importDump();
-        //Group.wekanDBIsImported = importWekanDB();
         MongoBackupHandler.importAllDBs();
     }
 

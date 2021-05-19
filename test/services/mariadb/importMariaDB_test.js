@@ -3,7 +3,7 @@ const assert = require('assert');
 let mysql = require('mysql');
 
 const { USB_PRE_PATH } = require("../../../config/server");
-const { importMySQLDB, importAllMySQLDBs } = require("../../../services/mariadb/mariaBackupHandler");
+const { importMySQLDB } = require("../../../services/mariadb/mariaBackupHandler");
 const syncExec = require('sync-exec');
 
 describe('Import MariaDB', function () {
@@ -23,15 +23,12 @@ describe('Import MariaDB', function () {
         assert(filenameWithDate.match(matcher));
     });
 
-    it('importAllMySQLDBs should return a error if there are is nothing to import', async () => {
-        let testError = syncExec(`sudo rm -rf /media/USB-TeamBox/TeamBox/${testGroup}/.meta/sql/`).stderr;
-        if (testError) {
-            throw new Error(testError);
-            assert(false);
-        }
-
-        let error = await importAllMySQLDBs();
-        assert(error);
+    it('importMySQLDB should import emptyDBs if there is nothing to import', async () => {
+        let doesNotExsist = "nonExsistingDB";
+        let emptyfileName = await importMySQLDB(doesNotExsist);
+        let exp = new RegExp(`${doesNotExsist}_emptyDB`, 'gm');
+        console.log(emptyfileName.match(exp)[0]);
+        assert(emptyfileName.match(exp)[0]);
     });
 
 

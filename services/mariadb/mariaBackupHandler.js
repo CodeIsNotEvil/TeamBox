@@ -1,14 +1,10 @@
-const { USB_PRE_PATH } = require("../../config/server");
-const { mysqlConnectionData } = require("../mysqlHandler");
+const { PATH_TO_EMPTY_DBS } = require('../../config/server');
 const { requireFolder, appendDateToFileName, extractDateFromFileName } = require("../../utils/fsUtils");
-const runScript = require("../runScripts");
 const SYNC_EXEC = require('sync-exec');
 const Group = require("../../models/Group");
 const fs = require('fs');
 const MariaDBs = require("./MariaDBs");
-
-let dbName = "";
-
+const connectionData = require('./connectionData');
 
 const getExportPath = async (dbName) => {
     if (dbName) {
@@ -21,7 +17,7 @@ const getExportPath = async (dbName) => {
 
 const executeMySQLDump = (dbName, path) => {
     let filename = appendDateToFileName(dbName);
-    let runToExportDB = `mysqldump --user=${mysqlConnectionData.user} --password=${mysqlConnectionData.password} ${dbName} > ${path}/${filename}.sql`;
+    let runToExportDB = `mysqldump --user=${connectionData.user} --password=${connectionData.password} ${dbName} > ${path}/${filename}.sql`;
     let error = SYNC_EXEC(`sudo ${runToExportDB}`).stderr;
     return error;
 }
@@ -48,17 +44,25 @@ const getlatestBackup = (path) => {
 }
 
 const executeMySQLImport = (dbName, latestBackupWithPath) => {
-    let execMySQLImportString = `mysql --user=${mysqlConnectionData.user} --password=${mysqlConnectionData.password} ${dbName} < "${latestBackupWithPath}"`;
+    let execMySQLImportString = `mysql --user=${connectionData.user} --password=${connectionData.password} ${dbName} < "${latestBackupWithPath}"`;
     let error = SYNC_EXEC(`sudo ${execMySQLImportString}`).stderr;
     return error;
 }
+
 const importMySQLDB = async (dbName) => {
     let path = await getExportPath(dbName);
     if (requireFolder(path)) {
         let latestBackup = getlatestBackup(path);
         let error = executeMySQLImport(dbName, `${path}/${latestBackup}`);
         if (error) {
-            throw new Error(error);
+            let exp = new RegExp(": 1: cannot open [\\/\\w\\-\\.]*: No such file", 'gm');
+            let errorMessage = error.toString().match(exp)[0];
+            if (errorMessage) {
+                executeMySQLImport(dbName, `${PATH_TO_EMPTY_DBS}/${dbName}_emptyDB.sql`);
+                return `${dbName}_emptyDB`;
+            } else {
+                throw new Error(error);
+            }
         } else {
             return latestBackup;
         }
@@ -68,7 +72,7 @@ const importMySQLDB = async (dbName) => {
 const importAllMySQLDBs = async () => {
     try {
         for (let dbName in MariaDBs) {
-            let latestBckup = await importMySQLDB(MariaDBs[dbName]);
+            let latestBackup = await importMySQLDB(MariaDBs[dbName]);
             console.log(`imported ${latestBackup} successfully`);
         }
     } catch (error) {
