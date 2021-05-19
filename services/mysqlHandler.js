@@ -37,11 +37,9 @@ const createOrFixTables = () => {
     mysqlConnection.query("CREATE TABLE IF NOT EXISTS userData (id int NOT NULL AUTO_INCREMENT, user VARCHAR(20), color VARCHAR(25), language VARCHAR(10), ip VARCHAR(20), PRIMARY KEY(id,user) )");
     mysqlConnection.query("ALTER TABLE userData ADD UNIQUE (user)");
 }
-/**
- * Exports the MySQL Databases with the help of the mysql_export.sh script.
- * @returns {boolean} wether the export was succsessfull or not.
- */
-function exportMysql(usbPath) {
+
+
+const exportMysql = (usbPath) => {
     let error = exportAllMySQLDBs(usbPath);
     if (error) {
         console.error("exportMysql >>> error while exporting");
@@ -53,11 +51,9 @@ function exportMysql(usbPath) {
         return true;
     }
 }
-/**
- * Exports the MySQL Databases with the help of the mysql_export.sh script.
- * @returns {boolean} wether then export was successfull.
- */
-async function exportMysqlAsync(usbPath) {
+
+
+const exportMysqlAsync = async (usbPath) => {
     let error = exportAllMySQLDBs(usbPath);
     if (error) {
         console.error("exportMysql >>> error while exporting");

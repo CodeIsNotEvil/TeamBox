@@ -24,7 +24,6 @@ const executeMySQLDump = (dbName, path) => {
 
 const exportMySQLDB = (dbName, usbPath) => {
     let path = `${usbPath}/.meta/sql/${dbName}Backup`;
-    console.log(path)
     if (requireFolder(path)) {
         let error = executeMySQLDump(dbName, path);
         return error;
