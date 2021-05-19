@@ -55,7 +55,6 @@ class groupHandler {
                 }
             }
         });
-        //Group.groups = runScript("group_show.sh", false, false).split("\n");
     }
 
     static chooseGroup() {

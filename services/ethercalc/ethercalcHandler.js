@@ -3,6 +3,7 @@ const runScript = require("../runScripts");
 const fs = require('fs');
 const fse = require(PATH_TO_GLOBAL_MODULES + 'fs-extra');
 const Group = require("../Group");
+const { requireFolder } = require("../../utils/fsUtils");
 
 const LOCAL_DUMP_PATH = "/home/ubuntu/dump/";
 const USB_POST_PATH = "/.meta/ethercalcDump/";
@@ -59,22 +60,19 @@ class Ethercalc {
      * @returns {Array} List of the etherpad filenames
      */
     static getEntries() {
-        try {
-            let dir = fs.readdirSync(LOCAL_DUMP_PATH).toString();
-            let list = dir.match(new RegExp("[a-zA-Z0-9_]*(_formdata)", "gm"));
-            if (list != null) {
-                for (let index = 0; index < list.length; index++) {
-                    list[index] = list[index].slice(0, list[index].length - 9);
-                }
-            } else {
-                list = [];
+        requireFolder(LOCAL_DUMP_PATH);
+        let dir = fs.readdirSync(LOCAL_DUMP_PATH).toString();
+        let list = dir.match(new RegExp("[a-zA-Z0-9_]*(_formdata)", "gm"));
+        if (list != null) {
+            for (let index = 0; index < list.length; index++) {
+                list[index] = list[index].slice(0, list[index].length - 9);
             }
-            return list;
-        } catch (error) {
-            console.error(error);
-            return runScript("server_get_ethercalc.sh", true, false).split("\n");
+        } else {
+            list = [];
         }
+        return list;
     }
+
     /**
      * removes the local dump folder wich is located at LOCAL_DUMP_PATH
      */
