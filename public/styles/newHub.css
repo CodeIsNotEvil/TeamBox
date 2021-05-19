@@ -9,7 +9,7 @@ Scroll Container
 .scroll-container {
     overflow: scroll;
     height: 80vh;
-    width: auto;
+    width: 100vw;
     overflow-x: hidden;
 }
 
