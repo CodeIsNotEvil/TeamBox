@@ -1,5 +1,6 @@
 const mocha = require('mocha');
 const assert = require('assert');
+let mysql = require('mysql');
 
 const { USB_PRE_PATH } = require("../../../config/server");
 const { getExportPath, exportMySQLDB } = require("../../../services/mariadb/mariaBackupHandler");
@@ -7,7 +8,7 @@ const Group = require('../../../models/Group');
 
 describe('Export MariaDB', function () {
 
-    const dbName = "TestDatabaseName";
+    const dbName = "TeamBox";
     let testGroup = {
         name: "testGroup",
         password: "password",

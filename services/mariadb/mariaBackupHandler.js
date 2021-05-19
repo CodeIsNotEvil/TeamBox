@@ -5,6 +5,7 @@ const runScript = require("../runScripts");
 const SYNC_EXEC = require('sync-exec');
 const Group = require("../../models/Group");
 const fs = require('fs');
+const MariaDBs = require("./MariaDBs");
 
 let dbName = "";
 
@@ -33,19 +34,6 @@ const exportMySQLDB = async (dbName) => {
     }
 }
 
-const exportForTheDBExsists = (dbName, path) => {
-    console.log(path)
-    try {
-        fs.readdirSync(`/media/USB-TeamBox/TeamBox/${Group.group}/.meta/${dbName}Backup/${dbName}`);
-        return true;
-    } catch (error) {
-        //console.debug(error);
-        return false;
-    } finally {
-        fs.close;
-    }
-}
-
 const getlatestBackup = (path) => {
     let maxBackups = 3;
     let files = fs.readdirSync(path);
@@ -69,19 +57,39 @@ const importMySQLDB = async (dbName) => {
     if (requireFolder(path)) {
         let latestBackup = getlatestBackup(path);
         let error = executeMySQLImport(dbName, `${path}/${latestBackup}`);
-
         if (error) {
-            console.log("importMySQLDB >>> ", error);
+            throw new Error(error);
         } else {
-            console.log("importMySQLDB >>> noError");
+            return latestBackup;
         }
-        error = "importMySQLDB >>> NOT IMPLEMENTET YET";
+    }
+}
+
+const importAllMySQLDBs = async () => {
+    try {
+        for (let dbName in MariaDBs) {
+            let latestBckup = await importMySQLDB(MariaDBs[dbName]);
+            console.log(`imported ${latestBackup} successfully`);
+        }
+    } catch (error) {
         return error;
+    }
+}
+
+const exportAllMySQLDBs = async () => {
+    for (let dbName in MariaDBs) {
+        let error = await exportMySQLDB(MariaDBs[dbName]);
+        if (error) {
+            return error;
+        }
     }
 }
 
 module.exports = {
     getExportPath,
     exportMySQLDB,
-    importMySQLDB
+    importMySQLDB,
+    importAllMySQLDBs,
+    exportAllMySQLDBs
+
 }
