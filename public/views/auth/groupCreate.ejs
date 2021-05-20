@@ -15,6 +15,7 @@
         <button>Create Group</button>
     </form>
     <script>
+        let socket = io();
         const form = document.querySelector('form');
         const groupNameError = document.querySelector('.groupName.error');
         const passwordError = document.querySelector('.password.error');

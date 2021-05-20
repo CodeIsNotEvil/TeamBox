@@ -1,5 +1,5 @@
-const { PATH_TO_BASH_SCRIPTS, PATH_TO_GLOBAL_MODULES } = require("../config/server");
-const syncExec = require(PATH_TO_GLOBAL_MODULES + 'sync-exec');
+const { PATH_TO_BASH_SCRIPTS } = require("../config/server");
+const syncExec = require('sync-exec');
 
 /**
  * Shut the RaspberryPi Down.
@@ -8,10 +8,10 @@ const shutdownPi = () => {
         let isError = syncExec(PATH_TO_BASH_SCRIPTS + "group_delete.sh && sudo shutdown").stderr;
 
         if (isError == "" && isError != null) {
-                console.log("EXEC :: SHUTDOWNPI:\t\tSUCCESS");
+                console.log("\nEXEC :: SHUTDOWNPI:\t\tSUCCESS\n\n");
         }
         else {
-                console.log("EXEC :: SHUTDOWNPI:\t\tERROR: \n" + isError);
+                console.log("\nEXEC :: SHUTDOWNPI:\t\tERROR: \n" + isError);
         }
 }
 
@@ -19,21 +19,27 @@ const rebootPi = () => {
         let isError = syncExec(PATH_TO_BASH_SCRIPTS + "group_delete.sh && sudo shutdown -r").stderr;
 
         if (isError == "" && isError != null) {
-                console.log("EXEC :: REBOOTPI:\t\tSUCCESS");
+                console.log("\nEXEC :: REBOOTPI:\t\tSUCCESS\n\n");
         }
         else {
-                console.log("EXEC :: REBOOTPI:\t\tERROR: \n" + isError);
+                console.log("\nEXEC :: REBOOTPI:\t\tERROR: \n" + isError);
         }
 }
 
 const clearAllData = () => {
-        let isError = syncExec('mongo TeamBox --eval "db.dropDatabase()" && sudo rm -rf /media/USB-TeamBox/TeamBox/').stderr;
+        let clearActions = {
+                dropTeamBoxMongoBD: 'mongo TeamBox --eval "db.dropDatabase()"',
+                deleteUSBFiles: 'sudo rm -rf /media/USB-TeamBox/TeamBox/',
+                removeAllLocalThumbnails: 'sudo rm -rf /home/ubuntu/app/public/screenshots/*.png && sudo rm -rf /home/ubuntu/app/public/drawings/*.png'
+        }
+        let assabledClearCommand = `${clearActions.dropTeamBoxMongoBD} && ${clearActions.deleteUSBFiles} && ${clearActions.removeAllLocalThumbnails}`;
+        let isError = syncExec(assabledClearCommand).stderr;
 
         if (isError == "" && isError != null) {
-                console.log("EXEC :: CLEAR_ALL_DATA:\t\tSUCCESS");
+                console.log("\nEXEC :: CLEAR_ALL_DATA:\t\tSUCCESS\n\n");
         }
         else {
-                console.log("EXEC :: CLEAR_ALL_DATA:\t\tERROR: \n" + isError);
+                console.log("\nEXEC :: CLEAR_ALL_DATA:\t\tERROR: \n" + isError);
         }
 }
 

@@ -18,5 +18,6 @@ router.get("/settings", requireAuth, requireGroup, routesController.settings_get
 router.post("/settings/shutdownpi", requireAuth, requireGroup, routesController.settings_shutdownpi_post);
 router.post("/settings/rebootpi", requireAuth, requireGroup, routesController.settings_rebootpi_post);
 router.post("/settings/clearalldata", requireAuth, requireGroup, routesController.settings_clearalldata_post);
+router.post("/clearallcookies", routesController.clearallcookies_post);
 
 module.exports = router;

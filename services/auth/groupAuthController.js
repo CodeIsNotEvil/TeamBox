@@ -126,7 +126,6 @@ module.exports.group_join_post = async (req, res) => {
         let group = await Group.findOneAndUpdate({ name, isActive: true }, { $addToSet: { users: user } });
         if (group) {
             try {
-                //TODO check grouppassword before adding the user and his color to the group
                 group = await Group.login(name, password);
                 updateUserColor(user, color);
                 const token = createToken(user._id, group._id);

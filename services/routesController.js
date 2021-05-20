@@ -50,6 +50,19 @@ module.exports.settings_clearalldata_post = async (req, res) => {
         res.status(200).json({ message });
     }
 }
+//after clearalldata everyone connected gets thier cookies removed
+module.exports.clearallcookies_post = async (req, res) => {
+    if (req.cookies.user_jwt) {
+        res.clearCookie('user_jwt');
+    }
+    if (req.cookies.group_jwt) {
+        res.clearCookie('group_jwt');
+    }
+    if (req.cookies.temp_jwt) {
+        res.clearCookie('temp_jwt');
+    }
+    res.status(200).json({ message: "Cleared all cookies" });
+}
 
 const exportDataAndShutdownPi = async () => {
     if (await exportData()) {

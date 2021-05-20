@@ -12,6 +12,7 @@
         <button>Sign up</button>
     </form>
     <script>
+        let socket = io();
         const form = document.querySelector('form');
         const nameError = document.querySelector('.name.error');
         const passwordError = document.querySelector('.password.error');

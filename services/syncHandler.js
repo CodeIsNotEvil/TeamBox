@@ -35,10 +35,14 @@ function exportAsync() {
         setInterval(async function () {
                 console.log("Asynchron Database exports:");
                 if (Group.mysqlIsImported == true) {
-                        let usbPath = (await newGroup.findOne({ isActive: true })).usbPath;
-                        exportMysqlAsync(usbPath);
+                        let group = await newGroup.findOne({ isActive: true });
+                        if (group) {
+                                exportMysqlAsync(group.usbPath);
+                        } else {
+                                console.log("MysqlDB was not exported, there was no path found for this group\n")
+                        }
                 } else {
-                        console.log("MysqlDB was not exported, there were never imported one for this group");
+                        console.log("MysqlDB was not exported, there were never imported one for this group\n");
                 }
 
                 MongoBackupHandler.exportAllDBsAsync();
@@ -46,10 +50,10 @@ function exportAsync() {
                 if (Group.ethercalcIsImported == true) {
                         let success = Ethercalc.exportDump(); //NOTE: this call is not Async
                         if (success) {
-                                console.log("Ethercalc Dump was exported Successfully.");
+                                console.log("Ethercalc Dump was exported Successfully.\n");
                         }
                 } else {
-                        console.log("The Ethercalc dump was not exported, there were never imported one for this group");
+                        console.log("The Ethercalc dump was not exported, there were never imported one for this group\n");
                 }
 
         }, 120000);//120000ms = 2minutes

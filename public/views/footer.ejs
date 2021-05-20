@@ -8,9 +8,21 @@
             showPopUp('simplePopup', message);
         });
 
-        socket.on('clearAllData', function (message) {
+        socket.on('clearAllData', async function (message) {
             showPopUp('simplePopup', message);
-            //Redirect to a clear cookies page.
+            try {
+                const res = await fetch('/clearallcookies', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await res.json();
+                if (data.message) {
+                    let message = data.message;
+                    console.log(message);
+                }
+            } catch (error) {
+                console.error(error);
+            }
         })
     }
 
