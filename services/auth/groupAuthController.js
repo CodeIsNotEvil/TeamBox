@@ -85,7 +85,7 @@ module.exports.group_select_post = async (req, res) => {
         const group = await Group.findOneAndUpdate({ name: req.body.groupName }, { isActive: true, users: [] });
 
         await groupHandler.import();
-        fileBrowser.startFileBrowser();
+        await fileBrowser.startFileBrowser();
         DrawPad.init();
         res.status(201).json({ user: user._id, group: group._id });
         //TODO redirect all userAuthenticated Clients to groupJoin to ensure no one trys to join another group
@@ -193,7 +193,7 @@ module.exports.group_create_post = async (req, res) => {
             );
 
             await groupHandler.import();
-            fileBrowser.startFileBrowser();
+            await fileBrowser.startFileBrowser();
             DrawPad.init();
             //const token = createToken(user._id, group._id);
             //res.cookie('group_jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
