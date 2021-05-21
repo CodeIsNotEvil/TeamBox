@@ -1,12 +1,17 @@
-const Group = require("../Group");
+const { requireFolder } = require("../../utils/fsUtils");
+const Group = require("../../models/Group");
 const asyncExec = require('child_process').exec;
 const PORT = "8080";
-const ADDRESS = "0.0.0.0"; //All interfaces
+// All interfaces port 8080 is only accessable over wlan0 anyways
+// to look that up run sudo ufw status
+const ADDRESS = "0.0.0.0";
+//It would be better to use something linke http header auth
 const AUTH_METHODE = "noauth";
 
-module.exports.startFileBrowser = () => {
-    let path = getGroupFilesPath();
-    startFileBrowserAtPath(path);
+module.exports.startFileBrowser = async () => {
+    let path = await getGroupFilesPath();
+    requireFolder(path);
+    startFileBrowserAtPath(`${path}/`);
     console.debug(`FileBrowser started at ${ADDRESS}:${PORT} at the path: ${path}`);
 }
 
@@ -20,8 +25,9 @@ startFileBrowserAtPath = (path) => {
     });
 }
 
-getGroupFilesPath = () => {
-    return `/media/USB-TeamBox/TeamBox/${Group.group}/files/`;
+getGroupFilesPath = async () => {
+    let group = await Group.findOne({ isActive: true });
+    return `${group.usbPath}/files`;
 }
 
 configureAuthMethode = () => {
