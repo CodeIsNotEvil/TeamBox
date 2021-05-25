@@ -1,5 +1,5 @@
-const { PATH_TO_GLOBAL_MODULES, PATH_TO_BASH_SCRIPTS } = require('../config/server');
-const mysql = require(PATH_TO_GLOBAL_MODULES + 'mysql');
+const { PATH_TO_BASH_SCRIPTS } = require('../config/server');
+const mysql = require('mysql');
 const asyncExec = require('child_process').exec;
 const Group = require('./Group');
 const user = require('../models/MySQLUser');
@@ -47,7 +47,7 @@ const exportMysql = (usbPath) => {
         return false;
     } else {
         Group.mysqlIsImported = false;
-        console.log("exportMysql >>> successfully Exported MySQLDBs\n");
+        console.log("exportMysql >>> successfully Exported MySQLDBs");
         return true;
     }
 }
@@ -60,7 +60,7 @@ const exportMysqlAsync = async (usbPath) => {
         console.error(error + "\n");
         return false;
     } else {
-        console.log("exportMysql >>> successfully Exported MySQLDBs\n");
+        console.log("exportMysql >>> successfully Exported MySQLDBs");
         return true;
     }
 }

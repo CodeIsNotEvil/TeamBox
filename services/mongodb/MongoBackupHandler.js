@@ -1,9 +1,8 @@
-const { PATH_TO_GLOBAL_MODULES } = require("../../config/server");
 const fs = require('fs');
 const Group = require('../Group');
 const MongoDBs = require('./MongoDBs');
 const asyncExec = require('child_process').exec;
-const SYNC_EXEC = require(PATH_TO_GLOBAL_MODULES + 'sync-exec');
+const SYNC_EXEC = require('sync-exec');
 
 class MongoBackupHandler {
 

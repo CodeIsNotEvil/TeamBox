@@ -1,5 +1,5 @@
-const { PATH_TO_BASH_SCRIPTS, PATH_TO_GLOBAL_MODULES } = require("../config/server");
-const SYNC_EXEC = require(PATH_TO_GLOBAL_MODULES + 'sync-exec');
+const { PATH_TO_BASH_SCRIPTS } = require("../config/server");
+const SYNC_EXEC = require('sync-exec');
 
 /**
  * This will synchonously run the defined script

@@ -1,11 +1,11 @@
-const { PATH_TO_GLOBAL_MODULES, PORT } = require('./config/server');
+const { PORT } = require('./config/server');
 const mysqlHandler = require('./services/mysqlHandler');
 const syncHandler = require('./services/syncHandler');
 
 const express = require('express');
-const bodyParser = require(PATH_TO_GLOBAL_MODULES + 'body-parser');
+const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const expressSession = require(PATH_TO_GLOBAL_MODULES + 'express-session');
+const expressSession = require('express-session');
 const mongoose = require('mongoose');
 
 //Own modules

@@ -1,6 +1,5 @@
-const { PATH_TO_GLOBAL_MODULES } = require("../config/server");
 const { exportMysqlAsync, exportMysql } = require("./mysqlHandler");
-const syncExec = require(PATH_TO_GLOBAL_MODULES + 'sync-exec');
+const syncExec = require('sync-exec');
 const Group = require('./Group');
 const newGroup = require('../models/Group');
 const Ethercalc = require("./ethercalc/ethercalcHandler");
@@ -39,10 +38,10 @@ function exportAsync() {
                         if (group) {
                                 exportMysqlAsync(group.usbPath);
                         } else {
-                                console.log("MysqlDB was not exported, there was no path found for this group\n")
+                                console.log("MysqlDB was not exported, there was no path found for this group")
                         }
                 } else {
-                        console.log("MysqlDB was not exported, there were never imported one for this group\n");
+                        console.log("MysqlDB was not exported, there were never imported one for this group");
                 }
 
                 MongoBackupHandler.exportAllDBsAsync();
@@ -50,10 +49,10 @@ function exportAsync() {
                 if (Group.ethercalcIsImported == true) {
                         let success = Ethercalc.exportDump(); //NOTE: this call is not Async
                         if (success) {
-                                console.log("Ethercalc Dump was exported Successfully.\n");
+                                console.log("Ethercalc Dump was exported Successfully.");
                         }
                 } else {
-                        console.log("The Ethercalc dump was not exported, there were never imported one for this group\n");
+                        console.log("The Ethercalc dump was not exported, there were never imported one for this group");
                 }
 
         }, 120000);//120000ms = 2minutes

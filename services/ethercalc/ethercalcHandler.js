@@ -1,7 +1,7 @@
-const { PATH_TO_GLOBAL_MODULES, USB_PRE_PATH } = require("../../config/server");
+const { USB_PRE_PATH } = require("../../config/server");
 const runScript = require("../runScripts");
 const fs = require('fs');
-const fse = require(PATH_TO_GLOBAL_MODULES + 'fs-extra');
+const fse = require('fs-extra');
 const Group = require("../Group");
 const { requireFolder } = require("../../utils/fsUtils");
 
